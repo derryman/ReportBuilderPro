@@ -39,6 +39,75 @@ export default function HomePage() {
           </div>
         ))}
       </section>
+
+      <section className="panel panel-default">
+        <div className="panel-heading">
+          <h3 className="panel-title">AI Issue Scanner</h3>
+          <p className="text-muted small">Automated issue detection from job reports</p>
+        </div>
+        <div className="panel-body">
+          <div className="row">
+            {issues.map((issue) => (
+              <div key={issue.id} className="col-sm-6">
+                <div className={`issue-card issue-${issue.severity}`}>
+                  <div className="issue-header">
+                    <span className={`issue-badge issue-badge-${issue.severity}`}>
+                      {issue.severity}
+                    </span>
+                    <span className="issue-job">Job #{issue.jobId}</span>
+                  </div>
+                  <h4 className="issue-title">{issue.title}</h4>
+                  <p className="issue-description">{issue.description}</p>
+                  <div className="issue-meta">
+                    <span className="issue-date">{issue.date}</span>
+                    <span className="issue-category">{issue.category}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
+
+// Fake issues data for AI Issue Scanner
+const issues = [
+  {
+    id: 1,
+    jobId: '2024-001',
+    title: 'Missing Safety Equipment',
+    description: 'Hard hat inspection tag expired on site entrance',
+    severity: 'high',
+    category: 'Safety',
+    date: '2 hours ago',
+  },
+  {
+    id: 2,
+    jobId: '2024-045',
+    title: 'Documentation Incomplete',
+    description: 'Progress report missing required signatures',
+    severity: 'medium',
+    category: 'Compliance',
+    date: '5 hours ago',
+  },
+  {
+    id: 3,
+    jobId: '2024-089',
+    title: 'Schedule Variance',
+    description: 'Milestone completion delayed by 3 days',
+    severity: 'medium',
+    category: 'Schedule',
+    date: '1 day ago',
+  },
+  {
+    id: 4,
+    jobId: '2024-112',
+    title: 'Quality Check Pending',
+    description: 'Material inspection not completed before installation',
+    severity: 'low',
+    category: 'Quality',
+    date: '2 days ago',
+  },
+];
