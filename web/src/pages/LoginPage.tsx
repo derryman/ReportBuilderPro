@@ -5,7 +5,6 @@ import logo from '../assets/logo.png';
 // Login credentials for prototype
 const CORRECT_EMAIL = 'derrymahon@icloud.com';
 const CORRECT_PASSWORD = 'prototype';
-const USER_NAME = 'Prototype User';
 
 export default function LoginPage() {
   const navigate = useNavigate();
