@@ -281,6 +281,50 @@ body {
   flex-wrap: wrap;
 }
 
+.template-simple-form {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.template-section-simple {
+  margin-bottom: 24px;
+}
+
+.template-section-simple .panel-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.image-preview {
+  margin-top: 12px;
+  border: 1px solid var(--rbp-gray-100);
+  border-radius: 4px;
+  padding: 8px;
+  background: var(--rbp-gray-50);
+  display: inline-block;
+}
+
+.image-preview img {
+  max-width: 300px;
+  max-height: 200px;
+  display: block;
+  border-radius: 4px;
+}
+
+.bullet-input {
+  margin-bottom: 8px;
+}
+
+.template-actions-simple {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rbp-gray-100);
+}
+
 .template-palette {
   flex: 0 0 260px;
 }
