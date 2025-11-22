@@ -2,41 +2,41 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
 
-// Simple prototype login - accepts any email/password combination
-const PROTOTYPE_CREDENTIALS = {
-  email: 'derrymahon@icloud.com',
-  password: 'prototype',
-  name: 'Prototype User',
-};
+// Login credentials for prototype
+const CORRECT_EMAIL = 'derrymahon@icloud.com';
+const CORRECT_PASSWORD = 'prototype';
+const USER_NAME = 'Prototype User';
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
-  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    
+    // Check if fields are filled
     if (!email || !password) {
-      setStatus('error');
-      setMessage('Please enter both email and password.');
+      setError('Please enter both email and password.');
       return;
     }
-    setStatus('loading');
-    setMessage('');
 
-    // Simple client-side validation for prototype
+    setIsLoading(true);
+    setError('');
+
+    // Simulate checking credentials
     setTimeout(() => {
-      if (email === PROTOTYPE_CREDENTIALS.email && password === PROTOTYPE_CREDENTIALS.password) {
-        setStatus('idle');
-        setMessage(`Welcome back, ${PROTOTYPE_CREDENTIALS.name}. Redirecting...`);
+      if (email === CORRECT_EMAIL && password === CORRECT_PASSWORD) {
+        // Success - redirect to home page
         setTimeout(() => {
           navigate('/');
-        }, 1200);
+        }, 1000);
       } else {
-        setStatus('error');
-        setMessage('Invalid email or password. Try: derrymahon@icloud.com / prototype');
+        // Wrong credentials
+        setError('Invalid email or password. Try: derrymahon@icloud.com / prototype');
+        setIsLoading(false);
       }
     }, 500);
   };
@@ -59,7 +59,7 @@ export default function LoginPage() {
                 className="form-control"
                 placeholder="derrymahon@icloud.com"
                 value={email}
-                onChange={(event) => setEmail(event.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -70,7 +70,7 @@ export default function LoginPage() {
                 className="form-control"
                 placeholder="Enter password"
                 value={password}
-                onChange={(event) => setPassword(event.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
             <div className="checkbox clearfix">
@@ -79,16 +79,12 @@ export default function LoginPage() {
               </label>
               <span className="pull-right text-muted">Single-account prototype</span>
             </div>
-            <button type="submit" className="btn btn-block btn-rbp" disabled={status === 'loading'}>
-              {status === 'loading' ? 'Verifying…' : 'Sign in'}
+            <button type="submit" className="btn btn-block btn-rbp" disabled={isLoading}>
+              {isLoading ? 'Verifying…' : 'Sign in'}
             </button>
-            {message && (
-              <div
-                className={`status-message ${
-                  status === 'error' ? 'status-error' : message.includes('Welcome') ? 'status-success' : ''
-                }`}
-              >
-                {message}
+            {error && (
+              <div className="status-message status-error">
+                {error}
               </div>
             )}
           </form>
@@ -100,4 +96,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

@@ -1,9 +1,11 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import logo from '../assets/logo.png';
 
-const navItems = [
+// Navigation menu items
+const menuItems = [
   { path: '/', label: 'Home' },
   { path: '/template-creator', label: 'Template Creator' },
+  { path: '/template-library', label: 'Template Library' },
 ];
 
 export default function MainLayout() {
@@ -18,7 +20,7 @@ export default function MainLayout() {
           </div>
         </NavLink>
         <ul className="nav rbp-nav-stacked">
-          {navItems.map((item) => (
+          {menuItems.map((item) => (
             <li key={item.path}>
               <NavLink
                 to={item.path}
@@ -45,4 +47,3 @@ export default function MainLayout() {
     </div>
   );
 }
-
