@@ -47,6 +47,13 @@ export default function TemplateLibraryPage() {
               <div className="panel-body">
                 <h3>{report.title}</h3>
                 <p className="text-muted">{report.description}</p>
+                <div className="pdf-preview-thumbnail">
+                  <iframe
+                    src={new URL(`reports/${report.filename}#page=1`, window.location.href).href}
+                    className="pdf-thumbnail-iframe"
+                    title={`${report.title} preview`}
+                  />
+                </div>
                 <button
                   className="btn btn-rbp btn-block"
                   onClick={() => handleView(report.filename)}
@@ -69,7 +76,7 @@ export default function TemplateLibraryPage() {
               </button>
             </div>
             <iframe
-              src={`/reports/${viewingPdf}`}
+              src={new URL(`reports/${viewingPdf}`, window.location.href).href}
               className="pdf-viewer-iframe"
               title="PDF Viewer"
             />
