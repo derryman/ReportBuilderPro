@@ -1,10 +1,50 @@
 import { NavLink } from 'react-router-dom';
 
-// Statistics to display
+// Dashboard statistics
 const stats = [
   { label: 'Templates drafted', value: '18', detail: 'In the last 30 days' },
   { label: 'Reports published', value: '42', detail: 'Company wide' },
   { label: 'Pending approvals', value: '6', detail: 'Awaiting review' },
+];
+
+// AI-detected issues from job reports
+const issues = [
+  {
+    id: 1,
+    jobId: '2024-001',
+    title: 'Missing Safety Equipment',
+    description: 'Hard hat inspection tag expired on site entrance',
+    severity: 'high',
+    category: 'Safety',
+    date: '2 hours ago',
+  },
+  {
+    id: 2,
+    jobId: '2024-045',
+    title: 'Documentation Incomplete',
+    description: 'Progress report missing required signatures',
+    severity: 'medium',
+    category: 'Compliance',
+    date: '5 hours ago',
+  },
+  {
+    id: 3,
+    jobId: '2024-089',
+    title: 'Schedule Variance',
+    description: 'Milestone completion delayed by 3 days',
+    severity: 'medium',
+    category: 'Schedule',
+    date: '1 day ago',
+  },
+  {
+    id: 4,
+    jobId: '2024-112',
+    title: 'Quality Check Pending',
+    description: 'Material inspection not completed before installation',
+    severity: 'low',
+    category: 'Quality',
+    date: '2 days ago',
+  },
 ];
 
 export default function HomePage() {
@@ -13,9 +53,7 @@ export default function HomePage() {
       <section className="rbp-hero panel panel-default">
         <div className="panel-body">
           <h1>Design fast, share confidently</h1>
-          <p>
-            Report Builder Pro centralizes your business data into ready-to-share dashboards.
-          </p>
+          <p>Report Builder Pro centralizes your business data into ready-to-share dashboards.</p>
           <div className="btn-group">
             <NavLink to="/template-creator" className="btn btn-rbp">
               Start a template
@@ -26,6 +64,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
       <section className="row">
         {stats.map((stat) => (
           <div key={stat.label} className="col-sm-4">
@@ -71,43 +110,3 @@ export default function HomePage() {
     </div>
   );
 }
-
-// Fake issues data for AI Issue Scanner
-const issues = [
-  {
-    id: 1,
-    jobId: '2024-001',
-    title: 'Missing Safety Equipment',
-    description: 'Hard hat inspection tag expired on site entrance',
-    severity: 'high',
-    category: 'Safety',
-    date: '2 hours ago',
-  },
-  {
-    id: 2,
-    jobId: '2024-045',
-    title: 'Documentation Incomplete',
-    description: 'Progress report missing required signatures',
-    severity: 'medium',
-    category: 'Compliance',
-    date: '5 hours ago',
-  },
-  {
-    id: 3,
-    jobId: '2024-089',
-    title: 'Schedule Variance',
-    description: 'Milestone completion delayed by 3 days',
-    severity: 'medium',
-    category: 'Schedule',
-    date: '1 day ago',
-  },
-  {
-    id: 4,
-    jobId: '2024-112',
-    title: 'Quality Check Pending',
-    description: 'Material inspection not completed before installation',
-    severity: 'low',
-    category: 'Quality',
-    date: '2 days ago',
-  },
-];

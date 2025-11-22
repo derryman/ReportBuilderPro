@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
 
-// Login credentials for prototype
+// Prototype login credentials
 const CORRECT_EMAIL = 'derrymahon@icloud.com';
 const CORRECT_PASSWORD = 'prototype';
 
@@ -16,7 +16,6 @@ export default function LoginPage() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     
-    // Check if fields are filled
     if (!email || !password) {
       setError('Please enter both email and password.');
       return;
@@ -25,15 +24,11 @@ export default function LoginPage() {
     setIsLoading(true);
     setError('');
 
-    // Simulate checking credentials
+    // Simple credential check
     setTimeout(() => {
       if (email === CORRECT_EMAIL && password === CORRECT_PASSWORD) {
-        // Success - redirect to home page
-        setTimeout(() => {
-          navigate('/');
-        }, 1000);
+        setTimeout(() => navigate('/'), 1000);
       } else {
-        // Wrong credentials
         setError('Invalid email or password. Try: derrymahon@icloud.com / prototype');
         setIsLoading(false);
       }
@@ -81,17 +76,11 @@ export default function LoginPage() {
             <button type="submit" className="btn btn-block btn-rbp" disabled={isLoading}>
               {isLoading ? 'Verifying…' : 'Sign in'}
             </button>
-            {error && (
-              <div className="status-message status-error">
-                {error}
-              </div>
-            )}
+            {error && <div className="status-message status-error">{error}</div>}
           </form>
         </div>
       </div>
-      <p className="login-footer text-muted">
-        Prototype build &mdash; functionality coming soon.
-      </p>
+      <p className="login-footer text-muted">Prototype build &mdash; functionality coming soon.</p>
     </div>
   );
 }

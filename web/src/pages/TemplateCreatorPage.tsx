@@ -4,79 +4,67 @@ import type { DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
+// Component types available in the builder
 type ComponentType = 'image' | 'progress' | 'issues' | 'text';
 
-type TemplateComponent = {
+// Template component structure
+type Component = {
   id: string;
   type: ComponentType;
-  data: {
-    image?: string;
-    progress?: string;
-    issues?: string;
-    text?: string;
-  };
+  data: { image?: string; progress?: string; issues?: string; text?: string };
 };
 
-const componentLibrary: { type: ComponentType; label: string; icon: string }[] = [
-  { type: 'image', label: 'Image', icon: '📷' },
-  { type: 'progress', label: 'Progress', icon: '📊' },
-  { type: 'issues', label: 'Issues', icon: '⚠️' },
-  { type: 'text', label: 'Text Box', icon: '📝' },
+// Available components to add
+const components = [
+  { type: 'image' as ComponentType, label: 'Image', icon: '📷' },
+  { type: 'progress' as ComponentType, label: 'Progress', icon: '📊' },
+  { type: 'issues' as ComponentType, label: 'Issues', icon: '⚠️' },
+  { type: 'text' as ComponentType, label: 'Text Box', icon: '📝' },
 ];
 
 export default function TemplateCreatorPage() {
   const [templateName, setTemplateName] = useState('');
-  const [components, setComponents] = useState<TemplateComponent[]>([]);
+  const [templateComponents, setTemplateComponents] = useState<Component[]>([]);
   const sensors = useSensors(useSensor(PointerSensor));
 
-  // Add component from library
-  const handleAddComponent = (type: ComponentType) => {
-    const newComponent: TemplateComponent = {
-      id: `comp-${Date.now()}`,
-      type,
-      data: {},
-    };
-    setComponents([...components, newComponent]);
+  // Add component to template
+  const addComponent = (type: ComponentType) => {
+    setTemplateComponents([...templateComponents, { id: `comp-${Date.now()}`, type, data: {} }]);
   };
 
-  // Handle drag end to reorder
+  // Reorder components when dragged
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
-    setComponents((items) => {
-      const oldIndex = items.findIndex((item) => item.id === active.id);
-      const newIndex = items.findIndex((item) => item.id === over.id);
-      const newItems = [...items];
-      const [removed] = newItems.splice(oldIndex, 1);
-      newItems.splice(newIndex, 0, removed);
-      return newItems;
-    });
+    const oldIndex = templateComponents.findIndex((c) => c.id === active.id);
+    const newIndex = templateComponents.findIndex((c) => c.id === over.id);
+    const newComponents = [...templateComponents];
+    const [moved] = newComponents.splice(oldIndex, 1);
+    newComponents.splice(newIndex, 0, moved);
+    setTemplateComponents(newComponents);
   };
 
   // Update component data
-  const handleUpdateComponent = (id: string, field: string, value: string) => {
-    setComponents(
-      components.map((comp) =>
-        comp.id === id ? { ...comp, data: { ...comp.data, [field]: value } } : comp
+  const updateComponent = (id: string, field: string, value: string) => {
+    setTemplateComponents(
+      templateComponents.map((c) =>
+        c.id === id ? { ...c, data: { ...c.data, [field]: value } } : c
       )
     );
   };
 
   // Remove component
-  const handleRemoveComponent = (id: string) => {
-    setComponents(components.filter((comp) => comp.id !== id));
+  const removeComponent = (id: string) => {
+    setTemplateComponents(templateComponents.filter((c) => c.id !== id));
   };
 
   // Handle image upload
-  const handleImageUpload = (id: string, event: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadImage = (id: string, event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        const imageUrl = e.target?.result as string;
-        handleUpdateComponent(id, 'image', imageUrl);
-      };
+      reader.onload = (e) => updateComponent(id, 'image', e.target?.result as string);
       reader.readAsDataURL(file);
     }
   };
@@ -95,12 +83,12 @@ export default function TemplateCreatorPage() {
             <p className="text-muted small">Click to add to template</p>
           </div>
           <div className="panel-body">
-            {componentLibrary.map((item) => (
+            {components.map((item) => (
               <button
                 key={item.type}
                 type="button"
                 className="btn btn-default btn-block component-library-item"
-                onClick={() => handleAddComponent(item.type)}
+                onClick={() => addComponent(item.type)}
               >
                 <span className="component-icon">{item.icon}</span>
                 <span>{item.label}</span>
@@ -131,24 +119,20 @@ export default function TemplateCreatorPage() {
               <p className="text-muted small">Drag components to reorder</p>
             </div>
             <div className="panel-body">
-              {components.length === 0 ? (
+              {templateComponents.length === 0 ? (
                 <div className="canvas-empty">
                   <p className="text-muted">Add components from the library to start building</p>
                 </div>
               ) : (
-                <DndContext
-                  sensors={sensors}
-                  collisionDetection={closestCenter}
-                  onDragEnd={handleDragEnd}
-                >
-                  <SortableContext items={components.map((c) => c.id)} strategy={verticalListSortingStrategy}>
-                    {components.map((component) => (
+                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                  <SortableContext items={templateComponents.map((c) => c.id)} strategy={verticalListSortingStrategy}>
+                    {templateComponents.map((component) => (
                       <ComponentItem
                         key={component.id}
                         component={component}
-                        onUpdate={handleUpdateComponent}
-                        onRemove={handleRemoveComponent}
-                        onImageUpload={handleImageUpload}
+                        onUpdate={updateComponent}
+                        onRemove={removeComponent}
+                        onImageUpload={uploadImage}
                       />
                     ))}
                   </SortableContext>
@@ -167,8 +151,9 @@ export default function TemplateCreatorPage() {
   );
 }
 
+// Component item that can be dragged and edited
 type ComponentItemProps = {
-  component: TemplateComponent;
+  component: Component;
   onUpdate: (id: string, field: string, value: string) => void;
   onRemove: (id: string) => void;
   onImageUpload: (id: string, event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -185,71 +170,41 @@ function ComponentItem({ component, onUpdate, onRemove, onImageUpload }: Compone
     opacity: isDragging ? 0.5 : 1,
   };
 
-  const renderComponent = () => {
-    switch (component.type) {
-      case 'image':
-        return (
-          <div className="component-image">
-            <label>Image</label>
-            <input
-              type="file"
-              accept="image/*"
-              className="form-control"
-              onChange={(e) => onImageUpload(component.id, e)}
-            />
-            {component.data.image && (
-              <div className="component-image-preview">
-                <img src={component.data.image} alt="Uploaded" />
-              </div>
-            )}
-          </div>
-        );
-
-      case 'progress':
-        return (
-          <div className="component-progress">
-            <label>Progress</label>
-            <textarea
-              className="form-control"
-              rows={4}
-              placeholder="Enter progress updates, milestones, or status information..."
-              value={component.data.progress || ''}
-              onChange={(e) => onUpdate(component.id, 'progress', e.target.value)}
-            />
-          </div>
-        );
-
-      case 'issues':
-        return (
-          <div className="component-issues">
-            <label>Issues</label>
-            <textarea
-              className="form-control"
-              rows={4}
-              placeholder="Enter any issues, concerns, or blockers..."
-              value={component.data.issues || ''}
-              onChange={(e) => onUpdate(component.id, 'issues', e.target.value)}
-            />
-          </div>
-        );
-
-      case 'text':
-        return (
-          <div className="component-text">
-            <label>Text</label>
-            <textarea
-              className="form-control"
-              rows={4}
-              placeholder="Enter any additional notes or information..."
-              value={component.data.text || ''}
-              onChange={(e) => onUpdate(component.id, 'text', e.target.value)}
-            />
-          </div>
-        );
-
-      default:
-        return null;
+  // Render the appropriate input based on component type
+  const renderInput = () => {
+    if (component.type === 'image') {
+      return (
+        <div className="component-image">
+          <label>Image</label>
+          <input type="file" accept="image/*" className="form-control" onChange={(e) => onImageUpload(component.id, e)} />
+          {component.data.image && (
+            <div className="component-image-preview">
+              <img src={component.data.image} alt="Uploaded" />
+            </div>
+          )}
+        </div>
+      );
     }
+
+    const fields = {
+      progress: { label: 'Progress', placeholder: 'Enter progress updates, milestones, or status information...' },
+      issues: { label: 'Issues', placeholder: 'Enter any issues, concerns, or blockers...' },
+      text: { label: 'Text', placeholder: 'Enter any additional notes or information...' },
+    };
+
+    const field = fields[component.type];
+    return (
+      <div className={`component-${component.type}`}>
+        <label>{field.label}</label>
+        <textarea
+          className="form-control"
+          rows={4}
+          placeholder={field.placeholder}
+          value={component.data[component.type] || ''}
+          onChange={(e) => onUpdate(component.id, component.type, e.target.value)}
+        />
+      </div>
+    );
   };
 
   return (
@@ -258,14 +213,11 @@ function ComponentItem({ component, onUpdate, onRemove, onImageUpload }: Compone
         <div className="component-drag-handle" {...attributes} {...listeners}>
           <span className="glyphicon glyphicon-move" /> {component.type}
         </div>
-        <button
-          className="btn btn-sm btn-default"
-          onClick={() => onRemove(component.id)}
-        >
+        <button className="btn btn-sm btn-default" onClick={() => onRemove(component.id)}>
           Remove
         </button>
       </div>
-      <div className="component-content">{renderComponent()}</div>
+      <div className="component-content">{renderInput()}</div>
     </div>
   );
 }

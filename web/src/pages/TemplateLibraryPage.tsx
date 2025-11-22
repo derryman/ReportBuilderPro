@@ -1,89 +1,46 @@
 import { useState, useRef, useEffect } from 'react';
 
-// Sample PDF reports - store PDFs in web/public/reports/ folder
-const sampleReports = [
-  {
-    id: 1,
-    title: 'Cover Page',
-    description: 'Report cover page template',
-    filename: 'report1.pdf',
-  },
-  {
-    id: 2,
-    title: 'Meeting Minutes',
-    description: 'Meeting minutes template',
-    filename: 'report2.pdf',
-  },
-  {
-    id: 3,
-    title: 'Progress',
-    description: 'Progress report template',
-    filename: 'report3.pdf',
-  },
+// PDF templates available in the library
+const templates = [
+  { id: 1, title: 'Cover Page', description: 'Report cover page template', filename: 'report1.pdf' },
+  { id: 2, title: 'Meeting Minutes', description: 'Meeting minutes template', filename: 'report2.pdf' },
+  { id: 3, title: 'Progress', description: 'Progress report template', filename: 'report3.pdf' },
 ];
 
 export default function TemplateLibraryPage() {
   const [viewingPdf, setViewingPdf] = useState<string | null>(null);
-  const iframeContainerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleView = (filename: string) => {
+  // Open PDF in fullscreen
+  const openPdf = (filename: string) => {
     setViewingPdf(filename);
-    // Small delay to ensure the element is rendered before requesting fullscreen
     setTimeout(() => {
-      enterFullscreen();
+      const container = containerRef.current;
+      if (container?.requestFullscreen) container.requestFullscreen();
+      else if ((container as any)?.webkitRequestFullscreen) (container as any).webkitRequestFullscreen();
+      else if ((container as any)?.msRequestFullscreen) (container as any).msRequestFullscreen();
     }, 100);
   };
 
-  const handleClose = () => {
-    exitFullscreen();
+  // Close PDF viewer
+  const closePdf = () => {
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if ((document as any)?.webkitExitFullscreen) (document as any).webkitExitFullscreen();
+    else if ((document as any)?.msExitFullscreen) (document as any).msExitFullscreen();
     setViewingPdf(null);
   };
 
-  const enterFullscreen = () => {
-    const container = iframeContainerRef.current;
-    if (!container) return;
-
-    if (container.requestFullscreen) {
-      container.requestFullscreen();
-    } else if ((container as any).webkitRequestFullscreen) {
-      (container as any).webkitRequestFullscreen();
-    } else if ((container as any).msRequestFullscreen) {
-      (container as any).msRequestFullscreen();
-    }
-  };
-
-  const exitFullscreen = () => {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if ((document as any).webkitExitFullscreen) {
-      (document as any).webkitExitFullscreen();
-    } else if ((document as any).msExitFullscreen) {
-      (document as any).msExitFullscreen();
-    }
-  };
-
-  // Exit fullscreen when user presses ESC or closes
+  // Auto-close when exiting fullscreen
   useEffect(() => {
     const handleFullscreenChange = () => {
-      const isFullscreen = !!(
-        document.fullscreenElement ||
-        (document as any).webkitFullscreenElement ||
-        (document as any).msFullscreenElement
-      );
-      
-      if (!isFullscreen && viewingPdf) {
-        setViewingPdf(null);
-      }
+      const isFullscreen = !!(document.fullscreenElement || (document as any)?.webkitFullscreenElement);
+      if (!isFullscreen && viewingPdf) setViewingPdf(null);
     };
-
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-    document.addEventListener('msfullscreenchange', handleFullscreenChange);
-
     return () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
       document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
-      document.removeEventListener('msfullscreenchange', handleFullscreenChange);
     };
   }, [viewingPdf]);
 
@@ -95,23 +52,20 @@ export default function TemplateLibraryPage() {
       </header>
 
       <div className="row">
-        {sampleReports.map((report) => (
-          <div key={report.id} className="col-sm-4">
+        {templates.map((template) => (
+          <div key={template.id} className="col-sm-4">
             <div className="panel panel-default">
               <div className="panel-body">
-                <h3>{report.title}</h3>
-                <p className="text-muted">{report.description}</p>
+                <h3>{template.title}</h3>
+                <p className="text-muted">{template.description}</p>
                 <div className="pdf-preview-thumbnail">
                   <iframe
-                    src={new URL(`reports/${report.filename}#page=1`, window.location.href).href}
+                    src={new URL(`reports/${template.filename}#page=1`, window.location.href).href}
                     className="pdf-thumbnail-iframe"
-                    title={`${report.title} preview`}
+                    title={`${template.title} preview`}
                   />
                 </div>
-                <button
-                  className="btn btn-rbp btn-block"
-                  onClick={() => handleView(report.filename)}
-                >
+                <button className="btn btn-rbp btn-block" onClick={() => openPdf(template.filename)}>
                   View PDF
                 </button>
               </div>
@@ -121,15 +75,10 @@ export default function TemplateLibraryPage() {
       </div>
 
       {viewingPdf && (
-        <div
-          ref={iframeContainerRef}
-          className="pdf-viewer-container pdf-viewer-fullscreen"
-        >
+        <div ref={containerRef} className="pdf-viewer-container pdf-viewer-fullscreen">
           <div className="pdf-viewer-header">
             <h3>Viewing: {viewingPdf}</h3>
-            <button className="btn btn-default" onClick={handleClose}>
-              Close
-            </button>
+            <button className="btn btn-default" onClick={closePdf}>Close</button>
           </div>
           <iframe
             src={new URL(`reports/${viewingPdf}`, window.location.href).href}
