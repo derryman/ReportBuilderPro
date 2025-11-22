@@ -56,7 +56,7 @@ export default function LoginPage() {
                 id="email"
                 type="email"
                 className="form-control"
-                placeholder="derrymahon@icloud.com"
+                placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
