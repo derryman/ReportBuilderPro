@@ -14,7 +14,7 @@ export default function MainLayout() {
       <aside className="rbp-sidebar">
         <NavLink to="/" className="rbp-brand-block">
           <img src={logo} alt="Report Builder Pro logo" />
-          <div>
+          <div className="brand-text">
             <span className="brand-title">Report Builder Pro</span>
             <small className="text-muted">Prototype</small>
           </div>
