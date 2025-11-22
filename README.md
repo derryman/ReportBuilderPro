@@ -48,17 +48,28 @@ web/
 This project is configured to deploy automatically to GitHub Pages:
 
 1. **Enable GitHub Pages** in your repository settings:
-   - Go to Settings → Pages
-   - Source: GitHub Actions
+   - Go to your repository → **Settings** → **Pages**
+   - Under "Source", select **"GitHub Actions"** (NOT "Deploy from a branch")
+   - Save the settings
 
-2. **Push to main branch** - The GitHub Actions workflow will automatically:
-   - Build the project
-   - Deploy to GitHub Pages
+2. **Trigger the deployment**:
+   - Push any changes to the `main` branch, OR
+   - Go to **Actions** tab → Select "Deploy to GitHub Pages" workflow → Click "Run workflow"
 
-3. **Access your site** at:
+3. **Wait for deployment**:
+   - Check the **Actions** tab to see the workflow running
+   - Wait for the green checkmark (deployment usually takes 1-2 minutes)
+
+4. **Access your site** at:
    ```
    https://[your-username].github.io/ReportBuilderPro/
    ```
+
+**Troubleshooting:**
+- If you see the README instead of the app, GitHub Pages is serving from the wrong source
+- Make sure "Source" is set to **"GitHub Actions"** (not "Deploy from a branch" or "/docs")
+- Check the Actions tab to ensure the workflow completed successfully
+- The site URL might take a few minutes to update after deployment
 
 ## Prototype Login
 

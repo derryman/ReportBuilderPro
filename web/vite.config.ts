@@ -4,7 +4,8 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/ReportBuilderPro/',
+  // HashRouter works with any base path, so we can use relative paths
+  base: './',
   server: {
     port: 5173,
   },
