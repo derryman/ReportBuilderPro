@@ -401,6 +401,21 @@ body {
   border-bottom: 1px solid var(--rbp-gray-100);
 }
 
+.pdf-viewer-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.pdf-viewer-container:fullscreen {
+  max-width: 100%;
+  max-height: 100vh;
+  border-radius: 0;
+}
+
+.pdf-viewer-container:fullscreen .pdf-viewer-iframe {
+  height: calc(100vh - 80px);
+}
+
 .pdf-viewer-iframe {
   width: 100%;
   height: calc(90vh - 80px);

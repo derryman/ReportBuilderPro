@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 // Sample PDF reports - store PDFs in web/public/reports/ folder
 const sampleReports = [
@@ -24,14 +24,71 @@ const sampleReports = [
 
 export default function TemplateLibraryPage() {
   const [viewingPdf, setViewingPdf] = useState<string | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const iframeContainerRef = useRef<HTMLDivElement>(null);
 
   const handleView = (filename: string) => {
     setViewingPdf(filename);
   };
 
   const handleClose = () => {
+    if (isFullscreen) {
+      exitFullscreen();
+    }
     setViewingPdf(null);
   };
+
+  const enterFullscreen = () => {
+    const container = iframeContainerRef.current;
+    if (!container) return;
+
+    if (container.requestFullscreen) {
+      container.requestFullscreen();
+    } else if ((container as any).webkitRequestFullscreen) {
+      (container as any).webkitRequestFullscreen();
+    } else if ((container as any).msRequestFullscreen) {
+      (container as any).msRequestFullscreen();
+    }
+  };
+
+  const exitFullscreen = () => {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if ((document as any).webkitExitFullscreen) {
+      (document as any).webkitExitFullscreen();
+    } else if ((document as any).msExitFullscreen) {
+      (document as any).msExitFullscreen();
+    }
+  };
+
+  const handleFullscreen = () => {
+    if (isFullscreen) {
+      exitFullscreen();
+    } else {
+      enterFullscreen();
+    }
+  };
+
+  // Listen for fullscreen changes
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(
+        !!(document.fullscreenElement ||
+          (document as any).webkitFullscreenElement ||
+          (document as any).msFullscreenElement)
+      );
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('msfullscreenchange', handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('msfullscreenchange', handleFullscreenChange);
+    };
+  }, []);
 
   return (
     <div className="template-library-page">
@@ -68,12 +125,21 @@ export default function TemplateLibraryPage() {
 
       {viewingPdf && (
         <div className="pdf-viewer-overlay" onClick={handleClose}>
-          <div className="pdf-viewer-container" onClick={(e) => e.stopPropagation()}>
+          <div
+            ref={iframeContainerRef}
+            className="pdf-viewer-container"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="pdf-viewer-header">
               <h3>Viewing: {viewingPdf}</h3>
-              <button className="btn btn-default" onClick={handleClose}>
-                Close
-              </button>
+              <div className="pdf-viewer-actions">
+                <button className="btn btn-default" onClick={handleFullscreen}>
+                  {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
+                </button>
+                <button className="btn btn-default" onClick={handleClose}>
+                  Close
+                </button>
+              </div>
             </div>
             <iframe
               src={new URL(`reports/${viewingPdf}`, window.location.href).href}
