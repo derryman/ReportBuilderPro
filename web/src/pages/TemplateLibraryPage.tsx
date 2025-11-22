@@ -24,17 +24,18 @@ const sampleReports = [
 
 export default function TemplateLibraryPage() {
   const [viewingPdf, setViewingPdf] = useState<string | null>(null);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const iframeContainerRef = useRef<HTMLDivElement>(null);
 
   const handleView = (filename: string) => {
     setViewingPdf(filename);
+    // Small delay to ensure the element is rendered before requesting fullscreen
+    setTimeout(() => {
+      enterFullscreen();
+    }, 100);
   };
 
   const handleClose = () => {
-    if (isFullscreen) {
-      exitFullscreen();
-    }
+    exitFullscreen();
     setViewingPdf(null);
   };
 
@@ -61,22 +62,18 @@ export default function TemplateLibraryPage() {
     }
   };
 
-  const handleFullscreen = () => {
-    if (isFullscreen) {
-      exitFullscreen();
-    } else {
-      enterFullscreen();
-    }
-  };
-
-  // Listen for fullscreen changes
+  // Exit fullscreen when user presses ESC or closes
   useEffect(() => {
     const handleFullscreenChange = () => {
-      setIsFullscreen(
-        !!(document.fullscreenElement ||
-          (document as any).webkitFullscreenElement ||
-          (document as any).msFullscreenElement)
+      const isFullscreen = !!(
+        document.fullscreenElement ||
+        (document as any).webkitFullscreenElement ||
+        (document as any).msFullscreenElement
       );
+      
+      if (!isFullscreen && viewingPdf) {
+        setViewingPdf(null);
+      }
     };
 
     document.addEventListener('fullscreenchange', handleFullscreenChange);
@@ -88,7 +85,7 @@ export default function TemplateLibraryPage() {
       document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
       document.removeEventListener('msfullscreenchange', handleFullscreenChange);
     };
-  }, []);
+  }, [viewingPdf]);
 
   return (
     <div className="template-library-page">
@@ -124,29 +121,21 @@ export default function TemplateLibraryPage() {
       </div>
 
       {viewingPdf && (
-        <div className="pdf-viewer-overlay" onClick={handleClose}>
-          <div
-            ref={iframeContainerRef}
-            className="pdf-viewer-container"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="pdf-viewer-header">
-              <h3>Viewing: {viewingPdf}</h3>
-              <div className="pdf-viewer-actions">
-                <button className="btn btn-default" onClick={handleFullscreen}>
-                  {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
-                </button>
-                <button className="btn btn-default" onClick={handleClose}>
-                  Close
-                </button>
-              </div>
-            </div>
-            <iframe
-              src={new URL(`reports/${viewingPdf}`, window.location.href).href}
-              className="pdf-viewer-iframe"
-              title="PDF Viewer"
-            />
+        <div
+          ref={iframeContainerRef}
+          className="pdf-viewer-container pdf-viewer-fullscreen"
+        >
+          <div className="pdf-viewer-header">
+            <h3>Viewing: {viewingPdf}</h3>
+            <button className="btn btn-default" onClick={handleClose}>
+              Close
+            </button>
           </div>
+          <iframe
+            src={new URL(`reports/${viewingPdf}`, window.location.href).href}
+            className="pdf-viewer-iframe"
+            title="PDF Viewer"
+          />
         </div>
       )}
     </div>
