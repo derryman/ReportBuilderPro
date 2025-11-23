@@ -1,13 +1,13 @@
 import { NavLink } from 'react-router-dom';
 
-// Dashboard statistics
+// Dashboard statistics (sample data)
 const stats = [
   { label: 'Templates drafted', value: '18', detail: 'In the last 30 days' },
   { label: 'Reports published', value: '42', detail: 'Company wide' },
   { label: 'Pending approvals', value: '6', detail: 'Awaiting review' },
 ];
 
-// AI-detected issues from job reports
+// AI-detected issues (sample data for demonstration)
 const issues = [
   {
     id: 1,
@@ -27,29 +27,12 @@ const issues = [
     category: 'Compliance',
     date: '5 hours ago',
   },
-  {
-    id: 3,
-    jobId: '2024-089',
-    title: 'Schedule Variance',
-    description: 'Milestone completion delayed by 3 days',
-    severity: 'medium',
-    category: 'Schedule',
-    date: '1 day ago',
-  },
-  {
-    id: 4,
-    jobId: '2024-112',
-    title: 'Quality Check Pending',
-    description: 'Material inspection not completed before installation',
-    severity: 'low',
-    category: 'Quality',
-    date: '2 days ago',
-  },
 ];
 
 export default function HomePage() {
   return (
     <div className="home-page">
+      {/* Hero section with main call-to-action */}
       <section className="rbp-hero panel panel-default">
         <div className="panel-body">
           <h1>Design fast, share confidently</h1>
@@ -65,6 +48,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Statistics cards */}
       <section className="row">
         {stats.map((stat) => (
           <div key={stat.label} className="col-sm-4">
@@ -79,10 +63,10 @@ export default function HomePage() {
         ))}
       </section>
 
+      {/* AI Issue Scanner section */}
       <section className="panel panel-default">
         <div className="panel-heading">
-          <h3 className="panel-title">AI Issue Scanner</h3>
-          <p className="text-muted small">Automated issue detection from job reports</p>
+          <h2 className="panel-title">AI Issue Scanner</h2>
         </div>
         <div className="panel-body">
           <div className="row">
@@ -95,7 +79,7 @@ export default function HomePage() {
                     </span>
                     <span className="issue-job">Job #{issue.jobId}</span>
                   </div>
-                  <h4 className="issue-title">{issue.title}</h4>
+                  <h3 className="issue-title">{issue.title}</h3>
                   <p className="issue-description">{issue.description}</p>
                   <div className="issue-meta">
                     <span className="issue-date">{issue.date}</span>

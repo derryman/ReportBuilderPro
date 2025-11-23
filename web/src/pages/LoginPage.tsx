@@ -1,10 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
-
-// Prototype login credentials
-const CORRECT_EMAIL = 'derrymahon@icloud.com';
-const CORRECT_PASSWORD = 'prototype';
+import { API_BASE_URL } from '../config';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -13,26 +10,31 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  // Handle login form submission
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
-    if (!email || !password) {
-      setError('Please enter both email and password.');
-      return;
-    }
-
     setIsLoading(true);
     setError('');
 
-    // Simple credential check
-    setTimeout(() => {
-      if (email === CORRECT_EMAIL && password === CORRECT_PASSWORD) {
-        setTimeout(() => navigate('/'), 1000);
+    try {
+      // Send credentials to backend API
+      const response = await fetch(`${API_BASE_URL}/api/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        navigate('/'); // Navigate to home on success
       } else {
-        setError('Invalid email or password. Try: derrymahon@icloud.com / prototype');
+        const data = await response.json();
+        setError(data.message || 'Invalid email or password');
         setIsLoading(false);
       }
-    }, 500);
+    } catch (error) {
+      setError('Unable to connect to server.');
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -67,12 +69,6 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <div className="checkbox clearfix">
-              <label>
-                <input type="checkbox" /> Remember me
-              </label>
-              <span className="pull-right text-muted">Single-account prototype</span>
-            </div>
             <button type="submit" className="btn btn-block btn-rbp" disabled={isLoading}>
               {isLoading ? 'Verifying…' : 'Sign in'}
             </button>
@@ -80,7 +76,6 @@ export default function LoginPage() {
           </form>
         </div>
       </div>
-      <p className="login-footer text-muted">Prototype build &mdash; functionality coming soon.</p>
     </div>
   );
 }

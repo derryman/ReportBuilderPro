@@ -1,6 +1,6 @@
 # Report Builder Pro (Prototype)
 
-A simplified static prototype for the Report Builder Pro experience. This prototype demonstrates the core UI layout for login, dashboard, and template creation with a client-side mock authentication system.
+A simplified prototype for the Report Builder Pro experience. This prototype demonstrates the core UI layout for login, dashboard, and template creation with MongoDB integration for authentication and template storage.
 
 ## Technologies
 - **Vite + React 19 + TypeScript** for fast component-driven UI development
@@ -43,47 +43,66 @@ web/
    npm run build
    ```
 
-## GitHub Pages Deployment
+## Deployment
 
-This project is configured to deploy automatically to GitHub Pages:
+### Frontend (GitHub Pages) ✅
+
+The frontend can still be hosted on GitHub Pages (static files only):
 
 1. **Enable GitHub Pages** in your repository settings:
    - Go to your repository → **Settings** → **Pages**
    - Under "Source", select **"GitHub Actions"** (NOT "Deploy from a branch")
    - Save the settings
 
-2. **Trigger the deployment**:
+2. **Set API URL for production**:
+   - In GitHub repository → **Settings** → **Secrets and variables** → **Actions**
+   - Add a new secret: `VITE_API_URL` = your backend URL (e.g., `https://your-backend.vercel.app`)
+   - This tells the frontend where to find your backend API
+
+3. **Trigger the deployment**:
    - Push any changes to the `main` branch, OR
    - Go to **Actions** tab → Select "Deploy to GitHub Pages" workflow → Click "Run workflow"
-
-3. **Wait for deployment**:
-   - Check the **Actions** tab to see the workflow running
-   - Wait for the green checkmark (deployment usually takes 1-2 minutes)
 
 4. **Access your site** at:
    ```
    https://[your-username].github.io/ReportBuilderPro/
    ```
 
-**Troubleshooting:**
-- If you see the README instead of the app, GitHub Pages is serving from the wrong source
-- Make sure "Source" is set to **"GitHub Actions"** (not "Deploy from a branch" or "/docs")
-- Check the Actions tab to ensure the workflow completed successfully
-- The site URL might take a few minutes to update after deployment
+### Backend (Separate Hosting Required)
 
-## Prototype Login
+GitHub Pages can't run Node.js servers. Deploy your backend separately:
 
-For testing purposes, use these credentials:
-- **Email:** `derrymahon@icloud.com`
-- **Password:** `prototype`
+**Option 1: Vercel (Recommended - Free & Easy)**
+1. Go to https://vercel.com
+2. Sign up with GitHub
+3. Import your repo
+4. Set root directory to `server`
+5. Add environment variables (MONGO_URI, MONGO_DB, PORT)
+6. Deploy - done!
 
-The login uses simple client-side validation (no backend required).
+**Option 2: Railway**
+- Similar to Vercel, also free tier available
+
+**Option 3: Other Options**
+- Netlify Functions, Render, Heroku, etc.
+
+Once your backend is deployed, update the `VITE_API_URL` secret in GitHub Actions (step 2 above).
+
+## Setup
+
+See `SETUP_INSTRUCTIONS.md` for detailed setup instructions.
+
+**Quick Start:**
+1. Set up MongoDB Atlas collections (Login and Templates)
+2. Configure `server/.env` with your MongoDB connection string
+3. Run backend: `cd server && npm start`
+4. Run frontend: `cd web && npm run dev`
 
 ## Features
 
 - ✅ Simplified codebase optimized for prototyping
+- ✅ MongoDB integration for login and templates
 - ✅ GitHub Pages compatible (HashRouter)
-- ✅ Client-side authentication (no backend needed)
 - ✅ Drag-and-drop template builder
 - ✅ Responsive design
 - ✅ Automated deployment via GitHub Actions

@@ -1,90 +1,141 @@
 import { useState, useRef, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
 
-// PDF templates available in the library
-const templates = [
-  { id: 1, title: 'Cover Page', description: 'Report cover page template', filename: 'report1.pdf' },
-  { id: 2, title: 'Meeting Minutes', description: 'Meeting minutes template', filename: 'report2.pdf' },
-  { id: 3, title: 'Progress', description: 'Progress report template', filename: 'report3.pdf' },
-];
+// Template structure from MongoDB
+type Template = {
+  id: string;
+  title: string;
+  description: string;
+};
 
 export default function TemplateLibraryPage() {
+  const [templates, setTemplates] = useState<Template[]>([]);
+  const [loading, setLoading] = useState(true);
   const [viewingPdf, setViewingPdf] = useState<string | null>(null);
+  const [pdfData, setPdfData] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Open PDF in fullscreen
-  const openPdf = (filename: string) => {
-    setViewingPdf(filename);
-    setTimeout(() => {
-      const container = containerRef.current;
-      if (container?.requestFullscreen) container.requestFullscreen();
-      else if ((container as any)?.webkitRequestFullscreen) (container as any).webkitRequestFullscreen();
-      else if ((container as any)?.msRequestFullscreen) (container as any).msRequestFullscreen();
-    }, 100);
+  // Fetch template list from MongoDB via backend API
+  useEffect(() => {
+    const fetchTemplates = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/templates`);
+        if (response.ok) {
+          const data = await response.json();
+          setTemplates(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch templates:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTemplates();
+  }, []);
+
+  // Open PDF in fullscreen - fetches PDF data from MongoDB
+  const openPdf = async (templateId: string) => {
+    try {
+      // Fetch PDF data (base64) from backend
+      const response = await fetch(`${API_BASE_URL}/api/templates/${templateId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setPdfData(data.pdfData); // Store base64 PDF data
+        setViewingPdf(templateId);
+        
+        // Open in fullscreen mode
+        setTimeout(() => {
+          const container = containerRef.current;
+          if (container?.requestFullscreen) container.requestFullscreen();
+        }, 100);
+      }
+    } catch (error) {
+      console.error('Failed to load PDF:', error);
+    }
   };
 
-  // Close PDF viewer
+  // Close PDF viewer and exit fullscreen
   const closePdf = () => {
     if (document.exitFullscreen) document.exitFullscreen();
-    else if ((document as any)?.webkitExitFullscreen) (document as any).webkitExitFullscreen();
-    else if ((document as any)?.msExitFullscreen) (document as any).msExitFullscreen();
     setViewingPdf(null);
+    setPdfData(null);
   };
 
-  // Auto-close when exiting fullscreen
+  // Auto-close PDF viewer when user exits fullscreen (e.g., presses ESC)
   useEffect(() => {
     const handleFullscreenChange = () => {
-      const isFullscreen = !!(document.fullscreenElement || (document as any)?.webkitFullscreenElement);
-      if (!isFullscreen && viewingPdf) setViewingPdf(null);
+      const isFullscreen = !!document.fullscreenElement;
+      if (!isFullscreen && viewingPdf) {
+        setViewingPdf(null);
+        setPdfData(null);
+      }
     };
     document.addEventListener('fullscreenchange', handleFullscreenChange);
-    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
     return () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
-      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
     };
   }, [viewingPdf]);
 
+  // Show loading state while fetching templates
+  if (loading) {
+    return (
+      <div className="template-library-page">
+        <header className="template-header">
+          <h1>Template Library</h1>
+          <p>Loading templates...</p>
+        </header>
+      </div>
+    );
+  }
+
   return (
     <div className="template-library-page">
+      {/* Page header */}
       <header className="template-header">
         <h1>Template Library</h1>
         <p>Browse and view your report templates.</p>
       </header>
 
-      <div className="row">
-        {templates.map((template) => (
-          <div key={template.id} className="col-sm-4">
-            <div className="panel panel-default">
-              <div className="panel-body">
-                <h3>{template.title}</h3>
-                <p className="text-muted">{template.description}</p>
-                <div className="pdf-preview-thumbnail">
-                  <iframe
-                    src={new URL(`reports/${template.filename}#page=1`, window.location.href).href}
-                    className="pdf-thumbnail-iframe"
-                    title={`${template.title} preview`}
-                  />
+      {/* Template cards - fetched from MongoDB */}
+      {templates.length === 0 ? (
+        <div className="panel panel-default">
+          <div className="panel-body">
+            <p className="text-muted">No templates found. Add templates to your database.</p>
+          </div>
+        </div>
+      ) : (
+        <div className="row">
+          {templates.map((template) => (
+            <div key={template.id} className="col-sm-4">
+              <div className="panel panel-default">
+                <div className="panel-body">
+                  <h2>{template.title}</h2>
+                  <p className="text-muted">{template.description}</p>
+                  <button className="btn btn-rbp btn-block" onClick={() => openPdf(template.id)}>
+                    View PDF
+                  </button>
                 </div>
-                <button className="btn btn-rbp btn-block" onClick={() => openPdf(template.filename)}>
-                  View PDF
-                </button>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
-      {viewingPdf && (
+      {/* Fullscreen PDF viewer - displays PDF from MongoDB base64 data */}
+      {viewingPdf && pdfData && (
         <div ref={containerRef} className="pdf-viewer-container pdf-viewer-fullscreen">
           <div className="pdf-viewer-header">
-            <h3>Viewing: {viewingPdf}</h3>
+            <h3>{templates.find((t) => t.id === viewingPdf)?.title}</h3>
             <button className="btn btn-default" onClick={closePdf}>Close</button>
           </div>
-          <iframe
-            src={new URL(`reports/${viewingPdf}`, window.location.href).href}
+          <object
+            data={`${pdfData}#toolbar=0`}
+            type="application/pdf"
             className="pdf-viewer-iframe"
-            title="PDF Viewer"
-          />
+            aria-label="PDF Viewer"
+          >
+            <p>Unable to display PDF. <a href={pdfData || ''} download>Download instead</a></p>
+          </object>
         </div>
       )}
     </div>

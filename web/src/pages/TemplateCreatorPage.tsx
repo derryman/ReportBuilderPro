@@ -14,7 +14,7 @@ type Component = {
   data: { image?: string; progress?: string; issues?: string; text?: string };
 };
 
-// Available components to add
+// Available components to add to templates
 const components = [
   { type: 'image' as ComponentType, label: 'Image', icon: '📷' },
   { type: 'progress' as ComponentType, label: 'Progress', icon: '📊' },
@@ -27,12 +27,17 @@ export default function TemplateCreatorPage() {
   const [templateComponents, setTemplateComponents] = useState<Component[]>([]);
   const sensors = useSensors(useSensor(PointerSensor));
 
-  // Add component to template
+  // Add a new component to the template
   const addComponent = (type: ComponentType) => {
-    setTemplateComponents([...templateComponents, { id: `comp-${Date.now()}`, type, data: {} }]);
+    const newComponent: Component = {
+      id: `comp-${Date.now()}`,
+      type,
+      data: {},
+    };
+    setTemplateComponents([...templateComponents, newComponent]);
   };
 
-  // Reorder components when dragged
+  // Handle drag-and-drop reordering of components
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
@@ -45,7 +50,7 @@ export default function TemplateCreatorPage() {
     setTemplateComponents(newComponents);
   };
 
-  // Update component data
+  // Update the data for a specific component
   const updateComponent = (id: string, field: string, value: string) => {
     setTemplateComponents(
       templateComponents.map((c) =>
@@ -54,32 +59,37 @@ export default function TemplateCreatorPage() {
     );
   };
 
-  // Remove component
+  // Remove a component from the template
   const removeComponent = (id: string) => {
     setTemplateComponents(templateComponents.filter((c) => c.id !== id));
   };
 
-  // Handle image upload
+  // Handle image file upload and convert to base64
   const uploadImage = (id: string, event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => updateComponent(id, 'image', e.target?.result as string);
+      reader.onload = (e) => {
+        const imageData = e.target?.result as string;
+        updateComponent(id, 'image', imageData);
+      };
       reader.readAsDataURL(file);
     }
   };
 
   return (
     <div className="template-page">
+      {/* Page header */}
       <header className="template-header">
         <h1>Template creator</h1>
         <p>Drag and drop components to build your template. Perfect for building site reports.</p>
       </header>
 
       <div className="template-builder-grid">
+        {/* Component library sidebar - click to add components */}
         <aside className="template-library-sidebar panel panel-default">
           <div className="panel-heading">
-            <h3 className="panel-title">Components</h3>
+            <h2 className="panel-title">Components</h2>
             <p className="text-muted small">Click to add to template</p>
           </div>
           <div className="panel-body">
@@ -97,7 +107,9 @@ export default function TemplateCreatorPage() {
           </div>
         </aside>
 
+        {/* Main template builder area */}
         <section className="template-canvas-area">
+          {/* Template name input */}
           <div className="panel panel-default">
             <div className="panel-body">
               <div className="form-group">
@@ -113,6 +125,7 @@ export default function TemplateCreatorPage() {
             </div>
           </div>
 
+          {/* Drag-and-drop canvas for template components */}
           <div className="template-canvas panel panel-default">
             <div className="panel-heading">
               <h3 className="panel-title">Template canvas</h3>
@@ -141,6 +154,7 @@ export default function TemplateCreatorPage() {
             </div>
           </div>
 
+          {/* Action buttons */}
           <div className="template-actions">
             <button className="btn btn-link">Save draft</button>
             <button className="btn btn-rbp">Preview template</button>
@@ -151,7 +165,7 @@ export default function TemplateCreatorPage() {
   );
 }
 
-// Component item that can be dragged and edited
+// Props for individual draggable component item
 type ComponentItemProps = {
   component: Component;
   onUpdate: (id: string, field: string, value: string) => void;
@@ -159,7 +173,9 @@ type ComponentItemProps = {
   onImageUpload: (id: string, event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
+// Individual draggable and editable component
 function ComponentItem({ component, onUpdate, onRemove, onImageUpload }: ComponentItemProps) {
+  // Drag-and-drop functionality from @dnd-kit
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: component.id,
   });
@@ -170,8 +186,9 @@ function ComponentItem({ component, onUpdate, onRemove, onImageUpload }: Compone
     opacity: isDragging ? 0.5 : 1,
   };
 
-  // Render the appropriate input based on component type
+  // Render input fields based on component type
   const renderInput = () => {
+    // Image component - file upload
     if (component.type === 'image') {
       return (
         <div className="component-image">
@@ -186,6 +203,7 @@ function ComponentItem({ component, onUpdate, onRemove, onImageUpload }: Compone
       );
     }
 
+    // Text-based components (progress, issues, text)
     const fields = {
       progress: { label: 'Progress', placeholder: 'Enter progress updates, milestones, or status information...' },
       issues: { label: 'Issues', placeholder: 'Enter any issues, concerns, or blockers...' },
