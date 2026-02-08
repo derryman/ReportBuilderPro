@@ -1,0 +1,53 @@
+[
+  {
+    "_collection": "NLPRules",
+    "_description": "Classification rules that define what keywords indicate an issue (like Scikit-learn training data)",
+    "documents": [
+      {
+        "id": 1,
+        "category": "schedule",
+        "categoryName": "Schedule",
+        "keywords": [
+          "delayed",
+          "rescheduled",
+          "postponed",
+          "behind schedule",
+          "overdue"
+        ],
+        "severity": "medium",
+        "description": "Issues related to project timelines and scheduling"
+      },
+      {
+        "id": 2,
+        "category": "compliance",
+        "categoryName": "Compliance",
+        "keywords": [
+          "pending",
+          "non-compliant",
+          "violation",
+          "missing",
+          "expired",
+          "incomplete"
+        ],
+        "severity": "high",
+        "description": "Issues related to safety, regulations, and compliance requirements"
+      },
+      {
+        "id": 3,
+        "category": "material",
+        "categoryName": "Material",
+        "keywords": [
+          "shortage",
+          "out of stock",
+          "unavailable",
+          "insufficient",
+          "low supply"
+        ],
+        "severity": "low",
+        "description": "Issues related to material and supply availability"
+      }
+    ]
+  }
+]
+
+

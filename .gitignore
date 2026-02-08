@@ -12,6 +12,11 @@ web/dist/
 web/.env
 server/.env
 
+# PM2 logs
+logs/
+*.log
+.pm2/
+
 # Misc
 .DS_Store
 Thumbs.db

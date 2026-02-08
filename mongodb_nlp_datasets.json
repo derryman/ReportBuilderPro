@@ -1,0 +1,83 @@
+[
+  {
+    "_collection": "ReportTexts",
+    "_description": "Sample construction report texts for NLP analysis",
+    "documents": [
+      {
+        "id": 1,
+        "reportText": "Delivery of steel delayed by two days.\nSafety inspection pending for next week.\nConcrete pour rescheduled due to weather.\nMaterial shortage reported for electrical supplies.\nNon-compliant scaffolding found on site.",
+        "source": "Site Report - Week 1",
+        "date": "2024-01-15"
+      },
+      {
+        "id": 2,
+        "reportText": "Equipment maintenance overdue by three weeks.\nPermit expiration date approaching.\nConcrete delivery behind schedule.\nSteel beams unavailable from supplier.\nMissing safety documentation for crane operation.",
+        "source": "Site Report - Week 2",
+        "date": "2024-01-22"
+      }
+    ]
+  },
+  {
+    "_collection": "NLPIssues",
+    "_description": "Issues detected by NLP analysis from report texts",
+    "documents": [
+      {
+        "id": 1,
+        "reportId": 1,
+        "jobId": "2024-001",
+        "title": "Delivery of steel delayed...",
+        "description": "Delivery of steel delayed by two days.",
+        "severity": "medium",
+        "category": "Schedule",
+        "detectedDate": "2024-01-15T10:30:00Z",
+        "keywords": ["delayed"]
+      },
+      {
+        "id": 2,
+        "reportId": 1,
+        "jobId": "2024-002",
+        "title": "Safety inspection pending...",
+        "description": "Safety inspection pending for next week.",
+        "severity": "high",
+        "category": "Compliance",
+        "detectedDate": "2024-01-15T10:30:00Z",
+        "keywords": ["pending"]
+      },
+      {
+        "id": 3,
+        "reportId": 1,
+        "jobId": "2024-003",
+        "title": "Concrete pour rescheduled...",
+        "description": "Concrete pour rescheduled due to weather.",
+        "severity": "medium",
+        "category": "Schedule",
+        "detectedDate": "2024-01-15T10:30:00Z",
+        "keywords": ["rescheduled"]
+      },
+      {
+        "id": 4,
+        "reportId": 1,
+        "jobId": "2024-004",
+        "title": "Material shortage reported...",
+        "description": "Material shortage reported for electrical supplies.",
+        "severity": "low",
+        "category": "Material",
+        "detectedDate": "2024-01-15T10:30:00Z",
+        "keywords": ["shortage"]
+      },
+      {
+        "id": 5,
+        "reportId": 1,
+        "jobId": "2024-005",
+        "title": "Non-compliant scaffolding found...",
+        "description": "Non-compliant scaffolding found on site.",
+        "severity": "high",
+        "category": "Compliance",
+        "detectedDate": "2024-01-15T10:30:00Z",
+        "keywords": ["non-compliant"]
+      }
+    ]
+  }
+]
+
+

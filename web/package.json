@@ -20,6 +20,9 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "bootstrap": "^3.4.1",
+    "exif-js": "^2.3.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^4.1.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.9.6"

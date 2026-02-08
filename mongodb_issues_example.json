@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "jobId": "2024-001",
+    "title": "Missing Safety Equipment",
+    "description": "Hard hat inspection tag expired on site entrance",
+    "severity": "high",
+    "category": "Safety",
+    "date": "2 hours ago"
+  },
+  {
+    "id": 2,
+    "jobId": "2024-045",
+    "title": "Documentation Incomplete",
+    "description": "Progress report missing required signatures",
+    "severity": "medium",
+    "category": "Compliance",
+    "date": "5 hours ago"
+  }
+]
+
+

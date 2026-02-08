@@ -4,20 +4,21 @@ import logo from '../assets/logo.png';
 import { API_BASE_URL } from '../config';
 
 export default function LoginPage() {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  // React hooks to manage component state
+  const navigate = useNavigate(); // Used to navigate to different pages
+  const [email, setEmail] = useState(''); // Stores the email input value
+  const [password, setPassword] = useState(''); // Stores the password input value
+  const [error, setError] = useState(''); // Stores any error message to display
+  const [isLoading, setIsLoading] = useState(false); // Tracks if login is in progress
 
-  // Handle login form submission
+  // This function runs when the user submits the login form
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsLoading(true);
-    setError('');
+    event.preventDefault(); // Prevent page from refreshing
+    setIsLoading(true); // Show loading state
+    setError(''); // Clear any previous errors
 
     try {
-      // Send credentials to backend API
+      // Send email and password to the backend API
       const response = await fetch(`${API_BASE_URL}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -25,13 +26,16 @@ export default function LoginPage() {
       });
 
       if (response.ok) {
-        navigate('/'); // Navigate to home on success
+        // Login successful - go to home page
+        navigate('/');
       } else {
+        // Login failed - show error message
         const data = await response.json();
         setError(data.message || 'Invalid email or password');
         setIsLoading(false);
       }
     } catch (error) {
+      // Network error - couldn't reach the server
       setError('Unable to connect to server.');
       setIsLoading(false);
     }

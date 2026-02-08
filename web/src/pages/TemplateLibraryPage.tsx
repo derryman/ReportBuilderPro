@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { API_BASE_URL } from '../config';
 
 // Template structure from MongoDB
@@ -9,41 +10,45 @@ type Template = {
 };
 
 export default function TemplateLibraryPage() {
-  const [templates, setTemplates] = useState<Template[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [viewingPdf, setViewingPdf] = useState<string | null>(null);
-  const [pdfData, setPdfData] = useState<string | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  // React hooks to manage component state
+  const [templates, setTemplates] = useState<Template[]>([]); // List of templates from MongoDB
+  const [loading, setLoading] = useState(true); // Whether we're still loading templates
+  const [viewingPdf, setViewingPdf] = useState<string | null>(null); // ID of PDF currently being viewed
+  const [pdfData, setPdfData] = useState<string | null>(null); // The actual PDF data (base64)
+  const containerRef = useRef<HTMLDivElement>(null); // Reference to the PDF viewer container
 
-  // Fetch template list from MongoDB via backend API
+  // This runs once when the page loads
+  // Fetches the list of templates from MongoDB via the backend API
   useEffect(() => {
     const fetchTemplates = async () => {
       try {
+        // Request template list from backend
         const response = await fetch(`${API_BASE_URL}/api/templates`);
         if (response.ok) {
           const data = await response.json();
-          setTemplates(data);
+          setTemplates(data); // Store the templates
         }
       } catch (error) {
         console.error('Failed to fetch templates:', error);
       } finally {
-        setLoading(false);
+        setLoading(false); // Stop showing loading state
       }
     };
     fetchTemplates();
   }, []);
 
-  // Open PDF in fullscreen - fetches PDF data from MongoDB
+  // This function opens a PDF in fullscreen mode
+  // It fetches the PDF data from MongoDB via the backend
   const openPdf = async (templateId: string) => {
     try {
-      // Fetch PDF data (base64) from backend
+      // Request the PDF data for this specific template
       const response = await fetch(`${API_BASE_URL}/api/templates/${templateId}`);
       if (response.ok) {
         const data = await response.json();
-        setPdfData(data.pdfData); // Store base64 PDF data
-        setViewingPdf(templateId);
+        setPdfData(data.pdfData); // Store the PDF data (it's stored as base64 in MongoDB)
+        setViewingPdf(templateId); // Remember which PDF we're viewing
         
-        // Open in fullscreen mode
+        // Open the PDF viewer in fullscreen mode
         setTimeout(() => {
           const container = containerRef.current;
           if (container?.requestFullscreen) container.requestFullscreen();
@@ -54,23 +59,27 @@ export default function TemplateLibraryPage() {
     }
   };
 
-  // Close PDF viewer and exit fullscreen
+  // This function closes the PDF viewer and exits fullscreen
   const closePdf = () => {
     if (document.exitFullscreen) document.exitFullscreen();
-    setViewingPdf(null);
-    setPdfData(null);
+    setViewingPdf(null); // Clear the viewing state
+    setPdfData(null); // Clear the PDF data
   };
 
-  // Auto-close PDF viewer when user exits fullscreen (e.g., presses ESC)
+  // This automatically closes the PDF viewer if the user exits fullscreen
+  // (for example, if they press the ESC key)
   useEffect(() => {
     const handleFullscreenChange = () => {
       const isFullscreen = !!document.fullscreenElement;
+      // If user exited fullscreen and we were viewing a PDF, close it
       if (!isFullscreen && viewingPdf) {
         setViewingPdf(null);
         setPdfData(null);
       }
     };
+    // Listen for fullscreen changes
     document.addEventListener('fullscreenchange', handleFullscreenChange);
+    // Clean up: remove the listener when component unmounts
     return () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
     };
@@ -111,9 +120,14 @@ export default function TemplateLibraryPage() {
                 <div className="panel-body">
                   <h2>{template.title}</h2>
                   <p className="text-muted">{template.description}</p>
-                  <button className="btn btn-rbp btn-block" onClick={() => openPdf(template.id)}>
-                    View PDF
-                  </button>
+                  <div style={{ display: 'flex', gap: '8px', marginTop: 12 }}>
+                    <Link to={`/template-creator/${template.id}`} className="btn btn-default" style={{ flex: 1 }}>
+                      Edit
+                    </Link>
+                    <button className="btn btn-rbp" style={{ flex: 1 }} onClick={() => openPdf(template.id)}>
+                      View PDF
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

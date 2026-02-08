@@ -8,6 +8,8 @@ export default defineConfig({
   base: './',
   server: {
     port: 5173,
+    host: '0.0.0.0', // Allow connections from local network
+    strictPort: false,
   },
   build: {
     outDir: 'dist',

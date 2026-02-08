@@ -1,0 +1,25 @@
+{
+  "name": "reportbuilderpro",
+  "version": "1.0.0",
+  "description": "Report Builder Pro - Full Stack Application",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:web\"",
+    "dev:server": "cd server && npm run dev",
+    "dev:web": "cd web && npm run dev",
+    "dev:mobile": "powershell -ExecutionPolicy Bypass -File ./start-dev-mobile.ps1",
+    "start": "concurrently \"npm run start:server\" \"npm run start:web\"",
+    "start:server": "cd server && npm start",
+    "start:web": "cd web && npm run dev",
+    "install:all": "npm install && cd server && npm install && cd ../web && npm install",
+    "get-ip": "powershell -ExecutionPolicy Bypass -File ./get-ip.ps1",
+    "pm2:start": "pm2 start ecosystem.config.js",
+    "pm2:stop": "pm2 stop ecosystem.config.js",
+    "pm2:restart": "pm2 restart ecosystem.config.js",
+    "pm2:delete": "pm2 delete ecosystem.config.js",
+    "pm2:logs": "pm2 logs"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "private": true
+}
