@@ -1,5 +1,6 @@
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './components/MainLayout';
+import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
 import TemplateCreatorPage from './pages/TemplateCreatorPage';
@@ -29,8 +30,15 @@ export default function App() {
         {/* Login page - no sidebar */}
         <Route path="/login" element={<LoginPage />} />
         
-        {/* All other pages use MainLayout (which includes the sidebar) */}
-        <Route path="/" element={<MainLayout />}>
+        {/* All other pages use MainLayout (which includes the sidebar) - protected routes */}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <MainLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<HomePage />} />
           <Route path="template-creator" element={<TemplateCreatorWrapper />} />
           <Route path="template-creator/:id" element={<TemplateCreatorWrapper />} />

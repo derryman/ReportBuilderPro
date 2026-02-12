@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
-import { API_BASE_URL } from '../config';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function LoginPage() {
   // React hooks to manage component state
   const navigate = useNavigate(); // Used to navigate to different pages
+  const { login } = useAuth(); // Get login function from auth context
   const [email, setEmail] = useState(''); // Stores the email input value
   const [password, setPassword] = useState(''); // Stores the password input value
   const [error, setError] = useState(''); // Stores any error message to display
@@ -18,20 +19,15 @@ export default function LoginPage() {
     setError(''); // Clear any previous errors
 
     try {
-      // Send email and password to the backend API
-      const response = await fetch(`${API_BASE_URL}/api/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (response.ok) {
+      // Use auth context login function
+      const success = await login(email, password);
+      
+      if (success) {
         // Login successful - go to home page
         navigate('/');
       } else {
         // Login failed - show error message
-        const data = await response.json();
-        setError(data.message || 'Invalid email or password');
+        setError('Invalid email or password');
         setIsLoading(false);
       }
     } catch (error) {

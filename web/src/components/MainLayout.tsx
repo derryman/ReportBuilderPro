@@ -1,6 +1,7 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import { useMobile } from '../utils/useMobile';
+import { useAuth } from '../contexts/AuthContext';
 
 // Navigation menu item type
 type MenuItem = {
@@ -20,7 +21,14 @@ const menuItems: MenuItem[] = [
 
 export default function MainLayout() {
   const isMobile = useMobile();
-  
+  const { logout, user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   return (
     <div className="rbp-shell">
       <aside className="rbp-sidebar">
@@ -48,9 +56,14 @@ export default function MainLayout() {
             ))}
         </ul>
         <div className="sidebar-footer">
-          <NavLink to="/login" className="btn btn-link btn-sm">
+          {user && (
+            <div className="text-muted small" style={{ padding: '10px', marginBottom: '5px' }}>
+              {user.email}
+            </div>
+          )}
+          <button onClick={handleLogout} className="btn btn-link btn-sm" style={{ width: '100%', textAlign: 'left' }}>
             Log out
-          </NavLink>
+          </button>
         </div>
       </aside>
       <div className="rbp-main">
