@@ -34,25 +34,37 @@ app.use(express.json({ limit: '50mb' }));
 let mongoClient;
 let db;
 
-// Function to connect to MongoDB
+// Function to connect to MongoDB (with retries for Cosmos DB)
 async function connectToMongo() {
-  try {
-    console.log('Attempting to connect to MongoDB...');
-    console.log('Connection string present:', !!MONGO_URI);
-    console.log('Database name:', DB_NAME);
-    
-    // Create a new MongoDB client with the connection string
-    mongoClient = new MongoClient(MONGO_URI);
-    // Connect to MongoDB
-    await mongoClient.connect();
-    // Select the database we want to use
-    db = mongoClient.db(DB_NAME);
-    console.log(`✅ Connected to MongoDB database "${DB_NAME}"`);
-  } catch (error) {
-    console.error('❌ Failed to connect to MongoDB:', error.message);
-    console.error('Error details:', error);
-    // Don't exit - let the server keep running so we can see the error
-    // The API will return 503 until connection succeeds
+  const maxRetries = 5;
+  const retryDelayMs = 5000;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`[${new Date().toISOString()}] MongoDB connection attempt ${attempt}/${maxRetries}...`);
+      console.log('Connection string present:', !!MONGO_URI);
+      console.log('Database name:', DB_NAME);
+
+      // Cosmos DB: add options if using mongodb+srv (longer timeout, retryWrites off for compatibility)
+      const uri = MONGO_URI.includes('?') ? `${MONGO_URI}&retryWrites=false` : `${MONGO_URI}?retryWrites=false`;
+      const client = new MongoClient(uri, {
+        serverSelectionTimeoutMS: 15000,
+      });
+
+      await client.connect();
+      mongoClient = client;
+      db = mongoClient.db(DB_NAME);
+      console.log(`✅ Connected to MongoDB database "${DB_NAME}"`);
+      return;
+    } catch (error) {
+      console.error(`❌ Attempt ${attempt}/${maxRetries} failed:`, error.message);
+      if (attempt < maxRetries) {
+        console.log(`Retrying in ${retryDelayMs / 1000}s...`);
+        await new Promise((r) => setTimeout(r, retryDelayMs));
+      } else {
+        console.error('All connection attempts failed. API will return 503 until connection succeeds.');
+      }
+    }
   }
 }
 
