@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { DndContext, closestCenter, useSensor, useSensors, PointerSensor } from '@dnd-kit/core';
-import type { DragEndEvent } from '@dnd-kit/core';
+import { DndContext, closestCenter, useSensor, useSensors, PointerSensor, DragOverlay } from '@dnd-kit/core';
+import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { analyzeReportText, type DetectedIssue } from '../nlpIssueDetection';
@@ -42,6 +42,9 @@ export default function TemplateCreatorPage() {
   const [nlpIssues, setNlpIssues] = useState<DetectedIssue[]>([]);
   const [saving, setSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [draggingFromSidebar, setDraggingFromSidebar] = useState<ComponentType | null>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
   const sensors = useSensors(useSensor(PointerSensor));
 
   // Load template when editing (templateId in URL)
@@ -66,15 +69,32 @@ export default function TemplateCreatorPage() {
   }, [templateId]);
 
   // This function adds a new component to the template when user clicks a component button
-  const addComponent = (type: ComponentType) => {
+  const addComponent = (type: ComponentType, insertIndex?: number) => {
     // Create a new component with a unique ID (using current timestamp)
     const newComponent: Component = {
       id: `comp-${Date.now()}`,
       type,
       data: {},
     };
-    // Add the new component to the list (using spread operator to keep existing components)
-    setTemplateComponents([...templateComponents, newComponent]);
+    // Add the new component to the list
+    if (insertIndex !== undefined) {
+      const newComponents = [...templateComponents];
+      newComponents.splice(insertIndex, 0, newComponent);
+      setTemplateComponents(newComponents);
+    } else {
+      setTemplateComponents([...templateComponents, newComponent]);
+    }
+  };
+
+  // Handle drag start from sidebar
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+    const componentType = active.data.current?.type as ComponentType | undefined;
+    if (componentType && components.some(c => c.type === componentType)) {
+      setDraggingFromSidebar(componentType);
+    } else {
+      setActiveId(active.id as string);
+    }
   };
 
   // For now, provide a single example page layout we can refine together.
@@ -121,12 +141,35 @@ export default function TemplateCreatorPage() {
   // This function handles when user finishes dragging a component to reorder it
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+    setActiveId(null);
+    setDraggingFromSidebar(null);
+
+    // If dragging from sidebar, add new component
+    if (draggingFromSidebar) {
+      if (over && over.id === 'canvas-drop-zone') {
+        // Add to end
+        addComponent(draggingFromSidebar);
+      } else if (over) {
+        // Insert before the component we dropped on
+        const insertIndex = templateComponents.findIndex((c) => c.id === over.id);
+        if (insertIndex !== -1) {
+          addComponent(draggingFromSidebar, insertIndex);
+        } else {
+          addComponent(draggingFromSidebar);
+        }
+      }
+      return;
+    }
+
     // If nothing was dropped on, or dropped on itself, do nothing
     if (!over || active.id === over.id) return;
 
     // Find the positions of the dragged component and where it was dropped
     const oldIndex = templateComponents.findIndex((c) => c.id === active.id);
     const newIndex = templateComponents.findIndex((c) => c.id === over.id);
+    
+    if (oldIndex === -1 || newIndex === -1) return;
+    
     // Create a copy of the components array
     const newComponents = [...templateComponents];
     // Remove the component from its old position
@@ -234,7 +277,7 @@ export default function TemplateCreatorPage() {
       {/* Page header */}
       <header className="template-header">
         <h1>Template creator</h1>
-        <p>Drag and drop components to build your template. Perfect for building site reports.</p>
+        <p>Drag components from the sidebar onto the canvas, or click to add. Arrange them like a Word document.</p>
         <button
           type="button"
           className="btn btn-default"
@@ -254,15 +297,28 @@ export default function TemplateCreatorPage() {
           </div>
           <div className="panel-body">
             {components.map((item) => (
-              <button
+              <div
                 key={item.type}
-                type="button"
-                className="btn btn-default btn-block component-library-item"
-                onClick={() => addComponent(item.type)}
+                className="component-library-item-draggable"
+                draggable
+                onDragStart={(e) => {
+                  e.dataTransfer.effectAllowed = 'copy';
+                  e.dataTransfer.setData('text/plain', item.type);
+                  setDraggingFromSidebar(item.type);
+                }}
+                onDragEnd={() => setDraggingFromSidebar(null)}
               >
-                <span className="component-icon">{item.icon}</span>
-                <span>{item.label}</span>
-              </button>
+                <button
+                  type="button"
+                  className="btn btn-default btn-block component-library-item"
+                  onClick={() => addComponent(item.type)}
+                  style={{ cursor: 'grab' }}
+                >
+                  <span className="component-icon">{item.icon}</span>
+                  <span>{item.label}</span>
+                  <span className="drag-hint">↔ Drag</span>
+                </button>
+              </div>
             ))}
           </div>
         </aside>
@@ -312,42 +368,72 @@ export default function TemplateCreatorPage() {
               </p>
             </div>
             <div className="panel-body">
-              {templateComponents.length === 0 ? (
-                <div className="canvas-empty">
-                  <p className="text-muted">Add components from the library to start building</p>
-                </div>
-              ) : (
-                <div className="report-preview">
-                  <div className="report-page">
-                    <div className="report-page-header">
-                      <h3 className="report-page-title">
-                        {templateName || 'Untitled report template'}
-                      </h3>
-                      <p className="text-muted small">This is a rough preview of the final report layout.</p>
-                    </div>
-                    <DndContext
+              <div className="report-preview">
+                <div className="report-page document-editor">
+                  <div className="report-page-header">
+                    <h3 className="report-page-title">
+                      {templateName || 'Untitled report template'}
+                    </h3>
+                    <p className="text-muted small">Drag components from the sidebar or click to add. Arrange them like a Word document.</p>
+                  </div>
+                  <DndContext
                       sensors={sensors}
                       collisionDetection={closestCenter}
+                      onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
                     >
-                      <SortableContext
-                        items={templateComponents.map((c) => c.id)}
-                        strategy={verticalListSortingStrategy}
+                      <div
+                        id="canvas-drop-zone"
+                        className="document-canvas"
+                        ref={canvasRef}
+                        onDragOver={(e) => {
+                          e.preventDefault();
+                          e.dataTransfer.dropEffect = 'copy';
+                        }}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          const componentType = e.dataTransfer.getData('text/plain') as ComponentType;
+                          if (componentType && components.some(c => c.type === componentType)) {
+                            addComponent(componentType);
+                          }
+                        }}
                       >
-                        {templateComponents.map((component) => (
-                          <ComponentItem
-                            key={component.id}
-                            component={component}
-                            onUpdate={updateComponent}
-                            onRemove={removeComponent}
-                            onImageUpload={uploadImage}
-                          />
-                        ))}
-                      </SortableContext>
+                        <SortableContext
+                          items={templateComponents.map((c) => c.id)}
+                          strategy={verticalListSortingStrategy}
+                        >
+                          {templateComponents.length === 0 ? (
+                            <div className="canvas-empty-document">
+                              <p className="text-muted">Drag components here or click to add</p>
+                              <p className="text-muted small">Start building your document template</p>
+                            </div>
+                          ) : (
+                            templateComponents.map((component) => (
+                              <ComponentItem
+                                key={component.id}
+                                component={component}
+                                onUpdate={updateComponent}
+                                onRemove={removeComponent}
+                                onImageUpload={uploadImage}
+                              />
+                            ))
+                          )}
+                        </SortableContext>
+                      </div>
+                      <DragOverlay>
+                        {activeId ? (
+                          <div className="template-component-item dragging">
+                            {templateComponents.find(c => c.id === activeId)?.type || 'Component'}
+                          </div>
+                        ) : draggingFromSidebar ? (
+                          <div className="template-component-item dragging">
+                            {components.find(c => c.type === draggingFromSidebar)?.label || 'Component'}
+                          </div>
+                        ) : null}
+                      </DragOverlay>
                     </DndContext>
-                  </div>
                 </div>
-              )}
+              </div>
             </div>
           </div>
 

@@ -424,11 +424,29 @@ small.text-muted {
   padding: 16px;
   margin-bottom: 16px;
   transition: all 0.2s;
+  position: relative;
 }
 
 .template-component-item:hover {
   border-color: var(--rbp-teal);
   box-shadow: 0 4px 12px rgba(26, 163, 163, 0.1);
+}
+
+.template-component-item::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 0;
+  background: var(--rbp-teal);
+  transition: height 0.2s;
+  border-radius: 2px 0 0 2px;
+}
+
+.template-component-item:hover::before {
+  height: 60%;
 }
 
 .component-header {
@@ -491,6 +509,77 @@ small.text-muted {
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
   padding: 24px 24px 32px;
   min-height: 640px;
+}
+
+.document-editor {
+  position: relative;
+  min-height: 800px;
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.document-canvas {
+  min-height: 600px;
+  padding: 40px 60px;
+  position: relative;
+  background: #ffffff;
+}
+
+.document-canvas.drag-over,
+#canvas-drop-zone.drag-over {
+  background: rgba(26, 163, 163, 0.05) !important;
+  border: 2px dashed var(--rbp-teal) !important;
+  border-radius: 8px;
+}
+
+#canvas-drop-zone {
+  min-height: 600px;
+  transition: all 0.2s;
+}
+
+.canvas-empty-document {
+  padding: 100px 20px;
+  text-align: center;
+  color: var(--rbp-gray-500);
+  border: 2px dashed var(--rbp-gray-100);
+  border-radius: 8px;
+  background: var(--rbp-gray-50);
+}
+
+.canvas-empty-document p {
+  margin: 8px 0;
+}
+
+.component-library-item-draggable {
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.component-library-item-draggable:hover .drag-hint {
+  opacity: 1;
+}
+
+.component-library-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-start;
+}
+
+.drag-hint {
+  margin-left: auto;
+  font-size: 11px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  color: var(--rbp-gray-500);
+  font-style: italic;
+}
+
+.template-component-item.dragging {
+  opacity: 0.5;
+  transform: rotate(2deg);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .report-page-header {
