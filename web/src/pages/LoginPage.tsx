@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import { useAuth } from '../contexts/AuthContext';
@@ -6,7 +6,14 @@ import { useAuth } from '../contexts/AuthContext';
 export default function LoginPage() {
   // React hooks to manage component state
   const navigate = useNavigate(); // Used to navigate to different pages
-  const { login } = useAuth(); // Get login function from auth context
+  const { login, isAuthenticated } = useAuth(); // Get login function and auth state from auth context
+  
+  // Redirect to home if already logged in
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
   const [email, setEmail] = useState(''); // Stores the email input value
   const [password, setPassword] = useState(''); // Stores the password input value
   const [error, setError] = useState(''); // Stores any error message to display

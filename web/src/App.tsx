@@ -48,8 +48,8 @@ export default function App() {
           <Route path="reports/:id/edit" element={<EditReportPage />} />
         </Route>
         
-        {/* If user goes to a page that doesn't exist, redirect to home */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* If user goes to a page that doesn't exist, redirect to login (will redirect to home if authenticated) */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </HashRouter>
   );
