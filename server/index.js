@@ -28,20 +28,29 @@ let db;
 // Function to connect to MongoDB
 async function connectToMongo() {
   try {
+    console.log('Attempting to connect to MongoDB...');
+    console.log('Connection string present:', !!MONGO_URI);
+    console.log('Database name:', DB_NAME);
+    
     // Create a new MongoDB client with the connection string
     mongoClient = new MongoClient(MONGO_URI);
     // Connect to MongoDB
     await mongoClient.connect();
     // Select the database we want to use
     db = mongoClient.db(DB_NAME);
-    console.log(`Connected to MongoDB database "${DB_NAME}"`);
+    console.log(`✅ Connected to MongoDB database "${DB_NAME}"`);
   } catch (error) {
-    console.error('Failed to connect to MongoDB:', error);
-    process.exit(1);
+    console.error('❌ Failed to connect to MongoDB:', error.message);
+    console.error('Error details:', error);
+    // Don't exit - let the server keep running so we can see the error
+    // The API will return 503 until connection succeeds
   }
 }
 
 // Start the connection when server starts
+console.log('Starting MongoDB connection...');
+console.log('MONGO_URI:', MONGO_URI ? 'Set' : 'NOT SET');
+console.log('MONGO_DB:', DB_NAME);
 connectToMongo();
 
 // Health check
@@ -423,8 +432,12 @@ process.on('SIGINT', async () => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Auth API listening on http://localhost:${PORT}`);
-  console.log(`Auth API accessible on your network at http://[YOUR_IP]:${PORT}`);
-  console.log(`To find your IP: Run 'ipconfig' (Windows) or 'ifconfig' (Mac/Linux)`);
+  console.log(`========================================`);
+  console.log(`🚀 Server started successfully!`);
+  console.log(`📡 Listening on port ${PORT}`);
+  console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`💾 Database: ${DB_NAME}`);
+  console.log(`🔌 Database connected: ${db ? 'Yes' : 'No (connecting...)'}`);
+  console.log(`========================================`);
 });
 
