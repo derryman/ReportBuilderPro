@@ -13,8 +13,17 @@ const PORT = process.env.PORT || 4000;
 
 // Get MongoDB connection details from environment variables
 // These come from the .env file you create
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/';
-const DB_NAME = process.env.MONGO_DB || 'ReportBuilderPro';
+const MONGO_URI = process.env.MONGO_URI || process.env.Mongo_URL || 'mongodb://localhost:27017/';
+const DB_NAME = process.env.MONGO_DB || process.env.Mongo_DB || 'ReportBuilderPro';
+
+// Debug: Log what we're getting (without exposing password)
+console.log('Environment check:');
+console.log('MONGO_URI exists:', !!process.env.MONGO_URI);
+console.log('Mongo_URL exists:', !!process.env.Mongo_URL);
+console.log('MONGO_DB exists:', !!process.env.MONGO_DB);
+console.log('Mongo_DB exists:', !!process.env.Mongo_DB);
+console.log('Using MONGO_URI:', MONGO_URI ? MONGO_URI.substring(0, 20) + '...' : 'NOT SET');
+console.log('Using DB_NAME:', DB_NAME);
 
 // Enable CORS (allows frontend to talk to backend)
 app.use(cors());
