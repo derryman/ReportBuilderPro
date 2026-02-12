@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 
 interface User {
   email: string;
@@ -14,20 +14,22 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-
-  // Load user from localStorage on mount
-  useEffect(() => {
+// Helper to load user from localStorage synchronously
+function loadUserFromStorage(): User | null {
+  try {
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch (e) {
-        localStorage.removeItem('user');
-      }
+      return JSON.parse(savedUser);
     }
-  }, []);
+  } catch (e) {
+    localStorage.removeItem('user');
+  }
+  return null;
+}
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  // Initialize user from localStorage immediately (synchronous)
+  const [user, setUser] = useState<User | null>(loadUserFromStorage);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
