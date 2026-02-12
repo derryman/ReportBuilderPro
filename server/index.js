@@ -218,6 +218,30 @@ app.put('/api/templates/:id', async (req, res) => {
   }
 });
 
+// Delete a template
+app.delete('/api/templates/:id', async (req, res) => {
+  if (!db) {
+    return res.status(503).json({ message: 'Database not ready yet' });
+  }
+
+  try {
+    const id = req.params.id;
+    const result = await db.collection('Templates').deleteOne({ _id: new ObjectId(id) });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: 'Template not found' });
+    }
+
+    return res.json({
+      id,
+      message: 'Template deleted successfully',
+    });
+  } catch (error) {
+    console.error('Delete template error:', error);
+    return res.status(500).json({ message: 'Unexpected server error' });
+  }
+});
+
 // Save a captured report from mobile
 app.post('/api/reports', async (req, res) => {
   if (!db) {

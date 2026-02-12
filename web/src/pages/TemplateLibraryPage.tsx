@@ -15,6 +15,7 @@ export default function TemplateLibraryPage() {
   const [loading, setLoading] = useState(true); // Whether we're still loading templates
   const [viewingPdf, setViewingPdf] = useState<string | null>(null); // ID of PDF currently being viewed
   const [pdfData, setPdfData] = useState<string | null>(null); // The actual PDF data (base64)
+  const [deletingId, setDeletingId] = useState<string | null>(null); // ID of template being deleted
   const containerRef = useRef<HTMLDivElement>(null); // Reference to the PDF viewer container
 
   // This runs once when the page loads
@@ -85,6 +86,34 @@ export default function TemplateLibraryPage() {
     };
   }, [viewingPdf]);
 
+  // Delete a template
+  const deleteTemplate = async (templateId: string, templateTitle: string) => {
+    // Confirm deletion
+    if (!window.confirm(`Are you sure you want to delete "${templateTitle}"? This action cannot be undone.`)) {
+      return;
+    }
+
+    setDeletingId(templateId);
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/templates/${templateId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        // Remove the template from the list
+        setTemplates(templates.filter((t) => t.id !== templateId));
+      } else {
+        const data = await response.json().catch(() => ({}));
+        alert(data.message || 'Failed to delete template');
+      }
+    } catch (error) {
+      console.error('Failed to delete template:', error);
+      alert('Failed to delete template. Please try again.');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   // Show loading state while fetching templates
   if (loading) {
     return (
@@ -120,12 +149,20 @@ export default function TemplateLibraryPage() {
                 <div className="panel-body">
                   <h2>{template.title}</h2>
                   <p className="text-muted">{template.description}</p>
-                  <div style={{ display: 'flex', gap: '8px', marginTop: 12 }}>
-                    <Link to={`/template-creator/${template.id}`} className="btn btn-default" style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', gap: '8px', marginTop: 12, flexWrap: 'wrap' }}>
+                    <Link to={`/template-creator/${template.id}`} className="btn btn-default" style={{ flex: 1, minWidth: '80px' }}>
                       Edit
                     </Link>
-                    <button className="btn btn-rbp" style={{ flex: 1 }} onClick={() => openPdf(template.id)}>
+                    <button className="btn btn-rbp" style={{ flex: 1, minWidth: '80px' }} onClick={() => openPdf(template.id)}>
                       View PDF
+                    </button>
+                    <button
+                      className="btn btn-danger"
+                      style={{ flex: 1, minWidth: '80px' }}
+                      onClick={() => deleteTemplate(template.id, template.title)}
+                      disabled={deletingId === template.id}
+                    >
+                      {deletingId === template.id ? 'Deleting...' : 'Delete'}
                     </button>
                   </div>
                 </div>
