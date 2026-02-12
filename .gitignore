@@ -12,10 +12,9 @@ web/dist/
 web/.env
 server/.env
 
-# PM2 logs
-logs/
+# Logs
 *.log
-.pm2/
+logs/
 
 # Misc
 .DS_Store
