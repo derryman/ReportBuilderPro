@@ -32,13 +32,6 @@ function openDB(): Promise<IDBDatabase> {
   });
 }
 
-function getStore(mode: IDBTransactionMode = 'readwrite'): Promise<IDBObjectStore> {
-  return openDB().then((db) => {
-    const tx = db.transaction(STORE_REPORTS, mode);
-    return Promise.resolve(tx.objectStore(STORE_REPORTS));
-  });
-}
-
 /** Generate a local-only ID for reports saved offline */
 export function generateLocalId(): string {
   return `local-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
