@@ -14,6 +14,8 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: false,
+    copyPublicDir: true,
   },
+  publicDir: 'public',
 });
 
