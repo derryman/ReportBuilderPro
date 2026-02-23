@@ -4,8 +4,8 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const { MongoClient, ObjectId } = require('mongodb');
 
-// Load environment variables from .env file
-dotenv.config();
+// Load environment variables from .env file (override so local .env wins over system env)
+dotenv.config({ override: true });
 
 // Create Express app and set port
 const app = express();
@@ -15,6 +15,7 @@ const PORT = process.env.PORT || 4000;
 // These come from the .env file you create
 const MONGO_URI = process.env.MONGO_URI || process.env.Mongo_URL || 'mongodb://localhost:27017/';
 const DB_NAME = process.env.MONGO_DB || process.env.Mongo_DB || 'ReportBuilderPro';
+const NLP_SERVICE_URL = process.env.NLP_SERVICE_URL || ''; // e.g. http://localhost:8000
 
 // Debug: Log what we're getting (without exposing password)
 console.log('Environment check:');
@@ -96,15 +97,20 @@ app.get('/api/test', (_req, res) => {
 
 // Login endpoint - checks credentials against MongoDB "Login" collection
 app.post('/api/login', async (req, res) => {
-  // Make sure database is connected
-  if (!db) {
-    return res.status(503).json({ message: 'Database not ready yet' });
-  }
-
   // Get email and password from request
   const { email, password } = req.body;
   if (!email || !password) {
     return res.status(400).json({ message: 'Email and password are required' });
+  }
+
+  // Hardcoded test login (admin / admin) - works even when DB is not connected
+  if (email === 'admin' && password === 'admin') {
+    return res.json({ email: 'admin', name: 'Admin' });
+  }
+
+  // For other users, database must be connected
+  if (!db) {
+    return res.status(503).json({ message: 'Database not ready yet' });
   }
 
   try {
@@ -440,6 +446,127 @@ app.delete('/api/reports/:id', async (req, res) => {
     });
   } catch (error) {
     console.error('Delete report error:', error);
+    return res.status(500).json({ message: 'Unexpected server error' });
+  }
+});
+
+// --- NLP / Risk detection ---
+
+/** Build one text string from a report's capturedData (all title + text fields). */
+function getTextFromReport(report) {
+  const capturedData = report && report.capturedData;
+  if (!capturedData || typeof capturedData !== 'object') return '';
+  const parts = [];
+  for (const v of Object.values(capturedData)) {
+    if (v && typeof v === 'object') {
+      if (typeof v.title === 'string' && v.title.trim()) parts.push(v.title.trim());
+      if (typeof v.text === 'string' && v.text.trim()) parts.push(v.text.trim());
+    }
+  }
+  return parts.join('\n');
+}
+
+/** Call Python NLP service; returns { flags, metadata } or throws. */
+async function callNlpService(text) {
+  const base = NLP_SERVICE_URL.replace(/\/$/, '');
+  if (!base) {
+    throw new Error('NLP_SERVICE_URL is not set');
+  }
+  const res = await fetch(`${base}/nlp/analyze`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: text || '' }),
+  });
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(errText || `NLP service returned ${res.status}`);
+  }
+  return res.json();
+}
+
+// Analyze one report by id: extract text, call NLP, store in ai_analysis
+app.post('/api/reports/:id/analyze', async (req, res) => {
+  if (!db) {
+    return res.status(503).json({ message: 'Database not ready yet' });
+  }
+
+  try {
+    const id = req.params.id;
+    const report = await db.collection('Reports').findOne({ _id: new ObjectId(id) });
+    if (!report) {
+      return res.status(404).json({ message: 'Report not found' });
+    }
+
+    const text = getTextFromReport(report);
+    let flags = [];
+    let metadata = { model_version: 'none' };
+
+    if (NLP_SERVICE_URL) {
+      try {
+        const nlpResult = await callNlpService(text);
+        flags = nlpResult.flags || [];
+        metadata = nlpResult.metadata || metadata;
+      } catch (err) {
+        console.error('NLP service error:', err);
+        return res.status(502).json({
+          message: 'NLP service unavailable or error',
+          error: err instanceof Error ? err.message : String(err),
+        });
+      }
+    }
+
+    const reportTitle =
+      (report.capturedData && typeof report.capturedData === 'object' && Object.values(report.capturedData).find((v) => v && v.title))
+        ? Object.values(report.capturedData).find((v) => v && v.title).title
+        : `Report ${id}`;
+
+    const analysisDoc = {
+      reportId: id,
+      reportTitle: reportTitle.substring(0, 200),
+      flags,
+      processed_at: new Date(),
+      model_version: metadata.model_version || 'python-ml-v1.0',
+    };
+
+    await db.collection('ai_analysis').insertOne(analysisDoc);
+
+    return res.json({
+      reportId: id,
+      reportTitle: analysisDoc.reportTitle,
+      flags,
+      processed_at: analysisDoc.processed_at,
+    });
+  } catch (error) {
+    console.error('Analyze report error:', error);
+    return res.status(500).json({ message: 'Unexpected server error' });
+  }
+});
+
+// Get the most recent analysis (for Home "latest scan" dashboard)
+app.get('/api/nlp/latest', async (_req, res) => {
+  if (!db) {
+    return res.status(503).json({ message: 'Database not ready yet' });
+  }
+
+  try {
+    const latest = await db.collection('ai_analysis').findOne(
+      {},
+      { sort: { processed_at: -1 } }
+    );
+    if (!latest) {
+      return res.json({ latest: null });
+    }
+    return res.json({
+      latest: {
+        reportId: latest.reportId,
+        reportTitle: latest.reportTitle,
+        flags: latest.flags || [],
+        processed_at: latest.processed_at,
+        model_version: latest.model_version,
+      },
+    });
+  } catch (error) {
+    console.error('Get latest analysis error:', error);
     return res.status(500).json({ message: 'Unexpected server error' });
   }
 });

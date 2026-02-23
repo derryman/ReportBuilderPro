@@ -12,6 +12,18 @@ web/dist/
 web/.env
 server/.env
 
+# Python (nlp-service)
+nlp-service/venv/
+nlp-service/.venv/
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+.eggs/
+
 # Logs
 *.log
 logs/

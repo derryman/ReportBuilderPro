@@ -7,6 +7,7 @@ import TemplateCreatorPage from './pages/TemplateCreatorPage';
 import TemplateLibraryPage from './pages/TemplateLibraryPage';
 import MobileCapturePage from './pages/MobileCapturePage';
 import ReportsPage from './pages/ReportsPage';
+import RiskDetectionPage from './pages/RiskDetectionPage';
 import EditReportPage from './pages/EditReportPage';
 import { useMobile } from './utils/useMobile';
 
@@ -44,6 +45,7 @@ export default function App() {
           <Route path="template-creator/:id" element={<TemplateCreatorWrapper />} />
           <Route path="template-library" element={<TemplateLibraryPage />} />
           <Route path="mobile-capture" element={<MobileCapturePage />} />
+          <Route path="risk-detection" element={<RiskDetectionPage />} />
           <Route path="reports" element={<ReportsPage />} />
           <Route path="reports/:id/edit" element={<EditReportPage />} />
         </Route>

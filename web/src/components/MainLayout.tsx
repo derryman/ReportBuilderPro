@@ -16,6 +16,7 @@ const menuItems: MenuItem[] = [
   { path: '/template-creator', label: 'Template Creator', hideOnMobile: true },
   { path: '/template-library', label: 'Template Library' },
   { path: '/mobile-capture', label: 'Mobile Capture' },
+  { path: '/risk-detection', label: 'Risk Detection' },
   { path: '/reports', label: 'Reports' },
 ];
 
