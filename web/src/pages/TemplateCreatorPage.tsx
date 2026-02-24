@@ -434,7 +434,6 @@ export default function TemplateCreatorPage() {
                         ) : null}
                       </DragOverlay>
                     </DndContext>
-                </div>
               </div>
             </div>
           </div>
