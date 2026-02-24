@@ -19,21 +19,32 @@ jobs:
         with:
           submodules: true
           lfs: false
-      - name: Build And Deploy
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: web/package-lock.json
+
+      - name: Build web app (Vite)
+        working-directory: ./web
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+        run: |
+          npm ci
+          npm run build
+
+      - name: Deploy to Azure Static Web Apps
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
-        env:
-          VITE_API_URL: ${{ secrets.VITE_API_URL }} # Backend API URL for Vite build
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_PURPLE_GRASS_0F87C911E }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "./web"
+          app_location: "./web/dist"
+          skip_app_build: true
           api_location: ""
-          output_location: "dist"
-          # Ensure Vite runs so the deployed app serves compiled JS, not raw index.html/TSX
-          app_build_command: "npm ci && npm run build"
-          ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
