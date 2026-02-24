@@ -273,27 +273,72 @@ export default function TemplateCreatorPage() {
   };
 
   return (
-    <div className="template-page">
-      {/* Page header */}
-      <header className="template-header">
-        <h1>Template creator</h1>
-        <p>Drag components from the sidebar onto the canvas, or click to add. Arrange them like a Word document.</p>
-        <button
-          type="button"
-          className="btn btn-default"
-          onClick={loadSampleDailyReport}
-          style={{ marginTop: 8 }}
-        >
-          Load sample daily site report
-        </button>
+    <div className="template-page template-page-word">
+      {/* Word-style ribbon toolbar */}
+      <header className="word-toolbar">
+        <div className="word-toolbar-row word-toolbar-main">
+          <div className="word-toolbar-doc-title">
+            <input
+              type="text"
+              className="word-doc-title-input"
+              placeholder="Document title"
+              value={templateName}
+              onChange={(e) => setTemplateName(e.target.value)}
+            />
+            <input
+              type="text"
+              className="word-doc-desc-input"
+              placeholder="Description (optional)"
+              value={templateDescription}
+              onChange={(e) => setTemplateDescription(e.target.value)}
+            />
+          </div>
+          <div className="word-toolbar-actions">
+            <button type="button" className="btn btn-default word-toolbar-btn" onClick={loadSampleDailyReport}>
+              Load sample
+            </button>
+            <button
+              type="button"
+              className="btn btn-rbp word-toolbar-btn"
+              onClick={handleSaveTemplate}
+              disabled={saving}
+            >
+              {saving ? 'Saving…' : templateId ? 'Update' : 'Save'}
+            </button>
+          </div>
+        </div>
+        <div className="word-toolbar-row word-toolbar-insert">
+          <span className="word-toolbar-tab-label">Insert</span>
+          <div className="word-toolbar-buttons">
+            {components.map((item) => (
+              <div key={item.type} className="word-insert-item-wrapper">
+                <button
+                  type="button"
+                  className="btn btn-default word-insert-btn"
+                  onClick={() => addComponent(item.type)}
+                  title={`Add ${item.label}`}
+                >
+                  <span className="word-insert-icon">{item.icon}</span>
+                  <span className="word-insert-label">{item.label}</span>
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
       </header>
 
+      {saveMessage && (
+        <div className={`word-save-message ${saveMessage.type === 'success' ? 'text-success' : 'text-danger'}`}>
+          {saveMessage.text}
+        </div>
+      )}
+
       <div className="template-builder-grid">
-        {/* Component library sidebar - click to add components */}
-        <aside className="template-library-sidebar panel panel-default">
+        {/* Sidebar: drag to canvas */}
+        <aside className="template-library-sidebar panel panel-default word-sidebar">
           <div className="panel-heading">
             <h2 className="panel-title">Components</h2>
-            <p className="text-muted small">Click to add to template</p>
+            <p className="text-muted small">Drag onto document</p>
           </div>
           <div className="panel-body">
             {components.map((item) => (
@@ -323,60 +368,17 @@ export default function TemplateCreatorPage() {
           </div>
         </aside>
 
-        {/* Main template builder area */}
+        {/* Document area - Word-style page */}
         <section className="template-canvas-area">
-          {/* Template name input */}
-          <div className="panel panel-default">
-            <div className="panel-body">
-              {saveMessage && (
-                <div
-                  className={saveMessage.type === 'success' ? 'text-success' : 'text-danger'}
-                  style={{ marginBottom: 12 }}
-                >
-                  {saveMessage.text}
+          <div className="template-canvas word-document-wrapper">
+            <div className="report-preview word-document-preview">
+              <div className="report-page document-editor word-document-page">
+                <div className="report-page-header word-doc-header">
+                  <h3 className="report-page-title word-doc-title">
+                    {templateName || 'Untitled document'}
+                  </h3>
                 </div>
-              )}
-              <div className="form-group">
-                <label>Template name</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="e.g., Progress Report Template"
-                  value={templateName}
-                  onChange={(e) => setTemplateName(e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label>Description (optional)</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Short description of this template"
-                  value={templateDescription}
-                  onChange={(e) => setTemplateDescription(e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Drag-and-drop canvas for template components */}
-          <div className="template-canvas panel panel-default">
-            <div className="panel-heading">
-              <h3 className="panel-title">Template canvas</h3>
-              <p className="text-muted small">
-                Drag components to reorder. This preview roughly matches how the final PDF report will be structured.
-              </p>
-            </div>
-            <div className="panel-body">
-              <div className="report-preview">
-                <div className="report-page document-editor">
-                  <div className="report-page-header">
-                    <h3 className="report-page-title">
-                      {templateName || 'Untitled report template'}
-                    </h3>
-                    <p className="text-muted small">Drag components from the sidebar or click to add. Arrange them like a Word document.</p>
-                  </div>
-                  <DndContext
+                <DndContext
                       sensors={sensors}
                       collisionDetection={closestCenter}
                       onDragStart={handleDragStart}
@@ -437,17 +439,8 @@ export default function TemplateCreatorPage() {
             </div>
           </div>
 
-          {/* Action buttons */}
-          <div className="template-actions">
-            <button
-              type="button"
-              className="btn btn-rbp"
-              onClick={handleSaveTemplate}
-              disabled={saving}
-            >
-              {saving ? 'Saving...' : templateId ? 'Update template' : 'Save template'}
-            </button>
-            <button type="button" className="btn btn-default" onClick={analyzeTemplateText}>
+          <div className="word-doc-actions" style={{ marginTop: 12 }}>
+            <button type="button" className="btn btn-default btn-sm" onClick={analyzeTemplateText}>
               Analyze template text (demo)
             </button>
           </div>

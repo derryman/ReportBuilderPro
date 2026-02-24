@@ -378,6 +378,157 @@ small.text-muted {
   margin-bottom: 16px;
 }
 
+/* Word-style template builder */
+.template-page-word {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.word-toolbar {
+  background: #f3f4f6;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0;
+  margin: -24px -24px 0 -24px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.word-toolbar-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px 24px;
+}
+
+.word-toolbar-main {
+  justify-content: space-between;
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+.word-toolbar-doc-title {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 200px;
+  flex: 1;
+  max-width: 400px;
+}
+
+.word-doc-title-input {
+  font-size: 16px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.word-doc-title-input:focus {
+  outline: none;
+  border-color: var(--rbp-teal);
+  box-shadow: 0 0 0 2px rgba(26, 163, 163, 0.2);
+}
+
+.word-doc-desc-input {
+  font-size: 13px;
+  padding: 5px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  background: #fff;
+  color: var(--rbp-gray-500);
+}
+
+.word-doc-desc-input:focus {
+  outline: none;
+  border-color: #d1d5db;
+}
+
+.word-toolbar-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.word-toolbar-btn {
+  white-space: nowrap;
+}
+
+.word-toolbar-insert {
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+  padding: 8px 24px;
+}
+
+.word-toolbar-tab-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--rbp-gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin-right: 8px;
+}
+
+.word-toolbar-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.word-insert-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 4px;
+}
+
+.word-insert-icon {
+  font-size: 16px;
+}
+
+.word-insert-label {
+  white-space: nowrap;
+}
+
+.word-save-message {
+  padding: 8px 24px;
+  font-size: 14px;
+}
+
+.word-document-wrapper {
+  margin-top: 16px;
+}
+
+.word-document-preview {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+  background: #e8e8e8;
+  border-radius: 4px;
+}
+
+.word-document-page {
+  min-height: 720px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 48px 72px 64px;
+}
+
+.word-doc-header {
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.word-doc-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #111;
+  margin: 0;
+}
 
 .template-builder-grid {
   display: flex;

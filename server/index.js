@@ -461,6 +461,8 @@ function getTextFromReport(report) {
     if (v && typeof v === 'object') {
       if (typeof v.title === 'string' && v.title.trim()) parts.push(v.title.trim());
       if (typeof v.text === 'string' && v.text.trim()) parts.push(v.text.trim());
+      if (typeof v.progress === 'string' && v.progress.trim()) parts.push(v.progress.trim());
+      if (typeof v.issues === 'string' && v.issues.trim()) parts.push(v.issues.trim());
     }
   }
   return parts.join('\n');

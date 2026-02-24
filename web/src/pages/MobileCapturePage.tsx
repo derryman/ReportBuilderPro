@@ -27,10 +27,17 @@ type Template = {
   components?: Component[];
 };
 
-type CaptureForm = {
-  jobId: string;
-  [key: string]: string; // Dynamic fields based on template components
-};
+/** Build empty form for one page from a template (all component keys, empty strings). */
+function emptyPageFromTemplate(template: Template): Record<string, string> {
+  const page: Record<string, string> = {};
+  template.components?.forEach((comp: Component) => {
+    if (comp.type === 'image') page[`image_${comp.id}`] = '';
+    else if (comp.type === 'text') page[`text_${comp.id}`] = '';
+    else if (comp.type === 'progress') page[`progress_${comp.id}`] = '';
+    else if (comp.type === 'issues') page[`issues_${comp.id}`] = '';
+  });
+  return page;
+}
 
 // Hardcoded test template - always available for quick testing
 const TEST_TEMPLATE: Template = {
@@ -65,11 +72,11 @@ const TEST_TEMPLATE: Template = {
 export default function MobileCapturePage() {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(
-    null
-  );
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
-  const [form, setForm] = useState<CaptureForm>({ jobId: '' });
+  const [reportJobId, setReportJobId] = useState('');
+  const [pageData, setPageData] = useState<Record<string, string>[]>([]);
+  const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [saving, setSaving] = useState(false);
   const [unsyncedCount, setUnsyncedCount] = useState(0);
   const isOnline = useOnlineStatus();
@@ -118,21 +125,8 @@ export default function MobileCapturePage() {
       // If it's the test template, use it directly
       if (selectedTemplateId === 'test-template') {
         setSelectedTemplate(TEST_TEMPLATE);
-        
-        // Initialize form with empty values for each component
-        const initialForm: CaptureForm = { jobId: '' };
-        TEST_TEMPLATE.components?.forEach((comp: Component) => {
-          if (comp.type === 'image') {
-            initialForm[`image_${comp.id}`] = '';
-          } else if (comp.type === 'text') {
-            initialForm[`text_${comp.id}`] = '';
-          } else if (comp.type === 'progress') {
-            initialForm[`progress_${comp.id}`] = '';
-          } else if (comp.type === 'issues') {
-            initialForm[`issues_${comp.id}`] = '';
-          }
-        });
-        setForm(initialForm);
+        setPageData([emptyPageFromTemplate(TEST_TEMPLATE)]);
+        setCurrentPageIndex(0);
         return;
       }
 
@@ -143,21 +137,8 @@ export default function MobileCapturePage() {
           if (response.ok) {
             const template = await response.json();
             setSelectedTemplate(template);
-            
-            // Initialize form with empty values for each component
-            const initialForm: CaptureForm = { jobId: '' };
-            template.components?.forEach((comp: Component) => {
-              if (comp.type === 'image') {
-                initialForm[`image_${comp.id}`] = '';
-              } else if (comp.type === 'text') {
-                initialForm[`text_${comp.id}`] = '';
-              } else if (comp.type === 'progress') {
-                initialForm[`progress_${comp.id}`] = '';
-              } else if (comp.type === 'issues') {
-                initialForm[`issues_${comp.id}`] = '';
-              }
-            });
-            setForm(initialForm);
+            setPageData([emptyPageFromTemplate(template)]);
+            setCurrentPageIndex(0);
           }
         } catch (error) {
           console.error('Failed to fetch template details:', error);
@@ -175,10 +156,16 @@ export default function MobileCapturePage() {
   };
 
   const handleFormChange = (field: string, value: string) => {
-    setForm((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    if (field === 'jobId') {
+      setReportJobId(value);
+      return;
+    }
+    setPageData((prev) => {
+      const next = [...prev];
+      const page = next[currentPageIndex] ?? {};
+      next[currentPageIndex] = { ...page, [field]: value };
+      return next;
+    });
   };
 
   const handleImageUpload = (componentId: string, event: React.ChangeEvent<HTMLInputElement>) => {
@@ -193,6 +180,18 @@ export default function MobileCapturePage() {
     }
   };
 
+  const addPage = () => {
+    if (!selectedTemplate) return;
+    setPageData((prev) => [...prev, emptyPageFromTemplate(selectedTemplate)]);
+    setCurrentPageIndex((prev) => prev + 1);
+  };
+
+  const goToPage = (index: number) => {
+    if (index >= 0 && index < pageData.length) setCurrentPageIndex(index);
+  };
+
+  const currentPageForm = pageData[currentPageIndex] ?? {};
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedTemplateId || !selectedTemplate) return;
@@ -200,43 +199,29 @@ export default function MobileCapturePage() {
     setSaving(true);
 
     try {
-      // Build captured data object from form
-      const capturedData: Record<string, any> = {};
-      
-      selectedTemplate.components?.forEach((comp: Component) => {
-        const fieldKey = `${comp.type}_${comp.id}`;
-        const value = form[fieldKey];
-        
-        if (comp.type === 'image' && value) {
-          capturedData[comp.id] = {
-            type: 'image',
-            title: comp.data.title || '',
-            image: value, // base64 image data
-          };
-        } else if (comp.type === 'text' && value) {
-          capturedData[comp.id] = {
-            type: 'text',
-            title: comp.data.title || '',
-            text: value,
-          };
-        } else if (comp.type === 'progress' && value) {
-          capturedData[comp.id] = {
-            type: 'progress',
-            title: comp.data.title || '',
-            progress: value,
-          };
-        } else if (comp.type === 'issues' && value) {
-          capturedData[comp.id] = {
-            type: 'issues',
-            title: comp.data.title || '',
-            issues: value,
-          };
-        }
+      // Build captured data from all pages (multipage report)
+      const capturedData: Record<string, { type: string; title: string; [k: string]: unknown }> = {};
+
+      pageData.forEach((page, pageIndex) => {
+        selectedTemplate.components?.forEach((comp: Component) => {
+          const fieldKey = `${comp.type}_${comp.id}`;
+          const value = page[fieldKey];
+          const key = `${pageIndex}_${comp.id}`;
+
+          if (comp.type === 'image' && value) {
+            capturedData[key] = { type: 'image', title: comp.data.title || '', image: value };
+          } else if (comp.type === 'text' && value) {
+            capturedData[key] = { type: 'text', title: comp.data.title || '', text: value };
+          } else if (comp.type === 'progress' && value) {
+            capturedData[key] = { type: 'progress', title: comp.data.title || '', progress: value };
+          } else if (comp.type === 'issues' && value) {
+            capturedData[key] = { type: 'issues', title: comp.data.title || '', issues: value };
+          }
+        });
       });
 
-      // Validate that we have at least some data
       if (Object.keys(capturedData).length === 0) {
-        alert('Please fill in at least one field before saving.');
+        alert('Please fill in at least one field on any page before saving.');
         setSaving(false);
         return;
       }
@@ -244,29 +229,26 @@ export default function MobileCapturePage() {
       const timestamp = new Date().toISOString();
       const payload = {
         templateId: selectedTemplateId,
-        jobId: form.jobId || null,
+        jobId: reportJobId || null,
         capturedData,
         timestamp,
       };
 
-      // If offline, save to IndexedDB only
+      const resetForm = () => {
+        setReportJobId('');
+        setPageData([emptyPageFromTemplate(selectedTemplate)]);
+        setCurrentPageIndex(0);
+      };
+
       if (!isOnline) {
         await saveReportOffline(payload);
         await refreshUnsyncedCount();
         alert('Saved offline. Report will sync when you\'re back online.');
-        const initialForm: CaptureForm = { jobId: '' };
-        selectedTemplate.components?.forEach((comp: Component) => {
-          if (comp.type === 'image') initialForm[`image_${comp.id}`] = '';
-          else if (comp.type === 'text') initialForm[`text_${comp.id}`] = '';
-          else if (comp.type === 'progress') initialForm[`progress_${comp.id}`] = '';
-          else if (comp.type === 'issues') initialForm[`issues_${comp.id}`] = '';
-        });
-        setForm(initialForm);
+        resetForm();
         setSaving(false);
         return;
       }
 
-      // Online: try to save to backend
       try {
         const response = await fetch(`${API_BASE_URL}/api/reports`, {
           method: 'POST',
@@ -275,7 +257,7 @@ export default function MobileCapturePage() {
         });
 
         const responseText = await response.text();
-        let responseData;
+        let responseData: { message?: string; id?: string };
         try {
           responseData = JSON.parse(responseText);
         } catch {
@@ -283,17 +265,9 @@ export default function MobileCapturePage() {
         }
 
         if (response.ok) {
-          const result = responseData;
-          console.log('✅ Report saved successfully!', result);
-          alert(`Report saved successfully!\n\nReport ID: ${result.id || 'N/A'}\n\nYou can view it on the Reports page.`);
-          const initialForm: CaptureForm = { jobId: '' };
-          selectedTemplate.components?.forEach((comp: Component) => {
-            if (comp.type === 'image') initialForm[`image_${comp.id}`] = '';
-            else if (comp.type === 'text') initialForm[`text_${comp.id}`] = '';
-            else if (comp.type === 'progress') initialForm[`progress_${comp.id}`] = '';
-            else if (comp.type === 'issues') initialForm[`issues_${comp.id}`] = '';
-          });
-          setForm(initialForm);
+          console.log('✅ Report saved successfully!', responseData);
+          alert(`Report saved successfully!\n\nReport ID: ${responseData.id || 'N/A'}\n\nYou can view it on the Reports page.`);
+          resetForm();
         } else {
           const errorMsg = responseData.message || `Server error: ${response.status} ${response.statusText}`;
           console.error('❌ Save failed:', { status: response.status, error: errorMsg });
@@ -301,18 +275,10 @@ export default function MobileCapturePage() {
           throw new Error(errorMsg);
         }
       } catch (networkError: unknown) {
-        // Network failed: save offline so user doesn't lose data
         await saveReportOffline(payload);
         await refreshUnsyncedCount();
         alert('No connection. Report saved offline and will sync when you\'re back online.');
-        const initialForm: CaptureForm = { jobId: '' };
-        selectedTemplate.components?.forEach((comp: Component) => {
-          if (comp.type === 'image') initialForm[`image_${comp.id}`] = '';
-          else if (comp.type === 'text') initialForm[`text_${comp.id}`] = '';
-          else if (comp.type === 'progress') initialForm[`progress_${comp.id}`] = '';
-          else if (comp.type === 'issues') initialForm[`issues_${comp.id}`] = '';
-        });
-        setForm(initialForm);
+        resetForm();
       }
     } catch (error: unknown) {
       console.error('❌ Error saving report:', error);
@@ -430,17 +396,34 @@ export default function MobileCapturePage() {
                       type="text"
                       className="form-control"
                       placeholder="e.g. 2026-001"
-                      value={form.jobId || ''}
+                      value={reportJobId}
                       onChange={(e) => handleFormChange('jobId', e.target.value)}
                     />
                   </div>
 
-                  {/* Render template components */}
+                  {/* Multipage: page navigation */}
+                  <div className="multipage-nav panel panel-default" style={{ marginBottom: 16 }}>
+                    <div className="panel-body" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+                      <span className="multipage-label">
+                        Page {currentPageIndex + 1} of {pageData.length}
+                      </span>
+                      <button type="button" className="btn btn-default btn-sm" onClick={() => goToPage(currentPageIndex - 1)} disabled={currentPageIndex === 0}>
+                        Previous
+                      </button>
+                      <button type="button" className="btn btn-default btn-sm" onClick={() => goToPage(currentPageIndex + 1)} disabled={currentPageIndex >= pageData.length - 1}>
+                        Next
+                      </button>
+                      <button type="button" className="btn btn-rbp btn-sm" onClick={addPage}>
+                        + Add page
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Current page fields */}
                   {selectedTemplate.components?.map((component) => {
                     if (component.type === 'image') {
                       const fieldKey = `image_${component.id}`;
-                      const imageValue = form[fieldKey] || '';
-                      
+                      const imageValue = currentPageForm[fieldKey] || '';
                       return (
                         <div key={component.id} className="form-group">
                           <label>{component.data.title || 'Image'}</label>
@@ -450,20 +433,13 @@ export default function MobileCapturePage() {
                             capture="environment"
                             className="form-control"
                             onChange={(e) => handleImageUpload(component.id, e)}
-                            required
                           />
                           {imageValue && (
                             <div className="mobile-image-preview" style={{ marginTop: '12px' }}>
-                              <img 
-                                src={imageValue} 
-                                alt="Captured" 
-                                style={{ 
-                                  width: '100%', 
-                                  maxHeight: '300px', 
-                                  objectFit: 'contain',
-                                  borderRadius: '8px',
-                                  border: '1px solid #e0e0e0'
-                                }} 
+                              <img
+                                src={imageValue}
+                                alt="Captured"
+                                style={{ width: '100%', maxHeight: '300px', objectFit: 'contain', borderRadius: '8px', border: '1px solid #e0e0e0' }}
                               />
                             </div>
                           )}
@@ -478,9 +454,8 @@ export default function MobileCapturePage() {
                             className="form-control"
                             rows={5}
                             placeholder="Enter text..."
-                            value={form[fieldKey] || ''}
+                            value={currentPageForm[fieldKey] || ''}
                             onChange={(e) => handleFormChange(fieldKey, e.target.value)}
-                            required
                           />
                         </div>
                       );
@@ -493,9 +468,8 @@ export default function MobileCapturePage() {
                             className="form-control"
                             rows={4}
                             placeholder="Enter progress updates..."
-                            value={form[fieldKey] || ''}
+                            value={currentPageForm[fieldKey] || ''}
                             onChange={(e) => handleFormChange(fieldKey, e.target.value)}
-                            required
                           />
                         </div>
                       );
@@ -508,9 +482,8 @@ export default function MobileCapturePage() {
                             className="form-control"
                             rows={4}
                             placeholder="Enter issues or concerns..."
-                            value={form[fieldKey] || ''}
+                            value={currentPageForm[fieldKey] || ''}
                             onChange={(e) => handleFormChange(fieldKey, e.target.value)}
-                            required
                           />
                         </div>
                       );
@@ -518,11 +491,7 @@ export default function MobileCapturePage() {
                     return null;
                   })}
 
-                  <button 
-                    type="submit" 
-                    className="btn btn-rbp btn-block"
-                    disabled={saving}
-                  >
+                  <button type="submit" className="btn btn-rbp btn-block" disabled={saving}>
                     {saving ? 'Saving...' : 'Save Report'}
                   </button>
                 </form>
