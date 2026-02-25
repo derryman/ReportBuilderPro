@@ -37,7 +37,7 @@ export default function MainLayout() {
           <img src={logo} alt="Report Builder Pro logo" />
           <div className="brand-text">
             <span className="brand-title">Report Builder Pro</span>
-            <small className="text-muted">Prototype</small>
+            <small className="text-muted">Beta</small>
           </div>
         </NavLink>
         <ul className="nav rbp-nav-stacked">
