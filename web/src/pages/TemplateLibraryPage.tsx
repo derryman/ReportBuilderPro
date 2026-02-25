@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { API_BASE_URL } from '../config';
+import { fetchWithAuth } from '../utils/api';
 
 // Template structure from MongoDB
 type Template = {
@@ -24,7 +24,7 @@ export default function TemplateLibraryPage() {
     const fetchTemplates = async () => {
       try {
         // Request template list from backend
-        const response = await fetch(`${API_BASE_URL}/api/templates`);
+        const response = await fetchWithAuth('/api/templates');
         if (response.ok) {
           const data = await response.json();
           setTemplates(data); // Store the templates
@@ -43,7 +43,7 @@ export default function TemplateLibraryPage() {
   const openPdf = async (templateId: string) => {
     try {
       // Request the PDF data for this specific template
-      const response = await fetch(`${API_BASE_URL}/api/templates/${templateId}`);
+      const response = await fetchWithAuth(`/api/templates/${templateId}`);
       if (response.ok) {
         const data = await response.json();
         setPdfData(data.pdfData); // Store the PDF data (it's stored as base64 in MongoDB)
@@ -95,7 +95,7 @@ export default function TemplateLibraryPage() {
 
     setDeletingId(templateId);
     try {
-      const response = await fetch(`${API_BASE_URL}/api/templates/${templateId}`, {
+      const response = await fetchWithAuth(`/api/templates/${templateId}`, {
         method: 'DELETE',
       });
 

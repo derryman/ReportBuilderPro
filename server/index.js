@@ -2,6 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
 const { MongoClient, ObjectId } = require('mongodb');
 
 // Load environment variables from .env file (override so local .env wins over system env)
@@ -12,10 +13,10 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 // Get MongoDB connection details from environment variables
-// These come from the .env file you create
 const MONGO_URI = process.env.MONGO_URI || process.env.Mongo_URL || 'mongodb://localhost:27017/';
 const DB_NAME = process.env.MONGO_DB || process.env.Mongo_DB || 'ReportBuilderPro';
 const NLP_SERVICE_URL = process.env.NLP_SERVICE_URL || ''; // e.g. http://localhost:8000
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-in-production';
 
 // Debug: Log what we're getting (without exposing password)
 console.log('Environment check:');
@@ -30,6 +31,25 @@ console.log('Using DB_NAME:', DB_NAME);
 app.use(cors());
 // Allow large JSON payloads (needed for PDFs stored as base64)
 app.use(express.json({ limit: '50mb' }));
+
+/** Require valid JWT for /api/* except login, health, test. Sets req.user = { email }. */
+function requireAuth(req, res, next) {
+  if (req.method === 'POST' && req.path === '/login') return next();
+  if (req.method === 'GET' && (req.path === '/health' || req.path === '/test')) return next();
+  const auth = req.headers.authorization;
+  const token = auth && auth.startsWith('Bearer ') ? auth.slice(7) : null;
+  if (!token) {
+    return res.status(401).json({ message: 'Authentication required' });
+  }
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = { email: decoded.sub };
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: 'Invalid or expired token' });
+  }
+}
+app.use('/api', requireAuth);
 
 // Variables to store MongoDB connection
 let mongoClient;
@@ -105,7 +125,8 @@ app.post('/api/login', async (req, res) => {
 
   // Hardcoded test login (admin / admin) - works even when DB is not connected
   if (email === 'admin' && password === 'admin') {
-    return res.json({ email: 'admin', name: 'Admin' });
+    const token = jwt.sign({ sub: 'admin' }, JWT_SECRET, { expiresIn: '7d' });
+    return res.json({ email: 'admin', name: 'Admin', token });
   }
 
   // For other users, database must be connected
@@ -114,31 +135,26 @@ app.post('/api/login', async (req, res) => {
   }
 
   try {
-    // Look up user in the "Login" collection by email
     const user = await db.collection('Login').findOne({ email });
-    // Check if user exists and password matches
     if (!user || user.password !== password) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
-
-    // Return user info if login successful
-    return res.json({ email: user.email, name: user.name });
+    const token = jwt.sign({ sub: user.email }, JWT_SECRET, { expiresIn: '7d' });
+    return res.json({ email: user.email, name: user.name, token });
   } catch (error) {
     console.error('Login error:', error);
     return res.status(500).json({ message: 'Unexpected server error' });
   }
 });
 
-// Get all templates - returns list from MongoDB "Templates" collection
-app.get('/api/templates', async (_req, res) => {
-  // Make sure database is connected
+// Get all templates - only those created by the current user
+app.get('/api/templates', async (req, res) => {
   if (!db) {
     return res.status(503).json({ message: 'Database not ready yet' });
   }
 
   try {
-    // Get all documents from the "Templates" collection
-    const templates = await db.collection('Templates').find({}).toArray();
+    const templates = await db.collection('Templates').find({ createdBy: req.user.email }).toArray();
     // Return only the metadata (id, title, description, components) - not the full PDF data
     // This keeps the response small and fast
     const templatesList = templates.map((t) => ({
@@ -154,16 +170,17 @@ app.get('/api/templates', async (_req, res) => {
   }
 });
 
-// Get full template data (including structure) for a specific template by ID
+// Get full template data - only if created by current user
 app.get('/api/templates/:id', async (req, res) => {
-  // Make sure database is connected
   if (!db) {
     return res.status(503).json({ message: 'Database not ready yet' });
   }
 
   try {
-    // Find the template by its ID in the "Templates" collection
-    const template = await db.collection('Templates').findOne({ _id: new ObjectId(req.params.id) });
+    const template = await db.collection('Templates').findOne({
+      _id: new ObjectId(req.params.id),
+      createdBy: req.user.email,
+    });
     if (!template) {
       return res.status(404).json({ message: 'Template not found' });
     }
@@ -182,7 +199,7 @@ app.get('/api/templates/:id', async (req, res) => {
   }
 });
 
-// Create a new template
+// Create a new template (owned by current user)
 app.post('/api/templates', async (req, res) => {
   if (!db) {
     return res.status(503).json({ message: 'Database not ready yet' });
@@ -199,6 +216,7 @@ app.post('/api/templates', async (req, res) => {
       title: title.trim(),
       description: (description || '').trim(),
       components: Array.isArray(components) ? components : [],
+      createdBy: req.user.email,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -214,7 +232,7 @@ app.post('/api/templates', async (req, res) => {
   }
 });
 
-// Update an existing template
+// Update an existing template (only if owned by current user)
 app.put('/api/templates/:id', async (req, res) => {
   if (!db) {
     return res.status(503).json({ message: 'Database not ready yet' });
@@ -236,7 +254,7 @@ app.put('/api/templates/:id', async (req, res) => {
     };
 
     const result = await db.collection('Templates').updateOne(
-      { _id: new ObjectId(id) },
+      { _id: new ObjectId(id), createdBy: req.user.email },
       { $set: update }
     );
 
@@ -254,7 +272,7 @@ app.put('/api/templates/:id', async (req, res) => {
   }
 });
 
-// Delete a template
+// Delete a template (only if owned by current user)
 app.delete('/api/templates/:id', async (req, res) => {
   if (!db) {
     return res.status(503).json({ message: 'Database not ready yet' });
@@ -262,7 +280,7 @@ app.delete('/api/templates/:id', async (req, res) => {
 
   try {
     const id = req.params.id;
-    const result = await db.collection('Templates').deleteOne({ _id: new ObjectId(id) });
+    const result = await db.collection('Templates').deleteOne({ _id: new ObjectId(id), createdBy: req.user.email });
 
     if (result.deletedCount === 0) {
       return res.status(404).json({ message: 'Template not found' });
@@ -305,12 +323,12 @@ app.post('/api/reports', async (req, res) => {
       return res.status(400).json({ message: 'Captured data is required. Please fill in at least one field.' });
     }
 
-    // Insert the captured report into the "Reports" collection
     const reportDoc = {
       templateId,
       jobId: jobId || null,
-      capturedData, // This will contain the image and text data
+      capturedData,
       timestamp: timestamp || new Date().toISOString(),
+      createdBy: req.user.email,
       createdAt: new Date(),
     };
 
@@ -331,16 +349,15 @@ app.post('/api/reports', async (req, res) => {
   }
 });
 
-// Get all captured reports
-app.get('/api/reports', async (_req, res) => {
+// Get all captured reports (only current user's)
+app.get('/api/reports', async (req, res) => {
   if (!db) {
     return res.status(503).json({ message: 'Database not ready yet' });
   }
 
   try {
-    // Get all reports, sorted by most recent first
     const reports = await db.collection('Reports')
-      .find({})
+      .find({ createdBy: req.user.email })
       .sort({ createdAt: -1 })
       .toArray();
 
@@ -360,14 +377,17 @@ app.get('/api/reports', async (_req, res) => {
   }
 });
 
-// Get a specific captured report by ID
+// Get a specific report (only if owned by current user)
 app.get('/api/reports/:id', async (req, res) => {
   if (!db) {
     return res.status(503).json({ message: 'Database not ready yet' });
   }
 
   try {
-    const report = await db.collection('Reports').findOne({ _id: new ObjectId(req.params.id) });
+    const report = await db.collection('Reports').findOne({
+      _id: new ObjectId(req.params.id),
+      createdBy: req.user.email,
+    });
     if (!report) {
       return res.status(404).json({ message: 'Report not found' });
     }
@@ -408,7 +428,7 @@ app.put('/api/reports/:id', async (req, res) => {
     };
 
     const result = await db.collection('Reports').updateOne(
-      { _id: new ObjectId(id) },
+      { _id: new ObjectId(id), createdBy: req.user.email },
       { $set: update }
     );
 
@@ -434,7 +454,7 @@ app.delete('/api/reports/:id', async (req, res) => {
 
   try {
     const id = req.params.id;
-    const result = await db.collection('Reports').deleteOne({ _id: new ObjectId(id) });
+    const result = await db.collection('Reports').deleteOne({ _id: new ObjectId(id), createdBy: req.user.email });
 
     if (result.deletedCount === 0) {
       return res.status(404).json({ message: 'Report not found' });
@@ -486,7 +506,7 @@ async function callNlpService(text) {
   return res.json();
 }
 
-// Analyze one report by id: extract text, call NLP, store in ai_analysis
+// Analyze one report (only if owned by current user)
 app.post('/api/reports/:id/analyze', async (req, res) => {
   if (!db) {
     return res.status(503).json({ message: 'Database not ready yet' });
@@ -494,7 +514,10 @@ app.post('/api/reports/:id/analyze', async (req, res) => {
 
   try {
     const id = req.params.id;
-    const report = await db.collection('Reports').findOne({ _id: new ObjectId(id) });
+    const report = await db.collection('Reports').findOne({
+      _id: new ObjectId(id),
+      createdBy: req.user.email,
+    });
     if (!report) {
       return res.status(404).json({ message: 'Report not found' });
     }
@@ -528,6 +551,7 @@ app.post('/api/reports/:id/analyze', async (req, res) => {
       flags,
       processed_at: new Date(),
       model_version: metadata.model_version || 'python-ml-v1.0',
+      createdBy: req.user.email,
     };
 
     await db.collection('ai_analysis').insertOne(analysisDoc);
@@ -544,15 +568,15 @@ app.post('/api/reports/:id/analyze', async (req, res) => {
   }
 });
 
-// Get the most recent analysis (for Home "latest scan" dashboard)
-app.get('/api/nlp/latest', async (_req, res) => {
+// Get the most recent analysis for current user (Home "latest scan" dashboard)
+app.get('/api/nlp/latest', async (req, res) => {
   if (!db) {
     return res.status(503).json({ message: 'Database not ready yet' });
   }
 
   try {
     const latest = await db.collection('ai_analysis').findOne(
-      {},
+      { createdBy: req.user.email },
       { sort: { processed_at: -1 } }
     );
     if (!latest) {

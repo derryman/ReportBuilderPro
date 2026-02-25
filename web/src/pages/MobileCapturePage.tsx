@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { API_BASE_URL } from '../config';
+import { fetchWithAuth } from '../utils/api';
 import { useOnlineStatus } from '../utils/useOnlineStatus';
 import {
   saveReportOffline,
@@ -89,7 +90,7 @@ export default function MobileCapturePage() {
   useEffect(() => {
     const fetchTemplates = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/templates`);
+        const response = await fetchWithAuth('/api/templates');
         if (response.ok) {
           const data = await response.json();
           // Always include the test template at the beginning
@@ -133,7 +134,7 @@ export default function MobileCapturePage() {
       // Otherwise, fetch from API
       const fetchTemplateDetails = async () => {
         try {
-          const response = await fetch(`${API_BASE_URL}/api/templates/${selectedTemplateId}`);
+          const response = await fetchWithAuth(`/api/templates/${selectedTemplateId}`);
           if (response.ok) {
             const template = await response.json();
             setSelectedTemplate(template);
@@ -250,7 +251,7 @@ export default function MobileCapturePage() {
       }
 
       try {
-        const response = await fetch(`${API_BASE_URL}/api/reports`, {
+        const response = await fetchWithAuth('/api/reports', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),

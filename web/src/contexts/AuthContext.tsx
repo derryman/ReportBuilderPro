@@ -1,5 +1,7 @@
 import { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
+import { API_BASE_URL } from '../config';
+import { clearToken, setToken } from '../utils/api';
 
 interface User {
   email: string;
@@ -15,15 +17,16 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Helper to load user from localStorage synchronously
 function loadUserFromStorage(): User | null {
   try {
     const savedUser = localStorage.getItem('user');
-    if (savedUser) {
+    const token = localStorage.getItem('token');
+    if (savedUser && token) {
       return JSON.parse(savedUser);
     }
   } catch (e) {
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
   }
   return null;
 }
@@ -34,8 +37,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
-      // Remove trailing slash if present to avoid double slashes
       const baseUrl = API_BASE_URL.replace(/\/$/, '');
       const response = await fetch(`${baseUrl}/api/login`, {
         method: 'POST',
@@ -51,6 +52,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         };
         setUser(user);
         localStorage.setItem('user', JSON.stringify(user));
+        if (userData.token) {
+          setToken(userData.token);
+        }
         return true;
       }
       return false;
@@ -63,6 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
+    clearToken();
   };
 
   return (

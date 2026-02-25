@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { API_BASE_URL } from '../config';
+import { fetchWithAuth } from '../utils/api';
 import { generateReportPdf } from '../utils/generatePdf';
 import { useOnlineStatus } from '../utils/useOnlineStatus';
 import {
@@ -51,13 +52,13 @@ export default function ReportsPage() {
     const fetchData = async () => {
       try {
         // Fetch reports
-        const reportsResponse = await fetch(`${API_BASE_URL}/api/reports`);
+        const reportsResponse = await fetchWithAuth('/api/reports');
         if (reportsResponse.ok) {
           const reportsData = await reportsResponse.json();
           setReports(reportsData);
 
           // Fetch template names for display
-          const templatesResponse = await fetch(`${API_BASE_URL}/api/templates`);
+          const templatesResponse = await fetchWithAuth('/api/templates');
           if (templatesResponse.ok) {
             const templatesData = await templatesResponse.json();
             const templatesMap: Record<string, Template> = {};
@@ -121,7 +122,7 @@ export default function ReportsPage() {
     let failed = 0;
     for (const report of pending) {
       try {
-        const res = await fetch(`${API_BASE_URL}/api/reports`, {
+        const res = await fetchWithAuth('/api/reports', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -146,7 +147,7 @@ export default function ReportsPage() {
     await refreshUnsyncedCount();
     setSyncing(false);
     if (synced > 0) {
-      const reportsRes = await fetch(`${API_BASE_URL}/api/reports`);
+      const reportsRes = await fetchWithAuth('/api/reports');
       if (reportsRes.ok) setReports(await reportsRes.json());
     }
     if (synced > 0 || failed > 0) {
@@ -158,7 +159,7 @@ export default function ReportsPage() {
     if (!window.confirm('Delete this report? This cannot be undone.')) return;
     setDeletingReportId(report.id);
     try {
-      const res = await fetch(`${API_BASE_URL}/api/reports/${report.id}`, { method: 'DELETE' });
+      const res = await fetchWithAuth(`/api/reports/${report.id}`, { method: 'DELETE' });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         alert(data.message || 'Failed to delete report');

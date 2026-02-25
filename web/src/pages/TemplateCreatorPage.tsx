@@ -5,7 +5,7 @@ import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { analyzeReportText, type DetectedIssue } from '../nlpIssueDetection';
-import { API_BASE_URL } from '../config';
+import { fetchWithAuth } from '../utils/api';
 
 // These are the types of components users can add to their templates
 type ComponentType = 'image' | 'progress' | 'issues' | 'text';
@@ -53,7 +53,7 @@ export default function TemplateCreatorPage() {
     let cancelled = false;
     const load = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/api/templates/${templateId}`);
+        const res = await fetchWithAuth(`/api/templates/${templateId}`);
         if (!res.ok) return;
         const data = await res.json();
         if (cancelled) return;
@@ -226,10 +226,10 @@ export default function TemplateCreatorPage() {
         components: templateComponents,
       };
       const url = templateId
-        ? `${API_BASE_URL}/api/templates/${templateId}`
-        : `${API_BASE_URL}/api/templates`;
+        ? `/api/templates/${templateId}`
+        : '/api/templates';
       const method = templateId ? 'PUT' : 'POST';
-      const res = await fetch(url, {
+      const res = await fetchWithAuth(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),

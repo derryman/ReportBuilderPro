@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { API_BASE_URL } from '../config';
+import { fetchWithAuth } from '../utils/api';
 
 type CapturedComponent = {
   type: string;
@@ -37,8 +37,8 @@ export default function RiskDetectionPage() {
     const fetchData = async () => {
       try {
         const [reportsRes, templatesRes] = await Promise.all([
-          fetch(`${API_BASE_URL}/api/reports`),
-          fetch(`${API_BASE_URL}/api/templates`),
+          fetchWithAuth('/api/reports'),
+          fetchWithAuth('/api/templates'),
         ]);
         if (reportsRes.ok) {
           const data = await reportsRes.json();
@@ -84,7 +84,7 @@ export default function RiskDetectionPage() {
     for (let i = 0; i < ids.length; i++) {
       setScanProgress({ current: i + 1, total: ids.length });
       try {
-        const res = await fetch(`${API_BASE_URL}/api/reports/${ids[i]}/analyze`, {
+        const res = await fetchWithAuth(`/api/reports/${ids[i]}/analyze`, {
           method: 'POST',
         });
         if (!res.ok) {

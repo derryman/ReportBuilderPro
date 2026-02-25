@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { API_BASE_URL } from '../config';
+import { fetchWithAuth } from '../utils/api';
 import { useMobile } from '../utils/useMobile';
 
 type NlpFlag = {
@@ -38,7 +38,7 @@ export default function HomePage() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch(`${API_BASE_URL}/api/nlp/latest`)
+    fetchWithAuth('/api/nlp/latest')
       .then((res) => (res.ok ? res.json() : { latest: null }))
       .then((data) => {
         if (!cancelled) setLatest(data.latest ?? null);

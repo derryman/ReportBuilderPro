@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { API_BASE_URL } from '../config';
+import { fetchWithAuth } from '../utils/api';
 
 type CapturedComponent = {
   type: 'image' | 'text' | 'progress' | 'issues';
@@ -52,8 +52,8 @@ export default function EditReportPage() {
     const load = async () => {
       try {
         const [reportRes, templatesRes] = await Promise.all([
-          fetch(`${API_BASE_URL}/api/reports/${reportId}`),
-          fetch(`${API_BASE_URL}/api/templates`),
+          fetchWithAuth(`/api/reports/${reportId}`),
+          fetchWithAuth('/api/templates'),
         ]);
         if (!reportRes.ok || !templatesRes.ok) {
           if (!cancelled) setError('Failed to load report');
@@ -137,7 +137,7 @@ export default function EditReportPage() {
         }
       });
 
-      const res = await fetch(`${API_BASE_URL}/api/reports/${reportId}`, {
+      const res = await fetchWithAuth(`/api/reports/${reportId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

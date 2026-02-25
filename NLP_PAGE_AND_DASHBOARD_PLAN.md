@@ -1,5 +1,9 @@
 # NLP: Risk Detection Page & Home Dashboard
 
+## Product goal
+
+People create and upload reports on the site. We scan those reports with the NLP model to find **underlying issues** in the text: **risks** (safety, compliance, hazards), **delays** (schedule, programme), and **material shortages** (supply, stock). The system should be able to **understand or reason with what’s being written** – i.e. pick up meaning and intent, not just keywords – so different phrasings and real report language are handled correctly.
+
 ## Structure
 
 - **Risk Detection** (separate page) – Where you **run the model**: select reports, scan selected, trigger NLP.

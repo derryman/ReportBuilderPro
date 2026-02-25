@@ -7,6 +7,26 @@
 
 Node backend calls this when `NLP_SERVICE_URL` is set in server/.env.
 
+## Training data (how to add more “risks” and improve the model)
+
+The model is **not** stored in MongoDB. It is trained from **`data/training_data.json`**. Each line is an object:
+
+- **`text`** – One sentence (e.g. from a report).
+- **`label`** – One of: `"risk"`, `"delay"`, `"material_shortage"`, `"none"`.
+
+To make the AI better at detecting risks, delays, and material shortages:
+
+1. **Add more examples** to `data/training_data.json`. Use real report-style sentences and the correct label. Keep a balance between the four labels so the model doesn’t favour one.
+2. **Retrain** the model:
+   ```bash
+   cd nlp-service
+   venv\Scripts\activate
+   python -m app.train
+   ```
+3. **Restart** the NLP service (e.g. run `run_nlp.bat` or uvicorn again).
+
+The script writes `model/vectorizer.joblib` and `model/classifier.joblib`. The running service loads these; no database is used for the model itself.
+
 ## Setup
 
 ```bash
