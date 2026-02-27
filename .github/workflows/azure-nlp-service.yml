@@ -1,0 +1,37 @@
+# Build and deploy NLP service to Azure Container Apps (push to main when nlp-service changes)
+name: Deploy NLP Service to Azure
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'nlp-service/**'
+      - '.github/workflows/azure-nlp-service.yml'
+
+env:
+  AZURE_CONTAINER_APP_NAME: ${{ secrets.AZURE_NLP_CONTAINER_APP_NAME }}
+  AZURE_RESOURCE_GROUP: ${{ secrets.AZURE_NLP_RESOURCE_GROUP }}
+  ACR_NAME: ${{ secrets.AZURE_NLP_ACR_NAME }}
+
+jobs:
+  build-and-deploy:
+    if: env.AZURE_CONTAINER_APP_NAME != '' && env.AZURE_RESOURCE_GROUP != '' && env.ACR_NAME != ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Build and deploy to Container Apps
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          appSourcePath: ${{ github.workspace }}/nlp-service
+          acrName: ${{ env.ACR_NAME }}
+          resourceGroup: ${{ env.AZURE_RESOURCE_GROUP }}
+          containerAppName: ${{ env.AZURE_CONTAINER_APP_NAME }}
+          targetPort: 8000
+          ingress: external

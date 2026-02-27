@@ -5,8 +5,9 @@ const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const { MongoClient, ObjectId } = require('mongodb');
 
-// Load environment variables from .env file (override so local .env wins over system env)
-dotenv.config({ override: true });
+// Load .env then .env.local (local overrides for local testing, e.g. MONGO_URI=mongodb://localhost:27017/)
+dotenv.config({ path: '.env' });
+dotenv.config({ path: '.env.local', override: true });
 
 // Create Express app and set port
 const app = express();
@@ -123,10 +124,15 @@ app.post('/api/login', async (req, res) => {
     return res.status(400).json({ message: 'Email and password are required' });
   }
 
-  // Hardcoded test login (admin / admin) - works even when DB is not connected
-  if (email === 'admin' && password === 'admin') {
-    const token = jwt.sign({ sub: 'admin' }, JWT_SECRET, { expiresIn: '7d' });
-    return res.json({ email: 'admin', name: 'Admin', token });
+  // Hardcoded logins for local/testing – work even when DB is not connected
+  const hardcoded = [
+    { email: 'admin', password: 'admin', name: 'Admin' },
+    { email: 'test@hwhpm.ie', password: 'password', name: 'User Test' },
+  ];
+  const match = hardcoded.find((u) => u.email === email && u.password === password);
+  if (match) {
+    const token = jwt.sign({ sub: match.email }, JWT_SECRET, { expiresIn: '7d' });
+    return res.json({ email: match.email, name: match.name, token });
   }
 
   // For other users, database must be connected
