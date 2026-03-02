@@ -118,5 +118,22 @@
   {"text": "Boiler installation delayed by manufacturer.", "label": "delay"},
   {"text": "Windows and doors not in stock.", "label": "material_shortage"},
   {"text": "Gas certificate outstanding.", "label": "risk"},
-  {"text": "Site tidy and compliant.", "label": "none"}
+  {"text": "Site tidy and compliant.", "label": "none"},
+  {"text": "House A is progressing well.", "label": "none"},
+  {"text": "Roof is up.", "label": "none"},
+  {"text": "Walls are ready for external render.", "label": "none"},
+  {"text": "Windows are installed.", "label": "none"},
+  {"text": "Current access to the house is unsafe.", "label": "risk"},
+  {"text": "A new safer ramp should be installed.", "label": "risk"},
+  {"text": "Scaffolding is not tied properly in some parts.", "label": "risk"},
+  {"text": "Missing some windowsills need more.", "label": "material_shortage"},
+  {"text": "Access to the house is unsafe.", "label": "risk"},
+  {"text": "Scaffolding not tied properly.", "label": "risk"},
+  {"text": "Missing windowsills need more.", "label": "material_shortage"},
+  {"text": "ScaƯolding is not tied properly in in some parts.", "label": "risk"},
+  {"text": "House A is progressing well", "label": "none"},
+  {"text": "Walls are Ready for external render.", "label": "none"},
+  {"text": "Need more windowsills.", "label": "material_shortage"},
+  {"text": "Windowsills missing need more.", "label": "material_shortage"},
+  {"text": "Some windowsills missing need more.", "label": "material_shortage"}
 ]

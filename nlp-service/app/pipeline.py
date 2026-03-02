@@ -18,7 +18,7 @@ from app.preprocess import sentence_split_and_lemmatize
 
 MODEL_DIR = Path(__file__).resolve().parent.parent / "model"
 LABELS_WITH_ACTIONS = ["delay", "risk", "material_shortage"]
-CONFIDENCE_THRESHOLD = 0.65
+CONFIDENCE_THRESHOLD = 0.50
 
 SUGGESTED_ACTIONS = {
     "delay": "Update schedule and notify client. Review dependencies.",

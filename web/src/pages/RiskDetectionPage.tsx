@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchWithAuth } from '../utils/api';
 
@@ -23,6 +23,14 @@ type Template = {
   title: string;
 };
 
+type NlpFlag = {
+  label: string;
+  confidence: number;
+  snippet: string;
+  suggested_action: string;
+  sentence_index?: number;
+};
+
 export default function RiskDetectionPage() {
   const [reports, setReports] = useState<Report[]>([]);
   const [templates, setTemplates] = useState<Record<string, Template>>({});
@@ -32,6 +40,16 @@ export default function RiskDetectionPage() {
   const [scanProgress, setScanProgress] = useState({ current: 0, total: 0 });
   const [scanError, setScanError] = useState<string | null>(null);
   const [scanDone, setScanDone] = useState(false);
+  const [pdfUploading, setPdfUploading] = useState(false);
+  const [pdfResult, setPdfResult] = useState<{
+    reportTitle: string;
+    flags: NlpFlag[];
+    textPreview?: string | null;
+    textLength?: number;
+    nlpConfigured?: boolean;
+  } | null>(null);
+  const [pdfError, setPdfError] = useState<string | null>(null);
+  const pdfInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -110,6 +128,41 @@ export default function RiskDetectionPage() {
     return `${title}${r.jobId ? ` (${r.jobId})` : ''}`;
   };
 
+  const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || file.type !== 'application/pdf') {
+      setPdfError('Please select a PDF file.');
+      return;
+    }
+    setPdfError(null);
+    setPdfResult(null);
+    setPdfUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('pdf', file);
+      const res = await fetchWithAuth('/api/nlp/analyze-pdf', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.message || data.error || `Upload failed (${res.status})`);
+      }
+      setPdfResult({
+        reportTitle: data.reportTitle || file.name,
+        flags: data.flags || [],
+        textPreview: data.text_preview ?? null,
+        textLength: data.metadata?.text_length ?? 0,
+        nlpConfigured: data.metadata?.nlp_configured !== false,
+      });
+    } catch (err) {
+      setPdfError(err instanceof Error ? err.message : 'PDF analysis failed');
+    } finally {
+      setPdfUploading(false);
+      if (pdfInputRef.current) pdfInputRef.current.value = '';
+    }
+  };
+
   if (loading) {
     return (
       <div className="risk-detection-page">
@@ -130,6 +183,82 @@ export default function RiskDetectionPage() {
           <p className="text-muted">
             Select reports to scan for risks, delays, and material issues. Run the model from here, then view results on the Home dashboard.
           </p>
+
+          {/* Demo: Upload a single PDF and see NLP findings */}
+          <div className="panel panel-default" style={{ marginTop: '1.5rem', marginBottom: '1.5rem' }}>
+            <div className="panel-heading">
+              <h3 className="panel-title" style={{ margin: 0, fontSize: '1.1rem' }}>Demo: Upload PDF</h3>
+              <p className="text-muted small" style={{ marginTop: '4px', marginBottom: 0 }}>
+                Upload a single-page PDF (e.g. a site report). We extract text and run risk/delay/material-shortage detection.
+              </p>
+            </div>
+            <div className="panel-body">
+              <input
+                ref={pdfInputRef}
+                type="file"
+                accept="application/pdf"
+                onChange={handlePdfUpload}
+                disabled={pdfUploading}
+                style={{ marginBottom: '0.75rem' }}
+                aria-label="Choose PDF file"
+              />
+              {pdfUploading && <p className="text-muted small">Extracting text and analyzing…</p>}
+              {pdfError && (
+                <div className="alert alert-danger" role="alert" style={{ marginTop: '0.5rem' }}>
+                  {pdfError}
+                </div>
+              )}
+              {pdfResult && (
+                <div style={{ marginTop: '1rem' }}>
+                  <p><strong>{pdfResult.reportTitle}</strong></p>
+                  {pdfResult.flags.length === 0 ? (
+                    <div>
+                      {pdfResult.nlpConfigured === false ? (
+                        <div className="alert alert-warning" role="alert">
+                          <strong>NLP service not configured.</strong> The server did not call the risk-detection model. In the <strong>server</strong> folder, add <code>NLP_SERVICE_URL=http://localhost:8000</code> to <code>.env</code> or <code>.env.local</code>, then restart the Node server. Ensure the NLP service is running on port 8000.
+                        </div>
+                      ) : (
+                        <p className="text-muted">No risks, delays, or material shortages detected.</p>
+                      )}
+                      {(pdfResult.textLength !== undefined && pdfResult.textLength > 0) && pdfResult.nlpConfigured !== false && (
+                        <p className="text-muted small">
+                          Extracted {pdfResult.textLength} characters from the PDF.
+                          The model looks for sentences similar to: &quot;delivery delayed&quot;, &quot;safety risk&quot;, &quot;material shortage&quot;.
+                          Try a report that contains those kinds of phrases, or add similar sentences to your PDF.
+                        </p>
+                      )}
+                      {pdfResult.textPreview && (
+                        <details style={{ marginTop: '0.75rem' }}>
+                          <summary className="text-muted small">Preview of extracted text</summary>
+                          <pre className="small" style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', marginTop: '0.25rem', maxHeight: '8rem', overflow: 'auto' }}>
+                            {pdfResult.textPreview}
+                            {(pdfResult.textLength ?? 0) > 500 ? '…' : ''}
+                          </pre>
+                        </details>
+                      )}
+                    </div>
+                  ) : (
+                    <>
+                      <p className="text-muted small">{pdfResult.flags.length} issue(s) found:</p>
+                      <ul className="list-group" style={{ marginTop: '0.5rem' }}>
+                        {pdfResult.flags.map((flag, idx) => (
+                          <li key={idx} className="list-group-item">
+                            <span className="label label-warning" style={{ marginRight: '0.5rem' }}>{flag.label.replace(/_/g, ' ')}</span>
+                            <span className="text-muted small">{(flag.confidence * 100).toFixed(0)}%</span>
+                            <p style={{ margin: '0.5rem 0 0 0' }}><em>{flag.snippet}</em></p>
+                            <p className="text-muted small" style={{ marginBottom: 0 }}>{flag.suggested_action}</p>
+                          </li>
+                        ))}
+                      </ul>
+                      <p className="text-muted small" style={{ marginTop: '0.75rem' }}>
+                        <Link to="/">View on Home</Link> as latest scan.
+                      </p>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
 
           {reports.length === 0 ? (
             <p>No reports yet. Create reports from Mobile Capture or the Reports flow, then return here to scan them.</p>

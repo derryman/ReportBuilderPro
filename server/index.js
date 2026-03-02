@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
+const pdfParse = require('pdf-parse');
 const { MongoClient, ObjectId } = require('mongodb');
 
 // Load .env then .env.local (local overrides for local testing, e.g. MONGO_URI=mongodb://localhost:27017/)
@@ -32,6 +34,16 @@ console.log('Using DB_NAME:', DB_NAME);
 app.use(cors());
 // Allow large JSON payloads (needed for PDFs stored as base64)
 app.use(express.json({ limit: '50mb' }));
+
+// In-memory storage for PDF upload (single file, max 10MB)
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    if (file.mimetype === 'application/pdf') return cb(null, true);
+    cb(new Error('Only PDF files are allowed'));
+  },
+});
 
 /** Require valid JWT for /api/* except login, health, test. Sets req.user = { email }. */
 function requireAuth(req, res, next) {
@@ -572,6 +584,60 @@ app.post('/api/reports/:id/analyze', async (req, res) => {
     console.error('Analyze report error:', error);
     return res.status(500).json({ message: 'Unexpected server error' });
   }
+});
+
+// Analyze uploaded PDF: extract text, run NLP, return flags (and save as latest scan for Home)
+app.post('/api/nlp/analyze-pdf', upload.single('pdf'), async (req, res) => {
+  if (!req.file || !req.file.buffer) {
+    return res.status(400).json({ message: 'No PDF file uploaded. Use field name "pdf".' });
+  }
+  let text;
+  try {
+    const data = await pdfParse(req.file.buffer);
+    text = (data && data.text) ? data.text.trim() : '';
+  } catch (err) {
+    console.error('PDF parse error:', err);
+    return res.status(400).json({ message: 'Could not extract text from PDF', error: err.message });
+  }
+  if (!text) {
+    return res.status(400).json({ message: 'PDF has no extractable text.' });
+  }
+  let flags = [];
+  let metadata = { model_version: 'none', classifier_mode: 'ml' };
+  if (NLP_SERVICE_URL) {
+    try {
+      const nlpResult = await callNlpService(text);
+      flags = nlpResult.flags || [];
+      metadata = nlpResult.metadata || metadata;
+    } catch (err) {
+      console.error('NLP service error:', err);
+      return res.status(502).json({
+        message: 'NLP service unavailable or error',
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
+  } else {
+    metadata.nlp_configured = false;
+  }
+  const reportTitle = (req.file.originalname || 'Uploaded PDF').substring(0, 200);
+  if (db) {
+    const analysisDoc = {
+      reportId: null,
+      reportTitle: `PDF: ${reportTitle}`,
+      flags,
+      processed_at: new Date(),
+      model_version: metadata.model_version || 'python-ml-v1.0',
+      createdBy: req.user.email,
+    };
+    await db.collection('ai_analysis').insertOne(analysisDoc);
+  }
+  return res.json({
+    reportTitle: `PDF: ${reportTitle}`,
+    flags,
+    metadata: { text_length: text.length, ...metadata },
+    text_preview: text.length > 0 ? text.substring(0, 500) : null,
+    processed_at: new Date(),
+  });
 });
 
 // Get the most recent analysis for current user (Home "latest scan" dashboard)

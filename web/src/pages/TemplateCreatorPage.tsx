@@ -334,41 +334,7 @@ export default function TemplateCreatorPage() {
       )}
 
       <div className="template-builder-grid">
-        {/* Sidebar: drag to canvas */}
-        <aside className="template-library-sidebar panel panel-default word-sidebar">
-          <div className="panel-heading">
-            <h2 className="panel-title">Components</h2>
-            <p className="text-muted small">Drag onto document</p>
-          </div>
-          <div className="panel-body">
-            {components.map((item) => (
-              <div
-                key={item.type}
-                className="component-library-item-draggable"
-                draggable
-                onDragStart={(e) => {
-                  e.dataTransfer.effectAllowed = 'copy';
-                  e.dataTransfer.setData('text/plain', item.type);
-                  setDraggingFromSidebar(item.type);
-                }}
-                onDragEnd={() => setDraggingFromSidebar(null)}
-              >
-                <button
-                  type="button"
-                  className="btn btn-default btn-block component-library-item"
-                  onClick={() => addComponent(item.type)}
-                  style={{ cursor: 'grab' }}
-                >
-                  <span className="component-icon">{item.icon}</span>
-                  <span>{item.label}</span>
-                  <span className="drag-hint">↔ Drag</span>
-                </button>
-              </div>
-            ))}
-          </div>
-        </aside>
-
-        {/* Document area - Word-style page */}
+        {/* Document area - Word-style page (ribbon-only, no components bar) */}
         <section className="template-canvas-area">
           <div className="template-canvas word-document-wrapper">
             <div className="report-preview word-document-preview">
@@ -388,17 +354,6 @@ export default function TemplateCreatorPage() {
                         id="canvas-drop-zone"
                         className="document-canvas"
                         ref={canvasRef}
-                        onDragOver={(e) => {
-                          e.preventDefault();
-                          e.dataTransfer.dropEffect = 'copy';
-                        }}
-                        onDrop={(e) => {
-                          e.preventDefault();
-                          const componentType = e.dataTransfer.getData('text/plain') as ComponentType;
-                          if (componentType && components.some(c => c.type === componentType)) {
-                            addComponent(componentType);
-                          }
-                        }}
                       >
                         <SortableContext
                           items={templateComponents.map((c) => c.id)}
@@ -406,8 +361,8 @@ export default function TemplateCreatorPage() {
                         >
                           {templateComponents.length === 0 ? (
                             <div className="canvas-empty-document">
-                              <p className="text-muted">Drag components here or click to add</p>
-                              <p className="text-muted small">Start building your document template</p>
+                              <p className="text-muted">Use the <strong>Insert</strong> ribbon above to add components</p>
+                              <p className="text-muted small">Image, Progress, Issues, Text Box</p>
                             </div>
                           ) : (
                             templateComponents.map((component) => (
