@@ -250,6 +250,20 @@ export default function RiskDetectionPage() {
                           </li>
                         ))}
                       </ul>
+                      {(pdfResult.textLength !== undefined && pdfResult.textLength > 0) && (
+                        <p className="text-muted small" style={{ marginTop: '0.5rem' }}>
+                          Extracted {pdfResult.textLength} characters from the PDF.
+                        </p>
+                      )}
+                      {pdfResult.textPreview && (
+                        <details style={{ marginTop: '0.5rem' }}>
+                          <summary className="text-muted small">Preview of extracted text</summary>
+                          <pre className="small" style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', marginTop: '0.25rem', maxHeight: '8rem', overflow: 'auto' }}>
+                            {pdfResult.textPreview}
+                            {(pdfResult.textLength ?? 0) > 500 ? '…' : ''}
+                          </pre>
+                        </details>
+                      )}
                       <p className="text-muted small" style={{ marginTop: '0.75rem' }}>
                         <Link to="/">View on Home</Link> as latest scan.
                       </p>

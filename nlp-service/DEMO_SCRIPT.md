@@ -8,14 +8,61 @@ Use this for a short demo: upload a single-page PDF, show the findings, and desc
 
 ## Before the demo
 
-1. **Run the stack locally**
-   - `run_all_local.bat` (or start Node API, NLP service, and web app).
+1. **Prepare your demo PDF**
+   - Use **TESTINGSitereport1.pdf** (or any one-page site report with clear risk/delay/material-shortage sentences).
+   - Good examples: “Current access to the house is unsafe.”, “Scaffolding is not tied properly.”, “Missing some windowsills need more.”
+
+2. **When you’re ready to show the app**
+   - Run the stack: `run_all_local.bat` (or start Node API, NLP service, and web app).
    - Ensure `server/.env` or `server/.env.local` has `NLP_SERVICE_URL=http://localhost:8000`.
    - Open the web app (e.g. `http://localhost:5173`), log in (e.g. admin / admin).
 
-2. **Prepare your demo PDF**
-   - Use **TESTINGSitereport1.pdf** (or any one-page site report with clear risk/delay/material-shortage sentences).
-   - Good examples: “Current access to the house is unsafe.”, “Scaffolding is not tied properly.”, “Missing some windowsills need more.”
+---
+
+## Demo flow: training → test script → app
+
+Use this order so you show **how the model is trained**, then **that it works on your report text**, then **the same thing in the app**.
+
+### Part 1: Show the training (terminal)
+
+**Where:** Open a terminal in the `nlp-service` folder.
+
+**What to run:**
+
+```bash
+cd nlp-service
+venv\Scripts\activate
+python -m app.train
+```
+
+**What they’ll see:** Lines like “Loading training data…”, “Preprocessing (spaCy)…”, “Training set: 1XX samples.”, “Fitting TF-IDF…”, “Training Logistic Regression…”, accuracy and a classification report, then “Model saved to …\model”.
+
+**What to say:** *“We train the model from a JSON file of labelled sentences—risk, delay, material shortage, or none. It uses TF-IDF and Logistic Regression. When we add more real report sentences to that file and run this again, the model gets better. The output shows how well it fits the training data.”*
+
+---
+
+### Part 2: Run the test script (same terminal)
+
+**What to run:**
+
+```bash
+python test_report_text.py
+```
+
+**What they’ll see:** “Model loaded? True”, how the text is split into sentences, then “Flags found: 3” with the three lines (e.g. risk for “current access to the house is unsafe.”, risk for “scaưolding is not tied properly…”, material_shortage for “missing some windowsills need more.”).
+
+**What to say:** *“This script runs the exact same report text we use in the PDF through the pipeline—same preprocessing, same model. So we’re proving the model works on this content before we show it in the browser. The same three findings will appear when we upload the PDF in the app.”*
+
+---
+
+### Part 3: Show the process in the app
+
+1. **Start the stack** (if not already): Node API, NLP service, web app. Log in.
+2. Go to **Risk Detection** → **Demo: Upload PDF** → choose **TESTINGSitereport1.pdf**.
+3. When results appear, point out the **same three findings** as in the test script.
+4. Go to **Home** and show **Latest scan** with the same run.
+
+**What to say:** *“So the flow in the app is: we upload the PDF, the server extracts the text, sends it to the same NLP service we just ran in the terminal, and we get the same flags. The only difference is the UI and that we store the result for the dashboard.”*
 
 ---
 
@@ -54,23 +101,21 @@ Use these when you want to explain what’s happening, in plain language.
 
 ---
 
-## Demo flow (about 5 minutes)
+## App part in detail (Part 3 of the demo)
 
-### 1. Show Risk Detection and PDF upload
+When you get to “show the process in the app”:
 
 - Go to **Risk Detection** in the app.
 - Point out the **“Demo: Upload PDF”** section.
 - **Choose file** → select **TESTINGSitereport1.pdf** (or your demo PDF).
-- While it runs, use the “Step by step” lines above if you want to describe what’s happening.
+- While it runs, use the “Step by step” lines in “What’s going on” if you want to describe what’s happening.
 - When results appear, walk through each flag: type, confidence, snippet, suggested action.
-
-### 2. Show the same result on Home
-
-- Click **“View on Home”** (or go to **Home**).
-- Show **Latest scan**: same run, same flags, optional counts by type.
+- Click **“View on Home”** (or go to **Home**). Show **Latest scan**: same run, same flags.
 - Say something like: *“Every scan is saved so the dashboard always reflects the latest run.”*
 
-### 3. (Optional) Technical flow
+---
+
+## (Optional) Technical flow
 
 If someone wants the technical version:
 
