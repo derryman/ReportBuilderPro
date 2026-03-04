@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { API_BASE_URL } from '../config';
 import { fetchWithAuth } from '../utils/api';
 import { generateReportPdf } from '../utils/generatePdf';
 import { useOnlineStatus } from '../utils/useOnlineStatus';
