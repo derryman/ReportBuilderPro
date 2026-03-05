@@ -1,0 +1,21 @@
+{
+  "name": "Report Builder Pro",
+  "short_name": "ReportBuilderPro",
+  "description": "Design and share professional reports and dashboards.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0DBCF2",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

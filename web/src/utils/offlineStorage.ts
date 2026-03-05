@@ -4,8 +4,10 @@
  */
 
 const DB_NAME = 'ReportBuilderProOffline';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const STORE_REPORTS = 'reports';
+const STORE_DRAFTS = 'drafts';
+const DRAFT_KEY = 'mobile-capture';
 
 export type OfflineReport = {
   localId: string;
@@ -27,6 +29,9 @@ function openDB(): Promise<IDBDatabase> {
       const db = (event.target as IDBOpenDBRequest).result;
       if (!db.objectStoreNames.contains(STORE_REPORTS)) {
         db.createObjectStore(STORE_REPORTS, { keyPath: 'localId' });
+      }
+      if (!db.objectStoreNames.contains(STORE_DRAFTS)) {
+        db.createObjectStore(STORE_DRAFTS, { keyPath: 'id' });
       }
     };
   });
@@ -128,4 +133,59 @@ export async function deleteOfflineReport(localId: string): Promise<void> {
 export async function getUnsyncedCount(): Promise<number> {
   const list = await getUnsyncedReports();
   return list.length;
+}
+
+// --- Mobile capture draft (temp save while filling out form, especially offline) ---
+
+export type MobileCaptureDraft = {
+  id: string;
+  templateId: string;
+  template: { id: string; title: string; description?: string; components?: unknown[] };
+  jobId: string;
+  pageData: Record<string, string>[];
+  savedAt: number;
+};
+
+/** Save current form state as a draft (overwrites any existing draft). */
+export async function saveDraft(draft: Omit<MobileCaptureDraft, 'id' | 'savedAt'>): Promise<void> {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const record: MobileCaptureDraft = {
+      id: DRAFT_KEY,
+      templateId: draft.templateId,
+      template: draft.template,
+      jobId: draft.jobId,
+      pageData: draft.pageData,
+      savedAt: Date.now(),
+    };
+    const tx = db.transaction(STORE_DRAFTS, 'readwrite');
+    const store = tx.objectStore(STORE_DRAFTS);
+    store.put(record);
+    tx.oncomplete = () => { db.close(); resolve(); };
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+/** Get the current draft, if any. */
+export async function getDraft(): Promise<MobileCaptureDraft | null> {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_DRAFTS, 'readonly');
+    const request = tx.objectStore(STORE_DRAFTS).get(DRAFT_KEY);
+    request.onsuccess = () => resolve(request.result || null);
+    request.onerror = () => reject(request.error);
+    tx.oncomplete = () => db.close();
+  });
+}
+
+/** Clear the draft (e.g. after successful submit). */
+export async function clearDraft(): Promise<void> {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_DRAFTS, 'readwrite');
+    const request = tx.objectStore(STORE_DRAFTS).delete(DRAFT_KEY);
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+    tx.oncomplete = () => db.close();
+  });
 }
