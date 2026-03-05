@@ -5,6 +5,12 @@ import { useOnlineStatus } from '../utils/useOnlineStatus';
 import {
   saveReportOffline,
   getUnsyncedCount,
+  getUnsyncedReports,
+  markReportSynced,
+  deleteOfflineReport,
+  getDraft,
+  saveDraft,
+  clearDraft,
 } from '../utils/offlineStorage';
 
 type ComponentType = 'image' | 'progress' | 'issues' | 'text';
@@ -80,6 +86,8 @@ export default function MobileCapturePage() {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [saving, setSaving] = useState(false);
   const [unsyncedCount, setUnsyncedCount] = useState(0);
+  const [syncing, setSyncing] = useState(false);
+  const [draftRestored, setDraftRestored] = useState(false);
   const isOnline = useOnlineStatus();
 
   const refreshUnsyncedCount = useCallback(async () => {
@@ -114,6 +122,71 @@ export default function MobileCapturePage() {
   useEffect(() => {
     refreshUnsyncedCount();
   }, [refreshUnsyncedCount]);
+
+  // Restore draft on mount (mobile temp-save from last session)
+  useEffect(() => {
+    let cancelled = false;
+    getDraft().then((draft) => {
+      if (cancelled || !draft?.template) return;
+      const template = draft.template as Template;
+      setSelectedTemplateId(draft.templateId);
+      setSelectedTemplate(template);
+      setReportJobId(draft.jobId || '');
+      setPageData(draft.pageData?.length ? draft.pageData : [emptyPageFromTemplate(template)]);
+      setCurrentPageIndex(0);
+      setDraftRestored(true);
+    }).catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
+
+  // Auto-save draft when form has content (debounced, so we don't write on every keystroke)
+  useEffect(() => {
+    if (!selectedTemplateId || !selectedTemplate || pageData.length === 0) return;
+    const t = setTimeout(() => {
+      saveDraft({
+        templateId: selectedTemplateId,
+        template: selectedTemplate,
+        jobId: reportJobId,
+        pageData,
+      }).catch(() => {});
+    }, 2000);
+    return () => clearTimeout(t);
+  }, [selectedTemplateId, selectedTemplate, reportJobId, pageData]);
+
+  // Auto-sync pending reports when coming back online (mobile)
+  useEffect(() => {
+    if (!isOnline) return;
+    let cancelled = false;
+    const run = async () => {
+      const pending = await getUnsyncedReports();
+      if (cancelled || pending.length === 0) return;
+      setSyncing(true);
+      for (const report of pending) {
+        if (cancelled) break;
+        try {
+          const res = await fetchWithAuth('/api/reports', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              templateId: report.templateId,
+              jobId: report.jobId,
+              capturedData: report.capturedData,
+              timestamp: report.timestamp,
+            }),
+          });
+          const data = await res.json().catch(() => ({}));
+          if (res.ok && data.id) {
+            await markReportSynced(report.localId, data.id);
+            await deleteOfflineReport(report.localId);
+          }
+        } catch { /* skip */ }
+      }
+      if (!cancelled) await refreshUnsyncedCount();
+      setSyncing(false);
+    };
+    run();
+    return () => { cancelled = true; };
+  }, [isOnline, refreshUnsyncedCount]);
 
   // Fetch full template details when selected
   useEffect(() => {
@@ -243,6 +316,7 @@ export default function MobileCapturePage() {
 
       if (!isOnline) {
         await saveReportOffline(payload);
+        await clearDraft();
         await refreshUnsyncedCount();
         alert('Saved offline. Report will sync when you\'re back online.');
         resetForm();
@@ -266,6 +340,7 @@ export default function MobileCapturePage() {
         }
 
         if (response.ok) {
+          await clearDraft();
           console.log('✅ Report saved successfully!', responseData);
           alert(`Report saved successfully!\n\nReport ID: ${responseData.id || 'N/A'}\n\nYou can view it on the Reports page.`);
           resetForm();
@@ -277,6 +352,7 @@ export default function MobileCapturePage() {
         }
       } catch (networkError: unknown) {
         await saveReportOffline(payload);
+        await clearDraft();
         await refreshUnsyncedCount();
         alert('No connection. Report saved offline and will sync when you\'re back online.');
         resetForm();
@@ -303,9 +379,19 @@ export default function MobileCapturePage() {
               Offline – reports saved locally
             </span>
           )}
-          {unsyncedCount > 0 && (
+          {syncing && (
+            <span className="label label-info" style={{ padding: '4px 8px', borderRadius: 4, fontSize: 12 }}>
+              Syncing…
+            </span>
+          )}
+          {unsyncedCount > 0 && !syncing && (
             <span className="text-muted" style={{ fontSize: 12 }}>
               {unsyncedCount} report{unsyncedCount !== 1 ? 's' : ''} pending sync
+            </span>
+          )}
+          {draftRestored && (
+            <span className="label label-default" style={{ padding: '4px 8px', borderRadius: 4, fontSize: 12 }}>
+              Draft restored
             </span>
           )}
         </div>
