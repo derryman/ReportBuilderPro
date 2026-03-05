@@ -15,7 +15,7 @@ env:
 
 jobs:
   build-and-deploy:
-    if: env.AZURE_CONTAINER_APP_NAME != '' && env.AZURE_RESOURCE_GROUP != '' && env.ACR_NAME != ''
+    if: ${{ env.AZURE_CONTAINER_APP_NAME != '' && env.AZURE_RESOURCE_GROUP != '' && env.ACR_NAME != '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
