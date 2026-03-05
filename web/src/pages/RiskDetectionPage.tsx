@@ -55,7 +55,7 @@ export default function RiskDetectionPage() {
     const fetchData = async () => {
       try {
         const [reportsRes, templatesRes] = await Promise.all([
-          fetchWithAuth('/api/reports'),
+          fetchWithAuth('/api/reports?list=1'),
           fetchWithAuth('/api/templates'),
         ]);
         if (reportsRes.ok) {

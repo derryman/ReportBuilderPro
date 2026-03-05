@@ -22,7 +22,7 @@ type Report = {
   id: string;
   templateId: string;
   jobId: string | null;
-  capturedData: Record<string, CapturedComponent>;
+  capturedData?: Record<string, CapturedComponent>;
   timestamp: string;
   createdAt: string;
 };
@@ -50,8 +50,8 @@ export default function ReportsPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch reports
-        const reportsResponse = await fetchWithAuth('/api/reports');
+        // Fetch reports (list only: no capturedData – much faster)
+        const reportsResponse = await fetchWithAuth('/api/reports?list=1');
         if (reportsResponse.ok) {
           const reportsData = await reportsResponse.json();
           setReports(reportsData);
@@ -89,13 +89,21 @@ export default function ReportsPage() {
   const handleDownloadPdf = async (report: Report) => {
     setGeneratingPdf(report.id);
     try {
+      // List view doesn't include capturedData; fetch full report for PDF
+      const fullReport = report.capturedData
+        ? report
+        : await fetchWithAuth(`/api/reports/${report.id}`).then((r) => (r.ok ? r.json() : null));
+      if (!fullReport?.capturedData) {
+        alert('Could not load report data for PDF.');
+        return;
+      }
       const template = templates[report.templateId];
-      const components = Object.values(report.capturedData);
+      const components = Object.values(fullReport.capturedData);
 
       await generateReportPdf({
         templateTitle: template?.title || 'Unknown Template',
-        jobId: report.jobId,
-        timestamp: report.timestamp || report.createdAt,
+        jobId: fullReport.jobId,
+        timestamp: fullReport.timestamp || fullReport.createdAt,
         components: components,
       });
     } catch (error) {
@@ -218,7 +226,7 @@ export default function ReportsPage() {
         <div className="reports-list">
           {reports.map((report) => {
             const template = templates[report.templateId];
-            const components = Object.values(report.capturedData);
+            const components = report.capturedData ? Object.values(report.capturedData) : [];
 
             return (
               <div key={report.id} className="panel panel-default report-card">
@@ -263,7 +271,10 @@ export default function ReportsPage() {
                   </div>
                 </div>
                 <div className="panel-body">
-                  {components.map((component, index) => {
+                  {components.length === 0 ? (
+                    <p className="text-muted small">Use Edit or Download PDF to view content.</p>
+                  ) : (
+                  components.map((component, index) => {
                     if (component.type === 'image' && component.image) {
                       return (
                         <div key={index} className="report-component" style={{ marginBottom: '20px' }}>
@@ -319,7 +330,8 @@ export default function ReportsPage() {
                       );
                     }
                     return null;
-                  })}
+                  })
+                  )}
                 </div>
               </div>
             );
