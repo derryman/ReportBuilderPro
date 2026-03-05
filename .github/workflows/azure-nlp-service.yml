@@ -15,8 +15,6 @@ env:
 
 jobs:
   build-and-deploy:
-    # Only run if the three required secrets are set
-    if: ${{ secrets.AZURE_NLP_CONTAINER_APP_NAME != '' && secrets.AZURE_NLP_RESOURCE_GROUP != '' && secrets.AZURE_NLP_ACR_NAME != '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
