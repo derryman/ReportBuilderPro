@@ -367,7 +367,8 @@ app.post('/api/reports', async (req, res) => {
   }
 });
 
-// Get all captured reports (only current user's)
+// Get all captured reports (only current user's).
+// ?list=1 returns lightweight list without capturedData (faster for list/risk pages).
 app.get('/api/reports', async (req, res) => {
   if (!db) {
     return res.status(503).json({ message: 'Database not ready yet' });
@@ -379,14 +380,19 @@ app.get('/api/reports', async (req, res) => {
       .sort({ createdAt: -1 })
       .toArray();
 
-    const reportsList = reports.map((r) => ({
-      id: r._id.toString(),
-      templateId: r.templateId,
-      jobId: r.jobId,
-      capturedData: r.capturedData,
-      timestamp: r.timestamp,
-      createdAt: r.createdAt,
-    }));
+    const listOnly = req.query.list === '1' || req.query.list === 'true';
+
+    const reportsList = reports.map((r) => {
+      const base = {
+        id: r._id.toString(),
+        templateId: r.templateId,
+        jobId: r.jobId,
+        timestamp: r.timestamp,
+        createdAt: r.createdAt,
+      };
+      if (listOnly) return base;
+      return { ...base, capturedData: r.capturedData };
+    });
 
     return res.json(reportsList);
   } catch (error) {
