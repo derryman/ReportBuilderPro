@@ -424,6 +424,65 @@ small.text-muted {
 }
 
 
+/* Home: quick links */
+.home-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--rbp-gray-800);
+  margin: 0 0 1rem 0;
+}
+
+.home-quick-links {
+  margin-bottom: 28px;
+}
+
+.home-quick-links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.home-quick-link-card {
+  display: block;
+  padding: 18px 20px;
+  background: var(--rbp-surface);
+  border: 1px solid var(--rbp-gray-200);
+  border-radius: var(--rbp-radius);
+  text-decoration: none;
+  color: var(--rbp-gray-800);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.home-quick-link-card:hover {
+  border-color: var(--rbp-teal);
+  box-shadow: var(--rbp-shadow);
+  color: var(--rbp-gray-800);
+}
+
+.home-quick-link-card.active {
+  border-color: var(--rbp-teal);
+  background: var(--rbp-gray-50);
+  color: var(--rbp-gray-800);
+}
+
+.home-quick-link-label {
+  display: block;
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.home-quick-link-desc {
+  display: block;
+  font-size: 13px;
+  color: var(--rbp-gray-500);
+  line-height: 1.4;
+}
+
+.home-latest-scan {
+  margin-bottom: 28px;
+}
+
 .home-page .panel-stat {
   background: var(--rbp-surface);
   border: none;
@@ -488,7 +547,8 @@ small.text-muted {
   max-width: 520px;
 }
 
-.rbp-hero .btn-group {
+.rbp-hero .btn-group,
+.rbp-hero .rbp-hero-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
@@ -1131,6 +1191,14 @@ small.text-muted {
   .rbp-hero {
     padding: 20px 16px;
     margin-bottom: 16px;
+  }
+
+  .home-quick-links-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-quick-link-card {
+    padding: 16px 18px;
   }
 
   .rbp-hero h1 {
