@@ -49,7 +49,7 @@ python -m app.train
 python test_report_text.py
 ```
 
-**What they’ll see:** “Model loaded? True”, how the text is split into sentences, then “Flags found: 3” with the three lines (e.g. risk for “current access to the house is unsafe.”, risk for “scaưolding is not tied properly…”, material_shortage for “missing some windowsills need more.”).
+**What they’ll see:** “Model loaded? True”, how the text is split into sentences, then “Flags found: 3” with the three l hoepfully this will fix the othere tng nes (e.g. risk for “current access to the house is unsafe.”, risk for “scaưolding is not tied properly…”, material_shortage for “missing some windowsills need more.”).
 
 **What to say:** *“This script runs the exact same report text we use in the PDF through the pipeline—same preprocessing, same model. So we’re proving the model works on this content before we show it in the browser. The same three findings will appear when we upload the PDF in the app.”*
 
