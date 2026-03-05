@@ -19,11 +19,24 @@ type LatestAnalysis = {
   model_version: string;
 };
 
-// Static stats for dashboard (can later come from API)
-const stats = [
-  { label: 'Templates drafted', value: '18', detail: 'In the last 30 days' },
-  { label: 'Reports published', value: '42', detail: 'Company wide' },
-  { label: 'Pending approvals', value: '6', detail: 'Awaiting review' },
+type QuickLink = {
+  path: string;
+  label: string;
+  description: string;
+};
+
+const QUICK_LINKS_DESKTOP: QuickLink[] = [
+  { path: '/template-creator', label: 'Template Creator', description: 'Design and edit report templates' },
+  { path: '/template-library', label: 'Template Library', description: 'Browse and use your templates' },
+  { path: '/reports', label: 'Reports', description: 'View and manage captured reports' },
+  { path: '/risk-detection', label: 'Risk Detection', description: 'Scan documents for risks and issues' },
+];
+
+const QUICK_LINKS_MOBILE: QuickLink[] = [
+  { path: '/mobile-capture', label: 'Mobile Capture', description: 'Fill out a report on site' },
+  { path: '/template-library', label: 'Template Library', description: 'Browse your templates' },
+  { path: '/reports', label: 'Reports', description: 'View your reports' },
+  { path: '/risk-detection', label: 'Risk Detection', description: 'Scan for risks' },
 ];
 
 function labelToSeverity(label: string): 'high' | 'medium' | 'low' {
@@ -56,60 +69,68 @@ export default function HomePage() {
       }, {})
     : {};
 
+  const quickLinks = isMobile ? QUICK_LINKS_MOBILE : QUICK_LINKS_DESKTOP;
+
   return (
     <div className="home-page">
       <section className="rbp-hero panel panel-default">
         <div className="panel-body">
-          <h1>Design fast, share confidently</h1>
-          <p>Report Builder Pro centralizes your business data into ready-to-share dashboards.</p>
-          <div className="btn-group">
-            {!isMobile && (
-              <NavLink to="/template-creator" className="btn btn-rbp">
-                Start a template
-              </NavLink>
-            )}
-            <NavLink to="/template-library" className="btn btn-default">
-              Browse templates
-            </NavLink>
-            {isMobile && (
+          <h1>Report Builder Pro</h1>
+          <p>
+            Create templates, capture reports on site, and scan for risks. One place for your reporting workflow.
+          </p>
+          <div className="rbp-hero-actions">
+            {isMobile ? (
               <NavLink to="/mobile-capture" className="btn btn-rbp">
-                Fill out template
+                Capture a report
               </NavLink>
+            ) : (
+              <>
+                <NavLink to="/template-creator" className="btn btn-rbp">
+                  New template
+                </NavLink>
+                <NavLink to="/template-library" className="btn btn-default">
+                  Browse templates
+                </NavLink>
+              </>
             )}
           </div>
         </div>
       </section>
 
-      <section className="row">
-        {stats.map((stat) => (
-          <div key={stat.label} className="col-sm-4">
-            <div className="panel panel-stat">
-              <div className="panel-body">
-                <span className="stat-label">{stat.label}</span>
-                <strong className="stat-value">{stat.value}</strong>
-                <span className="stat-detail">{stat.detail}</span>
-              </div>
-            </div>
-          </div>
-        ))}
+      <section className="home-quick-links">
+        <h2 className="home-section-title">Quick links</h2>
+        <div className="home-quick-links-grid">
+          {quickLinks.map((link) => (
+            <NavLink
+              key={link.path}
+              to={link.path}
+              className={({ isActive }) =>
+                `home-quick-link-card ${isActive ? 'active' : ''}`
+              }
+            >
+              <span className="home-quick-link-label">{link.label}</span>
+              <span className="home-quick-link-desc">{link.description}</span>
+            </NavLink>
+          ))}
+        </div>
       </section>
 
-      {/* Latest scan dashboard */}
-      <section className="panel panel-default">
+      <section className="panel panel-default home-latest-scan">
         <div className="panel-heading">
           <h2 className="panel-title">Latest scan</h2>
           <p className="text-muted small" style={{ marginTop: '4px', marginBottom: 0 }}>
-            Issues from the most recent document scan. Run scans from Risk Detection.
+            From your most recent document or report scan. Run scans from Risk Detection.
           </p>
         </div>
         <div className="panel-body">
-          {latest === undefined && <p>Loading latest scan…</p>}
+          {latest === undefined && <p className="text-muted">Loading…</p>}
 
           {latest === null && (
             <div className="latest-scan-empty">
-              <p>No scan results yet.</p>
+              <p className="text-muted">No scan results yet.</p>
               <p className="text-muted small">
-                Go to <NavLink to="/risk-detection">Risk Detection</NavLink> to select reports and run the model.
+                Go to <NavLink to="/risk-detection">Risk Detection</NavLink> to upload a PDF or scan reports.
               </p>
             </div>
           )}
@@ -135,7 +156,6 @@ export default function HomePage() {
                 </span>
               </div>
 
-              {/* Counts by type */}
               <div className="row" style={{ marginBottom: '1.5rem' }}>
                 {Object.entries(counts).map(([label, count]) => (
                   <div key={label} className="col-sm-4">
@@ -149,8 +169,9 @@ export default function HomePage() {
                 ))}
               </div>
 
-              {/* Issue cards from latest scan */}
-              <h3 style={{ marginBottom: '0.75rem' }}>Detected issues</h3>
+              <h3 style={{ marginBottom: '0.75rem', fontSize: '1rem', fontWeight: 600 }}>
+                Detected issues
+              </h3>
               <div className="row">
                 {latest.flags.map((flag, idx) => {
                   const severity = labelToSeverity(flag.label);
@@ -163,7 +184,6 @@ export default function HomePage() {
                           <span className={badgeClass}>{flag.label.replace(/_/g, ' ')}</span>
                           <span className="issue-job">{(flag.confidence * 100).toFixed(0)}%</span>
                         </div>
-                        <h3 className="issue-title">Snippet</h3>
                         <p className="issue-description">{flag.snippet}</p>
                         <div className="issue-meta">
                           <span className="issue-category">{flag.suggested_action}</span>
@@ -174,7 +194,7 @@ export default function HomePage() {
                 })}
               </div>
               <p className="text-muted small" style={{ marginTop: '1rem' }}>
-                Run another scan from <NavLink to="/risk-detection">Risk Detection</NavLink>.
+                <NavLink to="/risk-detection">Risk Detection</NavLink> — upload a PDF or scan more reports.
               </p>
             </>
           )}
