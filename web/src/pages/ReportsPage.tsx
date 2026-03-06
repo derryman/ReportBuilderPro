@@ -98,7 +98,7 @@ export default function ReportsPage() {
         return;
       }
       const template = templates[report.templateId];
-      const components = Object.values(fullReport.capturedData);
+      const components = Object.values(fullReport.capturedData) as CapturedComponent[];
 
       await generateReportPdf({
         templateTitle: template?.title || 'Unknown Template',
