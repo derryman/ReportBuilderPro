@@ -45,10 +45,10 @@ const upload = multer({
   },
 });
 
-/** Require valid JWT for /api/* except login, health, test. Sets req.user = { email }. */
+/** Require valid JWT for /api/* except login and health. Sets req.user = { email }. */
 function requireAuth(req, res, next) {
   if (req.method === 'POST' && req.path === '/login') return next();
-  if (req.method === 'GET' && (req.path === '/health' || req.path === '/test')) return next();
+  if (req.method === 'GET' && req.path === '/health') return next();
   const auth = req.headers.authorization;
   const token = auth && auth.startsWith('Bearer ') ? auth.slice(7) : null;
   if (!token) {
@@ -115,16 +115,6 @@ app.get('/api/health', (_req, res) => {
     status: 'ok', 
     hasDb: Boolean(db),
     timestamp: new Date().toISOString(),
-  });
-});
-
-// Test endpoint to verify connectivity
-app.get('/api/test', (_req, res) => {
-  console.log('Test endpoint called');
-  res.json({ 
-    message: 'Backend is reachable!',
-    timestamp: new Date().toISOString(),
-    dbConnected: Boolean(db),
   });
 });
 

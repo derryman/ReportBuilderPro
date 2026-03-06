@@ -44,7 +44,6 @@ See `AZURE_HOSTING.md` for detailed deployment instructions.
 
 - `AZURE_HOSTING.md` - Complete Azure deployment guide
 - `MIGRATE_TO_AZURE.md` - Migrating data from local MongoDB to Azure
-- `LOGIN_SETUP.md` - Setting up user authentication
 
 ## 🔧 Environment Variables
 
