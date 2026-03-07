@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../utils/api';
 import { generateReportPdf } from '../utils/generatePdf';
 import { useOnlineStatus } from '../utils/useOnlineStatus';
@@ -8,15 +8,12 @@ import {
   markReportSynced,
   deleteOfflineReport,
 } from '../utils/offlineStorage';
-
-type CapturedComponent = {
-  type: 'image' | 'text' | 'progress' | 'issues';
-  title: string;
-  image?: string;
-  text?: string;
-  progress?: string;
-  issues?: string;
-};
+import {
+  type CapturedComponent,
+  type WritingReviewResponse,
+  getWritingIssueLabel,
+  getWritingIssuePreview,
+} from '../utils/reportWritingReview';
 
 type Report = {
   id: string;
@@ -32,7 +29,14 @@ type Template = {
   title: string;
 };
 
+type WritingReviewModalState = {
+  report: Report;
+  templateTitle: string;
+  response: WritingReviewResponse;
+};
+
 export default function ReportsPage() {
+  const navigate = useNavigate();
   const [reports, setReports] = useState<Report[]>([]);
   const [templates, setTemplates] = useState<Record<string, Template>>({});
   const [loading, setLoading] = useState(true);
@@ -40,6 +44,7 @@ export default function ReportsPage() {
   const [deletingReportId, setDeletingReportId] = useState<string | null>(null);
   const [unsyncedCount, setUnsyncedCount] = useState(0);
   const [syncing, setSyncing] = useState(false);
+  const [writingReview, setWritingReview] = useState<WritingReviewModalState | null>(null);
   const isOnline = useOnlineStatus();
 
   const refreshUnsyncedCount = useCallback(async () => {
@@ -86,6 +91,20 @@ export default function ReportsPage() {
     return date.toLocaleString();
   };
 
+  const generatePdfForReport = async (fullReport: Report, templateTitle: string) => {
+    if (!fullReport.capturedData) {
+      throw new Error('Could not load report data for PDF.');
+    }
+
+    const components = Object.values(fullReport.capturedData) as CapturedComponent[];
+    await generateReportPdf({
+      templateTitle,
+      jobId: fullReport.jobId,
+      timestamp: fullReport.timestamp || fullReport.createdAt,
+      components,
+    });
+  };
+
   const handleDownloadPdf = async (report: Report) => {
     setGeneratingPdf(report.id);
     try {
@@ -97,21 +116,72 @@ export default function ReportsPage() {
         alert('Could not load report data for PDF.');
         return;
       }
-      const template = templates[report.templateId];
-      const components = Object.values(fullReport.capturedData) as CapturedComponent[];
+      const templateTitle = templates[report.templateId]?.title || 'Unknown Template';
 
-      await generateReportPdf({
-        templateTitle: template?.title || 'Unknown Template',
-        jobId: fullReport.jobId,
-        timestamp: fullReport.timestamp || fullReport.createdAt,
-        components: components,
-      });
+      if (isOnline) {
+        try {
+          const reviewRes = await fetchWithAuth(`/api/reports/${report.id}/writing-review`, {
+            method: 'POST',
+          });
+          const reviewData: WritingReviewResponse = await reviewRes.json().catch(() => ({
+            reviewAvailable: false,
+            configured: false,
+            provider: 'none',
+            issues: [],
+            summary: { issueCount: 0, textLength: 0, checkedAt: null },
+            message: 'Writing review failed.',
+          }));
+
+          if (!reviewRes.ok) {
+            const continueAnyway = window.confirm(
+              `${reviewData.message || 'Writing review is unavailable.'}\n\nContinue to PDF anyway?`
+            );
+            if (!continueAnyway) return;
+          } else if (reviewData.reviewAvailable && reviewData.issues.length > 0) {
+            setWritingReview({
+              report: fullReport,
+              templateTitle,
+              response: reviewData,
+            });
+            return;
+          }
+        } catch (error) {
+          console.error('Writing review request failed:', error);
+          const continueAnyway = window.confirm(
+            'Writing review failed. Continue to PDF anyway?'
+          );
+          if (!continueAnyway) return;
+        }
+      }
+
+      await generatePdfForReport(fullReport, templateTitle);
     } catch (error) {
       console.error('Error generating PDF:', error);
       alert('Failed to generate PDF. Please try again.');
     } finally {
       setGeneratingPdf(null);
     }
+  };
+
+  const handleContinuePdfAfterReview = async () => {
+    if (!writingReview) return;
+    setGeneratingPdf(writingReview.report.id);
+    try {
+      await generatePdfForReport(writingReview.report, writingReview.templateTitle);
+      setWritingReview(null);
+    } catch (error) {
+      console.error('Error generating PDF after review:', error);
+      alert('Failed to generate PDF. Please try again.');
+    } finally {
+      setGeneratingPdf(null);
+    }
+  };
+
+  const handleEditAfterReview = () => {
+    if (!writingReview) return;
+    const reportId = writingReview.report.id;
+    setWritingReview(null);
+    navigate(`/reports/${reportId}/edit`);
   };
 
   const handleSyncPending = async () => {
@@ -336,6 +406,106 @@ export default function ReportsPage() {
               </div>
             );
           })}
+        </div>
+      )}
+      {writingReview && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0, 0, 0, 0.45)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 16,
+            zIndex: 1100,
+          }}
+        >
+          <div
+            className="panel panel-default"
+            style={{
+              width: '100%',
+              maxWidth: 760,
+              maxHeight: '85vh',
+              overflowY: 'auto',
+              marginBottom: 0,
+            }}
+          >
+            <div className="panel-heading">
+              <h3 className="panel-title">Writing review before PDF</h3>
+            </div>
+            <div className="panel-body">
+              <p className="text-muted">
+                Found {writingReview.response.summary.issueCount} possible writing issue
+                {writingReview.response.summary.issueCount !== 1 ? 's' : ''} in this report.
+                You can continue to PDF, or edit the report first.
+              </p>
+
+              <div
+                style={{
+                  display: 'grid',
+                  gap: 12,
+                  marginTop: 16,
+                }}
+              >
+                {writingReview.response.issues.slice(0, 8).map((issue, index) => (
+                  <div
+                    key={`${issue.ruleId}-${index}`}
+                    style={{
+                      border: '1px solid #e6e6e6',
+                      borderRadius: 8,
+                      padding: 12,
+                      background: '#fafafa',
+                    }}
+                  >
+                    <div style={{ fontWeight: 600, marginBottom: 6 }}>
+                      {getWritingIssueLabel(issue)}
+                    </div>
+                    <div style={{ marginBottom: 6 }}>{issue.message}</div>
+                    <div className="text-muted small" style={{ marginBottom: 6 }}>
+                      {getWritingIssuePreview(issue)}
+                    </div>
+                    {issue.replacements.length > 0 && (
+                      <div className="small">
+                        Suggestions: {issue.replacements.join(', ')}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {writingReview.response.issues.length > 8 && (
+                <p className="text-muted small" style={{ marginTop: 12 }}>
+                  Showing the first 8 suggestions to keep the review quick.
+                </p>
+              )}
+
+              <div style={{ display: 'flex', gap: 12, marginTop: 20, flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  className="btn btn-default"
+                  onClick={() => setWritingReview(null)}
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-default"
+                  onClick={handleEditAfterReview}
+                >
+                  Edit report
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-rbp"
+                  onClick={handleContinuePdfAfterReview}
+                  disabled={generatingPdf === writingReview.report.id}
+                >
+                  {generatingPdf === writingReview.report.id ? 'Generating...' : 'Continue to PDF'}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

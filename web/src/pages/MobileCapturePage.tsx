@@ -541,6 +541,9 @@ export default function MobileCapturePage() {
                             className="form-control"
                             rows={5}
                             placeholder="Enter text..."
+                            spellCheck
+                            autoCorrect="on"
+                            autoCapitalize="sentences"
                             value={currentPageForm[fieldKey] || ''}
                             onChange={(e) => handleFormChange(fieldKey, e.target.value)}
                           />
@@ -555,6 +558,9 @@ export default function MobileCapturePage() {
                             className="form-control"
                             rows={4}
                             placeholder="Enter progress updates..."
+                            spellCheck
+                            autoCorrect="on"
+                            autoCapitalize="sentences"
                             value={currentPageForm[fieldKey] || ''}
                             onChange={(e) => handleFormChange(fieldKey, e.target.value)}
                           />
@@ -569,6 +575,9 @@ export default function MobileCapturePage() {
                             className="form-control"
                             rows={4}
                             placeholder="Enter issues or concerns..."
+                            spellCheck
+                            autoCorrect="on"
+                            autoCapitalize="sentences"
                             value={currentPageForm[fieldKey] || ''}
                             onChange={(e) => handleFormChange(fieldKey, e.target.value)}
                           />
