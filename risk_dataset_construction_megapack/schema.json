@@ -1,0 +1,43 @@
+{
+  "files": {
+    "risk_catalog.json": "List of unique risk types (taxonomy).",
+    "risk_training_examples.jsonl": "JSONL lines for model training: site-note examples + grounded examples.",
+    "schema.json": "Schema definition for both files.",
+    "README.md": "How to use and notes on provenance."
+  },
+  "risk_catalog_record": {
+    "record_type": "risk_type",
+    "id": "RT_####",
+    "risk_id": "<category>.<subcategory>",
+    "category": "safety|delay|material_shortage|fire_safety|weathertightness",
+    "subcategory": "snake_case subcategory",
+    "title": "Human readable",
+    "description": "Short definition",
+    "typical_causes": [
+      "..."
+    ],
+    "typical_consequences": [
+      "..."
+    ],
+    "keywords": [
+      "..."
+    ],
+    "source_note": "Provenance note"
+  },
+  "training_example_record": {
+    "record_type": "site_note_example|incident_example|narrative_example",
+    "id": "EX_*",
+    "text": "Training text",
+    "labels": {
+      "risk_id": "<category>.<subcategory>",
+      "category": "...",
+      "subcategory": "...",
+      "severity": "low|medium|high|critical",
+      "likelihood": "rare|unlikely|possible|likely"
+    },
+    "keywords": [
+      "..."
+    ],
+    "source": "synthetic_from_taxonomy|user_provided_osha_text|user_provided_building_safety_narrative"
+  }
+}

@@ -17,13 +17,44 @@ The model is **not** stored in MongoDB. It is trained from **`data/training_data
 To make the AI better at detecting risks, delays, and material shortages:
 
 1. **Add more examples** to `data/training_data.json`. Use real report-style sentences and the correct label. Keep a balance between the four labels so the model doesn’t favour one.
-2. **Retrain** the model:
+2. **Optional:** convert the richer construction megapack into an augmented training file:
+   ```bash
+   cd nlp-service
+   venv\Scripts\activate
+   python -m app.convert_megapack
+   ```
+   This writes:
+   - `data/training_data_megapack_converted.json`
+   - `data/training_data_augmented.json`
+   - `data/training_data_megapack_report_style.json`
+   - `data/training_data_augmented_report_style.json`
+   - `data/training_data_augmented_summary.json`
+   The `*_report_style.json` files rewrite synthetic examples into shorter site-note wording so the model learns language closer to real inspection reports.
+3. **Retrain** the model:
    ```bash
    cd nlp-service
    venv\Scripts\activate
    python -m app.train
    ```
-3. **Restart** the NLP service (e.g. run `run_nlp.bat` or uvicorn again).
+   Or train from the augmented dataset:
+   ```bash
+   python -m app.train --data data/training_data_augmented.json
+   ```
+   For the most report-like training run, use:
+   ```bash
+   python -m app.train --data data/training_data_augmented_report_style.json
+   ```
+4. **Restart** the NLP service (e.g. run `run_nlp.bat` or uvicorn again).
+
+## Production build
+
+The Docker image trains the model at build time using:
+
+```bash
+python -m app.train --data data/training_data_augmented_report_style.json
+```
+
+That means Azure Container Apps will pick up the latest report-style dataset when this repo is pushed and rebuilt.
 
 The script writes `model/vectorizer.joblib` and `model/classifier.joblib`. The running service loads these; no database is used for the model itself.
 

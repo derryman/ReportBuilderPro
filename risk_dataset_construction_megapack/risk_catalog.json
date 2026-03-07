@@ -1,0 +1,1054 @@
+[
+  {
+    "risk_id": "safety.fall_from_height",
+    "category": "safety",
+    "subcategory": "fall_from_height",
+    "title": "Fall From Height",
+    "description": "Fall from height due to missing edge protection / unsafe access.",
+    "typical_causes": [
+      "missing guardrails",
+      "improper ladder use",
+      "unsecured opening",
+      "no fall arrest"
+    ],
+    "typical_consequences": [
+      "serious injury",
+      "fatality",
+      "lost time"
+    ],
+    "keywords": [
+      "fall protection",
+      "guardrails",
+      "ladder",
+      "scaffold",
+      "edge"
+    ],
+    "source_note": "HSE/OSHA common hazard",
+    "record_type": "risk_type",
+    "id": "RT_0001"
+  },
+  {
+    "risk_id": "safety.ladder_slip",
+    "category": "safety",
+    "subcategory": "ladder_slip",
+    "title": "Ladder Slip",
+    "description": "Fall due to ladder slip, kick-out, or misuse (e.g., stepladder used closed).",
+    "typical_causes": [
+      "ladder on uneven footing",
+      "overreaching",
+      "incorrect setup angle",
+      "damaged ladder"
+    ],
+    "typical_consequences": [
+      "head injury",
+      "fracture",
+      "hospitalisation"
+    ],
+    "keywords": [
+      "ladder",
+      "kick-out",
+      "overreach",
+      "tiles"
+    ],
+    "source_note": "OSHA-style incidents",
+    "record_type": "risk_type",
+    "id": "RT_0002"
+  },
+  {
+    "risk_id": "safety.struck_by_vehicle",
+    "category": "safety",
+    "subcategory": "struck_by_vehicle",
+    "title": "Struck By Vehicle",
+    "description": "Worker struck by moving vehicle in work zone or yard.",
+    "typical_causes": [
+      "inadequate traffic management",
+      "poor visibility",
+      "no spotter",
+      "reversing without banksman"
+    ],
+    "typical_consequences": [
+      "fatality",
+      "serious injury"
+    ],
+    "keywords": [
+      "traffic",
+      "work zone",
+      "banksman",
+      "visibility"
+    ],
+    "source_note": "OSHA-style incidents",
+    "record_type": "risk_type",
+    "id": "RT_0003"
+  },
+  {
+    "risk_id": "safety.forklift_pit_strike",
+    "category": "safety",
+    "subcategory": "forklift_pit_strike",
+    "title": "Forklift Pit Strike",
+    "description": "Powered industrial truck (forklift/PIT) strikes pedestrian.",
+    "typical_causes": [
+      "operator not looking",
+      "mixed pedestrian/vehicle routes",
+      "no audible warning",
+      "training gaps"
+    ],
+    "typical_consequences": [
+      "crush injury",
+      "amputation"
+    ],
+    "keywords": [
+      "forklift",
+      "PIT",
+      "warehouse",
+      "run over"
+    ],
+    "source_note": "User-provided OSHA abstracts",
+    "record_type": "risk_type",
+    "id": "RT_0004"
+  },
+  {
+    "risk_id": "safety.caught_between",
+    "category": "safety",
+    "subcategory": "caught_between",
+    "title": "Caught Between",
+    "description": "Worker caught between moving and fixed objects (pinch/crush).",
+    "typical_causes": [
+      "unsafe positioning",
+      "unexpected movement",
+      "poor communication",
+      "no exclusion zone"
+    ],
+    "typical_consequences": [
+      "crushing injury",
+      "fatality"
+    ],
+    "keywords": [
+      "caught between",
+      "pinch point",
+      "crushed"
+    ],
+    "source_note": "OSHA-style incidents",
+    "record_type": "risk_type",
+    "id": "RT_0005"
+  },
+  {
+    "risk_id": "safety.machinery_unguarded",
+    "category": "safety",
+    "subcategory": "machinery_unguarded",
+    "title": "Machinery Unguarded",
+    "description": "Contact with unguarded moving parts (fan blades, sprockets, nip points).",
+    "typical_causes": [
+      "guard removed",
+      "bypass of interlocks",
+      "maintenance while running",
+      "poor LOTO"
+    ],
+    "typical_consequences": [
+      "laceration",
+      "amputation",
+      "fatality"
+    ],
+    "keywords": [
+      "unguarded",
+      "fan blade",
+      "sprocket",
+      "nip point"
+    ],
+    "source_note": "OSHA-style incidents",
+    "record_type": "risk_type",
+    "id": "RT_0006"
+  },
+  {
+    "risk_id": "safety.lockout_tagout_failure",
+    "category": "safety",
+    "subcategory": "lockout_tagout_failure",
+    "title": "Lockout Tagout Failure",
+    "description": "Unexpected energisation during maintenance due to LOTO failure.",
+    "typical_causes": [
+      "no LOTO program",
+      "poor isolation",
+      "miscommunication",
+      "procedures missing"
+    ],
+    "typical_consequences": [
+      "fracture",
+      "amputation",
+      "electrocution"
+    ],
+    "keywords": [
+      "LOTO",
+      "isolation",
+      "maintenance"
+    ],
+    "source_note": "OSHA-style incidents",
+    "record_type": "risk_type",
+    "id": "RT_0007"
+  },
+  {
+    "risk_id": "safety.hot_work_fumes",
+    "category": "safety",
+    "subcategory": "hot_work_fumes",
+    "title": "Hot Work Fumes",
+    "description": "Exposure to welding/grinding fumes or hot metal burns during hot work.",
+    "typical_causes": [
+      "no respirator",
+      "poor ventilation",
+      "inadequate PPE",
+      "galvanised fumes"
+    ],
+    "typical_consequences": [
+      "respiratory illness",
+      "burn"
+    ],
+    "keywords": [
+      "welding",
+      "fumes",
+      "grinding",
+      "PPE"
+    ],
+    "source_note": "User-provided OSHA abstracts",
+    "record_type": "risk_type",
+    "id": "RT_0008"
+  },
+  {
+    "risk_id": "safety.lifting_operations",
+    "category": "safety",
+    "subcategory": "lifting_operations",
+    "title": "Lifting Operations",
+    "description": "Dropped load / lifting failure during crane or hoisting operations.",
+    "typical_causes": [
+      "incorrect rigging",
+      "no lift plan",
+      "poor communication",
+      "equipment defect"
+    ],
+    "typical_consequences": [
+      "struck-by",
+      "crush injury"
+    ],
+    "keywords": [
+      "lifting",
+      "rigging",
+      "dropped load",
+      "crane"
+    ],
+    "source_note": "Construction safety",
+    "record_type": "risk_type",
+    "id": "RT_0009"
+  },
+  {
+    "risk_id": "safety.excavation_collapse",
+    "category": "safety",
+    "subcategory": "excavation_collapse",
+    "title": "Excavation Collapse",
+    "description": "Excavation/trench collapse or instability.",
+    "typical_causes": [
+      "no shoring",
+      "water ingress",
+      "vibration",
+      "poor soil assessment"
+    ],
+    "typical_consequences": [
+      "burial",
+      "fatality"
+    ],
+    "keywords": [
+      "trench",
+      "shoring",
+      "excavation"
+    ],
+    "source_note": "Construction safety",
+    "record_type": "risk_type",
+    "id": "RT_0010"
+  },
+  {
+    "risk_id": "safety.electrical_shock",
+    "category": "safety",
+    "subcategory": "electrical_shock",
+    "title": "Electrical Shock",
+    "description": "Electrical shock/arc due to live work or defective equipment.",
+    "typical_causes": [
+      "live circuits",
+      "inadequate isolation",
+      "damaged leads",
+      "poor inspection"
+    ],
+    "typical_consequences": [
+      "burn",
+      "fatality"
+    ],
+    "keywords": [
+      "electric shock",
+      "arc flash",
+      "isolation"
+    ],
+    "source_note": "Construction safety",
+    "record_type": "risk_type",
+    "id": "RT_0011"
+  },
+  {
+    "risk_id": "fire_safety.combustible_cladding",
+    "category": "fire_safety",
+    "subcategory": "combustible_cladding",
+    "title": "Combustible Cladding",
+    "description": "Combustible materials on external walls increase external fire spread.",
+    "typical_causes": [
+      "combustible facade materials",
+      "inadequate testing/classification",
+      "value engineering"
+    ],
+    "typical_consequences": [
+      "rapid fire spread",
+      "evacuation risk",
+      "major loss"
+    ],
+    "keywords": [
+      "cladding",
+      "external wall",
+      "combustible",
+      "facade"
+    ],
+    "source_note": "UK Approved Document B / post-Grenfell context",
+    "record_type": "risk_type",
+    "id": "RT_0012"
+  },
+  {
+    "risk_id": "fire_safety.missing_fire_stopping",
+    "category": "fire_safety",
+    "subcategory": "missing_fire_stopping",
+    "title": "Missing Fire Stopping",
+    "description": "Missing/defective cavity barriers and fire stopping in facade/compartments.",
+    "typical_causes": [
+      "poor workmanship",
+      "unverified installations",
+      "design gaps",
+      "inspection failure"
+    ],
+    "typical_consequences": [
+      "smoke spread",
+      "fire spread",
+      "life safety risk"
+    ],
+    "keywords": [
+      "fire stopping",
+      "cavity barrier",
+      "compartmentation"
+    ],
+    "source_note": "Building safety litigation context",
+    "record_type": "risk_type",
+    "id": "RT_0013"
+  },
+  {
+    "risk_id": "fire_safety.ambiguous_guidance",
+    "category": "fire_safety",
+    "subcategory": "ambiguous_guidance",
+    "title": "Ambiguous Guidance",
+    "description": "Ambiguous or inconsistent guidance leads to misinterpretation and unsafe compliance.",
+    "typical_causes": [
+      "unclear approved documents",
+      "desktop assessments misused",
+      "competence gaps"
+    ],
+    "typical_consequences": [
+      "non-compliant build",
+      "latent safety defects"
+    ],
+    "keywords": [
+      "guidance",
+      "compliance",
+      "approved documents"
+    ],
+    "source_note": "Hackitt-style findings",
+    "record_type": "risk_type",
+    "id": "RT_0014"
+  },
+  {
+    "risk_id": "fire_safety.inadequate_inspection",
+    "category": "fire_safety",
+    "subcategory": "inadequate_inspection",
+    "title": "Inadequate Inspection",
+    "description": "Insufficient checking at consent/inspection/completion stages.",
+    "typical_causes": [
+      "resource constraints",
+      "skills gaps",
+      "paper-based signoff",
+      "weak oversight"
+    ],
+    "typical_consequences": [
+      "defects not detected",
+      "rework",
+      "litigation"
+    ],
+    "keywords": [
+      "inspection",
+      "consent",
+      "sign-off"
+    ],
+    "source_note": "UK/NZ regulatory parallels",
+    "record_type": "risk_type",
+    "id": "RT_0015"
+  },
+  {
+    "risk_id": "fire_safety.evacuation_system_gap",
+    "category": "fire_safety",
+    "subcategory": "evacuation_system_gap",
+    "title": "Evacuation System Gap",
+    "description": "Evacuation alert / wayfinding information missing or inadequate.",
+    "typical_causes": [
+      "systems not specified",
+      "maintenance failures",
+      "unclear responsibilities"
+    ],
+    "typical_consequences": [
+      "delayed evacuation",
+      "fire service hindered"
+    ],
+    "keywords": [
+      "evacuation alert",
+      "wayfinding",
+      "secure information box"
+    ],
+    "source_note": "Approved Document B update themes",
+    "record_type": "risk_type",
+    "id": "RT_0016"
+  },
+  {
+    "risk_id": "weathertightness.untreated_timber_rot",
+    "category": "weathertightness",
+    "subcategory": "untreated_timber_rot",
+    "title": "Untreated Timber Rot",
+    "description": "Use of untreated timber and moisture ingress leading to decay/rot.",
+    "typical_causes": [
+      "material selection unsuitable",
+      "moisture trapped",
+      "poor detailing"
+    ],
+    "typical_consequences": [
+      "structural decay",
+      "mould",
+      "high remediation cost"
+    ],
+    "keywords": [
+      "untreated timber",
+      "rot",
+      "decay",
+      "mould"
+    ],
+    "source_note": "NZ leaky buildings context",
+    "record_type": "risk_type",
+    "id": "RT_0017"
+  },
+  {
+    "risk_id": "weathertightness.monolithic_cladding_failure",
+    "category": "weathertightness",
+    "subcategory": "monolithic_cladding_failure",
+    "title": "Monolithic Cladding Failure",
+    "description": "Monolithic cladding system prone to cracking and water ingress.",
+    "typical_causes": [
+      "thermal movement",
+      "insufficient drainage",
+      "poor maintenance"
+    ],
+    "typical_consequences": [
+      "water ingress",
+      "mould",
+      "decay"
+    ],
+    "keywords": [
+      "monolithic cladding",
+      "cracks",
+      "water ingress"
+    ],
+    "source_note": "NZ leaky buildings context",
+    "record_type": "risk_type",
+    "id": "RT_0018"
+  },
+  {
+    "risk_id": "weathertightness.window_flashing_defect",
+    "category": "weathertightness",
+    "subcategory": "window_flashing_defect",
+    "title": "Window Flashing Defect",
+    "description": "Defective window/door flashing and junction details allow water entry.",
+    "typical_causes": [
+      "incorrect installation",
+      "missing flashings",
+      "sealant failure"
+    ],
+    "typical_consequences": [
+      "internal damp",
+      "damage",
+      "rework"
+    ],
+    "keywords": [
+      "flashing",
+      "junction",
+      "sealant"
+    ],
+    "source_note": "E2/AS1 risk matrix principles",
+    "record_type": "risk_type",
+    "id": "RT_0019"
+  },
+  {
+    "risk_id": "weathertightness.complex_roof_detail",
+    "category": "weathertightness",
+    "subcategory": "complex_roof_detail",
+    "title": "Complex Roof Detail",
+    "description": "Complex roof forms and low/no eaves increase weathertightness risk.",
+    "typical_causes": [
+      "design complexity",
+      "insufficient overhang",
+      "poor drainage"
+    ],
+    "typical_consequences": [
+      "leaks",
+      "maintenance burden"
+    ],
+    "keywords": [
+      "eaves",
+      "complex roof",
+      "drainage"
+    ],
+    "source_note": "NZ leaky buildings context",
+    "record_type": "risk_type",
+    "id": "RT_0020"
+  },
+  {
+    "risk_id": "delay.late_design_information",
+    "category": "delay",
+    "subcategory": "late_design_information",
+    "title": "Late Design Information",
+    "description": "Design information / approvals issued late, delaying downstream tasks.",
+    "typical_causes": [
+      "late client decisions",
+      "incomplete design",
+      "RFI backlog"
+    ],
+    "typical_consequences": [
+      "programme slippage",
+      "rework",
+      "cost overrun"
+    ],
+    "keywords": [
+      "RFI",
+      "approval",
+      "design",
+      "submittal"
+    ],
+    "source_note": "Common delay cause",
+    "record_type": "risk_type",
+    "id": "RT_0021"
+  },
+  {
+    "risk_id": "delay.late_inspections",
+    "category": "delay",
+    "subcategory": "late_inspections",
+    "title": "Late Inspections",
+    "description": "Inspections or sign-offs delayed (e.g., fire stopping, building control).",
+    "typical_causes": [
+      "inspector availability",
+      "documentation missing",
+      "rework needed"
+    ],
+    "typical_consequences": [
+      "hold points missed",
+      "handover delay"
+    ],
+    "keywords": [
+      "inspection",
+      "sign-off",
+      "hold point"
+    ],
+    "source_note": "Common delay cause",
+    "record_type": "risk_type",
+    "id": "RT_0022"
+  },
+  {
+    "risk_id": "delay.weather_delay",
+    "category": "delay",
+    "subcategory": "weather_delay",
+    "title": "Weather Delay",
+    "description": "Adverse weather disrupts external works and deliveries.",
+    "typical_causes": [
+      "heavy rain",
+      "high winds",
+      "frost"
+    ],
+    "typical_consequences": [
+      "lost productive hours",
+      "access issues"
+    ],
+    "keywords": [
+      "weather",
+      "rain",
+      "wind",
+      "frost"
+    ],
+    "source_note": "Common delay cause",
+    "record_type": "risk_type",
+    "id": "RT_0023"
+  },
+  {
+    "risk_id": "delay.rework_quality_defect",
+    "category": "delay",
+    "subcategory": "rework_quality_defect",
+    "title": "Rework Quality Defect",
+    "description": "Rework due to quality defects or non-compliance.",
+    "typical_causes": [
+      "poor workmanship",
+      "spec misunderstanding",
+      "insufficient QA"
+    ],
+    "typical_consequences": [
+      "delay",
+      "waste",
+      "cost increase"
+    ],
+    "keywords": [
+      "rework",
+      "defect",
+      "NCR"
+    ],
+    "source_note": "Common delay cause",
+    "record_type": "risk_type",
+    "id": "RT_0024"
+  },
+  {
+    "risk_id": "delay.plant_breakdown",
+    "category": "delay",
+    "subcategory": "plant_breakdown",
+    "title": "Plant Breakdown",
+    "description": "Plant/equipment breakdown causes stoppages (crane, telehandler, generator).",
+    "typical_causes": [
+      "poor maintenance",
+      "overuse",
+      "parts unavailable"
+    ],
+    "typical_consequences": [
+      "delay",
+      "productivity loss"
+    ],
+    "keywords": [
+      "breakdown",
+      "plant",
+      "downtime"
+    ],
+    "source_note": "Common delay cause",
+    "record_type": "risk_type",
+    "id": "RT_0025"
+  },
+  {
+    "risk_id": "material_shortage.long_lead_items",
+    "category": "material_shortage",
+    "subcategory": "long_lead_items",
+    "title": "Long Lead Items",
+    "description": "Long lead-time items not ordered early enough.",
+    "typical_causes": [
+      "procurement delays",
+      "late approvals",
+      "cashflow constraints"
+    ],
+    "typical_consequences": [
+      "programme delay",
+      "workface starvation"
+    ],
+    "keywords": [
+      "lead time",
+      "procurement",
+      "submittal"
+    ],
+    "source_note": "Supply chain",
+    "record_type": "risk_type",
+    "id": "RT_0026"
+  },
+  {
+    "risk_id": "material_shortage.supplier_delay",
+    "category": "material_shortage",
+    "subcategory": "supplier_delay",
+    "title": "Supplier Delay",
+    "description": "Supplier dispatch/delivery delay disrupts planned sequence.",
+    "typical_causes": [
+      "supplier backlog",
+      "transport issues",
+      "incorrect order"
+    ],
+    "typical_consequences": [
+      "idle labour",
+      "resequencing"
+    ],
+    "keywords": [
+      "late delivery",
+      "supplier",
+      "dispatch"
+    ],
+    "source_note": "Supply chain",
+    "record_type": "risk_type",
+    "id": "RT_0027"
+  },
+  {
+    "risk_id": "material_shortage.material_quality_reject",
+    "category": "material_shortage",
+    "subcategory": "material_quality_reject",
+    "title": "Material Quality Reject",
+    "description": "Material rejected on quality; requires replacement.",
+    "typical_causes": [
+      "out-of-spec",
+      "damage in transit",
+      "incorrect certification"
+    ],
+    "typical_consequences": [
+      "reorder",
+      "delay",
+      "cost"
+    ],
+    "keywords": [
+      "quality reject",
+      "out-of-spec",
+      "replacement"
+    ],
+    "source_note": "Supply chain",
+    "record_type": "risk_type",
+    "id": "RT_0028"
+  },
+  {
+    "risk_id": "material_shortage.spec_change",
+    "category": "material_shortage",
+    "subcategory": "spec_change",
+    "title": "Spec Change",
+    "description": "Specification change forces new material selection and lead times.",
+    "typical_causes": [
+      "design change",
+      "compliance change",
+      "client preference"
+    ],
+    "typical_consequences": [
+      "rework",
+      "delay"
+    ],
+    "keywords": [
+      "spec change",
+      "variation",
+      "materials"
+    ],
+    "source_note": "Supply chain / change control",
+    "record_type": "risk_type",
+    "id": "RT_0029"
+  },
+  {
+    "risk_id": "material_shortage.inventory_mismanagement",
+    "category": "material_shortage",
+    "subcategory": "inventory_mismanagement",
+    "title": "Inventory Mismanagement",
+    "description": "Materials unavailable due to poor inventory control or site logistics.",
+    "typical_causes": [
+      "no min/max",
+      "misplaced stock",
+      "theft"
+    ],
+    "typical_consequences": [
+      "work stoppage",
+      "waste"
+    ],
+    "keywords": [
+      "shortage",
+      "stock",
+      "logistics"
+    ],
+    "source_note": "Supply chain",
+    "record_type": "risk_type",
+    "id": "RT_0030"
+  },
+  {
+    "risk_id": "safety.confined_space",
+    "category": "safety",
+    "subcategory": "confined_space",
+    "title": "Confined Space",
+    "description": "Confined space entry without adequate controls.",
+    "typical_causes": [
+      "no gas testing",
+      "no rescue plan",
+      "poor ventilation"
+    ],
+    "typical_consequences": [
+      "asphyxiation",
+      "fatality"
+    ],
+    "keywords": [
+      "confined space",
+      "gas test",
+      "rescue"
+    ],
+    "source_note": "Synthetic taxonomy",
+    "record_type": "risk_type",
+    "id": "RT_0031"
+  },
+  {
+    "risk_id": "safety.silica_exposure",
+    "category": "safety",
+    "subcategory": "silica_exposure",
+    "title": "Silica Exposure",
+    "description": "Respirable crystalline silica exposure during cutting/grinding.",
+    "typical_causes": [
+      "dry cutting",
+      "no extraction",
+      "no RPE"
+    ],
+    "typical_consequences": [
+      "occupational illness"
+    ],
+    "keywords": [
+      "silica",
+      "dust",
+      "RPE"
+    ],
+    "source_note": "Synthetic taxonomy",
+    "record_type": "risk_type",
+    "id": "RT_0032"
+  },
+  {
+    "risk_id": "safety.asbestos_disturbance",
+    "category": "safety",
+    "subcategory": "asbestos_disturbance",
+    "title": "Asbestos Disturbance",
+    "description": "Asbestos-containing materials disturbed without controls.",
+    "typical_causes": [
+      "survey missing",
+      "uncontrolled removal"
+    ],
+    "typical_consequences": [
+      "exposure",
+      "regulatory breach"
+    ],
+    "keywords": [
+      "asbestos",
+      "survey",
+      "licensed"
+    ],
+    "source_note": "Synthetic taxonomy",
+    "record_type": "risk_type",
+    "id": "RT_0033"
+  },
+  {
+    "risk_id": "safety.manual_handling",
+    "category": "safety",
+    "subcategory": "manual_handling",
+    "title": "Manual Handling",
+    "description": "Manual handling strain due to poor lifting technique.",
+    "typical_causes": [
+      "awkward loads",
+      "no mechanical aid"
+    ],
+    "typical_consequences": [
+      "MSD",
+      "lost time"
+    ],
+    "keywords": [
+      "manual handling",
+      "strain",
+      "MSD"
+    ],
+    "source_note": "Synthetic taxonomy",
+    "record_type": "risk_type",
+    "id": "RT_0034"
+  },
+  {
+    "risk_id": "safety.noise_exposure",
+    "category": "safety",
+    "subcategory": "noise_exposure",
+    "title": "Noise Exposure",
+    "description": "Noise exposure above limits due to plant/tools.",
+    "typical_causes": [
+      "no hearing protection",
+      "long exposure"
+    ],
+    "typical_consequences": [
+      "hearing loss"
+    ],
+    "keywords": [
+      "noise",
+      "hearing",
+      "PPE"
+    ],
+    "source_note": "Synthetic taxonomy",
+    "record_type": "risk_type",
+    "id": "RT_0035"
+  },
+  {
+    "risk_id": "safety.scaffold_collapse",
+    "category": "safety",
+    "subcategory": "scaffold_collapse",
+    "title": "Scaffold Collapse",
+    "description": "Scaffold instability or collapse.",
+    "typical_causes": [
+      "inadequate ties",
+      "unauthorised modification"
+    ],
+    "typical_consequences": [
+      "falls",
+      "injury"
+    ],
+    "keywords": [
+      "scaffold",
+      "ties",
+      "collapse"
+    ],
+    "source_note": "Synthetic taxonomy",
+    "record_type": "risk_type",
+    "id": "RT_0036"
+  },
+  {
+    "risk_id": "safety.edge_opening_unprotected",
+    "category": "safety",
+    "subcategory": "edge_opening_unprotected",
+    "title": "Edge Opening Unprotected",
+    "description": "Unprotected openings (lift shaft, stairwell, service penetrations).",
+    "typical_causes": [
+      "covers missing",
+      "poor housekeeping"
+    ],
+    "typical_consequences": [
+      "fall",
+      "serious injury"
+    ],
+    "keywords": [
+      "opening",
+      "cover",
+      "edge"
+    ],
+    "source_note": "Synthetic taxonomy",
+    "record_type": "risk_type",
+    "id": "RT_0037"
+  },
+  {
+    "risk_id": "delay.permit_delay",
+    "category": "delay",
+    "subcategory": "permit_delay",
+    "title": "Permit Delay",
+    "description": "Permit/authorisation delays (road opening, hot works, lift plans).",
+    "typical_causes": [
+      "late applications",
+      "missing documentation"
+    ],
+    "typical_consequences": [
+      "start delayed"
+    ],
+    "keywords": [
+      "permit",
+      "authorisation",
+      "hot works"
+    ],
+    "source_note": "Synthetic taxonomy",
+    "record_type": "risk_type",
+    "id": "RT_0038"
+  },
+  {
+    "risk_id": "delay.interface_clash",
+    "category": "delay",
+    "subcategory": "interface_clash",
+    "title": "Interface Clash",
+    "description": "Trade interface clashes cause resequencing and stand-down.",
+    "typical_causes": [
+      "poor coordination",
+      "space constraints"
+    ],
+    "typical_consequences": [
+      "productivity loss"
+    ],
+    "keywords": [
+      "clash",
+      "resequencing",
+      "stand-down"
+    ],
+    "source_note": "Synthetic taxonomy",
+    "record_type": "risk_type",
+    "id": "RT_0039"
+  },
+  {
+    "risk_id": "delay.access_restriction",
+    "category": "delay",
+    "subcategory": "access_restriction",
+    "title": "Access Restriction",
+    "description": "Access restrictions prevent planned work (shared access, neighbours, security).",
+    "typical_causes": [
+      "logistics plan gaps",
+      "restricted hours"
+    ],
+    "typical_consequences": [
+      "delay"
+    ],
+    "keywords": [
+      "access",
+      "logistics",
+      "restriction"
+    ],
+    "source_note": "Synthetic taxonomy",
+    "record_type": "risk_type",
+    "id": "RT_0040"
+  },
+  {
+    "risk_id": "material_shortage.transport_disruption",
+    "category": "material_shortage",
+    "subcategory": "transport_disruption",
+    "title": "Transport Disruption",
+    "description": "Transport disruption (port delays, weather, strikes) affects deliveries.",
+    "typical_causes": [
+      "port congestion",
+      "weather",
+      "customs"
+    ],
+    "typical_consequences": [
+      "late delivery"
+    ],
+    "keywords": [
+      "transport",
+      "port",
+      "customs"
+    ],
+    "source_note": "Synthetic taxonomy",
+    "record_type": "risk_type",
+    "id": "RT_0041"
+  },
+  {
+    "risk_id": "material_shortage.single_source_dependency",
+    "category": "material_shortage",
+    "subcategory": "single_source_dependency",
+    "title": "Single Source Dependency",
+    "description": "Single-source supplier dependency causes vulnerability.",
+    "typical_causes": [
+      "no alternates",
+      "framework lock-in"
+    ],
+    "typical_consequences": [
+      "shortage"
+    ],
+    "keywords": [
+      "single source",
+      "supplier",
+      "alternate"
+    ],
+    "source_note": "Synthetic taxonomy",
+    "record_type": "risk_type",
+    "id": "RT_0042"
+  },
+  {
+    "risk_id": "material_shortage.storage_damage",
+    "category": "material_shortage",
+    "subcategory": "storage_damage",
+    "title": "Storage Damage",
+    "description": "Materials damaged due to poor storage/handling.",
+    "typical_causes": [
+      "water exposure",
+      "improper stacking"
+    ],
+    "typical_consequences": [
+      "reorder"
+    ],
+    "keywords": [
+      "damage",
+      "storage",
+      "handling"
+    ],
+    "source_note": "Synthetic taxonomy",
+    "record_type": "risk_type",
+    "id": "RT_0043"
+  }
+]

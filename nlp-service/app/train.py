@@ -1,6 +1,8 @@
 # Training: load data, spaCy preprocess, TF-IDF + Logistic Regression, save
+import argparse
 import json
 import sys
+from collections import Counter
 from pathlib import Path
 
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -16,19 +18,31 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA_PATH = ROOT / "data" / "training_data.json"
 
 
-def load_training_data():
-    if not DATA_PATH.exists():
-        raise FileNotFoundError(f"Training data not found at {DATA_PATH}")
-    with open(DATA_PATH, "r", encoding="utf-8") as f:
+def parse_args():
+    parser = argparse.ArgumentParser(description="Train the ReportBuilderPro NLP model.")
+    parser.add_argument(
+        "--data",
+        type=Path,
+        default=DATA_PATH,
+        help="Path to the JSON training data file",
+    )
+    return parser.parse_args()
+
+
+def load_training_data(data_path: Path):
+    if not data_path.exists():
+        raise FileNotFoundError(f"Training data not found at {data_path}")
+    with open(data_path, "r", encoding="utf-8") as f:
         data = json.load(f)
     if not data:
-        raise ValueError("training_data.json must be a non-empty array.")
+        raise ValueError(f"{data_path.name} must be a non-empty array.")
     return data
 
 
 def main():
-    print("Loading training data...")
-    raw = load_training_data()
+    args = parse_args()
+    print(f"Loading training data from {args.data}...")
+    raw = load_training_data(args.data)
     print("Preprocessing (spaCy)...")
     X_texts = []
     y = []
@@ -42,6 +56,7 @@ def main():
             X_texts.append(" ".join(tokens))
             y.append(label)
     print(f"Training set: {len(X_texts)} samples.")
+    print(f"Label distribution: {dict(Counter(y))}")
     print("Fitting TF-IDF (word + bigram)...")
     vectorizer = TfidfVectorizer(ngram_range=(1, 2), max_features=5000)
     X = vectorizer.fit_transform(X_texts)
