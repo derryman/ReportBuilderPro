@@ -255,6 +255,9 @@ export default function EditReportPage() {
                       <textarea
                         className="form-control"
                         rows={5}
+                        spellCheck
+                        autoCorrect="on"
+                        autoCapitalize="sentences"
                         value={form[fieldKey] || ''}
                         onChange={(e) => handleFormChange(fieldKey, e.target.value)}
                       />
@@ -269,6 +272,9 @@ export default function EditReportPage() {
                       <textarea
                         className="form-control"
                         rows={4}
+                        spellCheck
+                        autoCorrect="on"
+                        autoCapitalize="sentences"
                         value={form[fieldKey] || ''}
                         onChange={(e) => handleFormChange(fieldKey, e.target.value)}
                       />
@@ -283,6 +289,9 @@ export default function EditReportPage() {
                       <textarea
                         className="form-control"
                         rows={4}
+                        spellCheck
+                        autoCorrect="on"
+                        autoCapitalize="sentences"
                         value={form[fieldKey] || ''}
                         onChange={(e) => handleFormChange(fieldKey, e.target.value)}
                       />

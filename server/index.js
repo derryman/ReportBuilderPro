@@ -20,6 +20,15 @@ const MONGO_URI = process.env.MONGO_URI || process.env.Mongo_URL || 'mongodb://l
 const DB_NAME = process.env.MONGO_DB || process.env.Mongo_DB || 'ReportBuilderPro';
 const NLP_SERVICE_URL = process.env.NLP_SERVICE_URL || ''; // e.g. http://localhost:8000
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-in-production';
+const WRITING_REVIEW_ENABLED = process.env.WRITING_REVIEW_ENABLED === '1';
+const WRITING_REVIEW_URL = (process.env.WRITING_REVIEW_URL || '').trim();
+const WRITING_REVIEW_LANGUAGE = (process.env.WRITING_REVIEW_LANGUAGE || 'en-GB').trim();
+const WRITING_REVIEW_USERNAME = (process.env.WRITING_REVIEW_USERNAME || '').trim();
+const WRITING_REVIEW_API_KEY = (process.env.WRITING_REVIEW_API_KEY || '').trim();
+const WRITING_REVIEW_MAX_ISSUES = Math.max(
+  1,
+  Number.parseInt(process.env.WRITING_REVIEW_MAX_ISSUES || '12', 10) || 12
+);
 
 // Debug: Log what we're getting (without exposing password)
 console.log('Environment check:');
@@ -29,6 +38,8 @@ console.log('MONGO_DB exists:', !!process.env.MONGO_DB);
 console.log('Mongo_DB exists:', !!process.env.Mongo_DB);
 console.log('Using MONGO_URI:', MONGO_URI ? MONGO_URI.substring(0, 20) + '...' : 'NOT SET');
 console.log('Using DB_NAME:', DB_NAME);
+console.log('Writing review enabled:', WRITING_REVIEW_ENABLED);
+console.log('Writing review configured:', Boolean(WRITING_REVIEW_URL));
 
 // Enable CORS (allows frontend to talk to backend)
 app.use(cors());
@@ -502,6 +513,141 @@ function getTextFromReport(report) {
   return parts.join('\n');
 }
 
+function getWritingReviewSegmentsFromReport(report) {
+  const capturedData = report && report.capturedData;
+  if (!capturedData || typeof capturedData !== 'object') {
+    return { text: '', segments: [] };
+  }
+
+  const rawSegments = [];
+  for (const [fieldKey, value] of Object.entries(capturedData)) {
+    if (!value || typeof value !== 'object') continue;
+
+    const fieldLabel =
+      typeof value.title === 'string' && value.title.trim()
+        ? value.title.trim()
+        : 'Report text';
+
+    const candidates = [
+      ['text', value.text],
+      ['progress', value.progress],
+      ['issues', value.issues],
+    ];
+
+    for (const [fieldType, candidate] of candidates) {
+      if (typeof candidate === 'string' && candidate.trim()) {
+        rawSegments.push({
+          fieldKey,
+          fieldType,
+          fieldLabel,
+          text: candidate.trim(),
+        });
+      }
+    }
+  }
+
+  let cursor = 0;
+  const segments = rawSegments.map((segment, index) => {
+    const start = cursor;
+    const end = start + segment.text.length;
+    cursor = end;
+    if (index < rawSegments.length - 1) cursor += 2;
+    return { ...segment, start, end };
+  });
+
+  return {
+    text: rawSegments.map((segment) => segment.text).join('\n\n'),
+    segments,
+  };
+}
+
+function isWritingReviewConfigured() {
+  return WRITING_REVIEW_ENABLED && Boolean(WRITING_REVIEW_URL);
+}
+
+function findSegmentForOffset(segments, offset) {
+  if (!Array.isArray(segments) || segments.length === 0) return null;
+  return (
+    segments.find((segment) => offset >= segment.start && offset <= segment.end) ||
+    segments.find((segment) => offset < segment.start) ||
+    segments[segments.length - 1]
+  );
+}
+
+async function callWritingReviewService(text) {
+  const params = new URLSearchParams({
+    text: text || '',
+    language: WRITING_REVIEW_LANGUAGE,
+  });
+
+  if (WRITING_REVIEW_USERNAME) params.set('username', WRITING_REVIEW_USERNAME);
+  if (WRITING_REVIEW_API_KEY) params.set('apiKey', WRITING_REVIEW_API_KEY);
+
+  const res = await fetch(WRITING_REVIEW_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params.toString(),
+  });
+
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(errText || `Writing review service returned ${res.status}`);
+  }
+
+  return res.json();
+}
+
+function normaliseWritingReviewIssues(matches, segments) {
+  if (!Array.isArray(matches)) return [];
+
+  return matches
+    .slice(0, WRITING_REVIEW_MAX_ISSUES)
+    .map((match) => {
+      const offset = Number(match.offset) || 0;
+      const length = Number(match.length) || 0;
+      const segment = findSegmentForOffset(segments, offset);
+      const relativeOffset = segment ? Math.max(0, offset - segment.start) : 0;
+      const issueText = segment
+        ? segment.text.slice(relativeOffset, relativeOffset + length).trim()
+        : '';
+      const context =
+        match &&
+        match.context &&
+        typeof match.context.text === 'string' &&
+        match.context.text.trim()
+          ? match.context.text.trim()
+          : segment
+            ? segment.text.slice(
+                Math.max(0, relativeOffset - 25),
+                Math.min(segment.text.length, relativeOffset + length + 25)
+              )
+            : '';
+
+      return {
+        fieldKey: segment ? segment.fieldKey : null,
+        fieldType: segment ? segment.fieldType : 'unknown',
+        fieldLabel: segment ? segment.fieldLabel : 'Report text',
+        message: match.message || 'Possible writing issue found.',
+        shortMessage: match.shortMessage || '',
+        category:
+          (match.rule &&
+            match.rule.category &&
+            typeof match.rule.category.name === 'string' &&
+            match.rule.category.name) ||
+          'Writing',
+        context,
+        issueText,
+        replacements: Array.isArray(match.replacements)
+          ? match.replacements
+              .map((replacement) => replacement && replacement.value)
+              .filter(Boolean)
+              .slice(0, 5)
+          : [],
+        ruleId: (match.rule && match.rule.id) || 'unknown',
+      };
+    });
+}
+
 /** Call Python NLP service; returns { flags, metadata } or throws. */
 async function callNlpService(text) {
   const base = NLP_SERVICE_URL.replace(/\/$/, '');
@@ -579,6 +725,75 @@ app.post('/api/reports/:id/analyze', async (req, res) => {
   } catch (error) {
     console.error('Analyze report error:', error);
     return res.status(500).json({ message: 'Unexpected server error' });
+  }
+});
+
+app.post('/api/reports/:id/writing-review', async (req, res) => {
+  if (!db) {
+    return res.status(503).json({ message: 'Database not ready yet' });
+  }
+
+  try {
+    const id = req.params.id;
+    const report = await db.collection('Reports').findOne({
+      _id: new ObjectId(id),
+      createdBy: req.user.email,
+    });
+    if (!report) {
+      return res.status(404).json({ message: 'Report not found' });
+    }
+
+    const { text, segments } = getWritingReviewSegmentsFromReport(report);
+    if (!text) {
+      return res.json({
+        reviewAvailable: isWritingReviewConfigured(),
+        configured: isWritingReviewConfigured(),
+        provider: isWritingReviewConfigured() ? 'languagetool' : 'none',
+        issues: [],
+        summary: {
+          issueCount: 0,
+          textLength: 0,
+          checkedAt: new Date().toISOString(),
+        },
+        message: 'No report text found to review.',
+      });
+    }
+
+    if (!isWritingReviewConfigured()) {
+      return res.json({
+        reviewAvailable: false,
+        configured: false,
+        provider: 'none',
+        issues: [],
+        summary: {
+          issueCount: 0,
+          textLength: text.length,
+          checkedAt: null,
+        },
+        message: 'Writing review is not configured on this server.',
+      });
+    }
+
+    const providerResult = await callWritingReviewService(text);
+    const issues = normaliseWritingReviewIssues(providerResult.matches, segments);
+
+    return res.json({
+      reviewAvailable: true,
+      configured: true,
+      provider: 'languagetool',
+      issues,
+      summary: {
+        issueCount: issues.length,
+        textLength: text.length,
+        checkedAt: new Date().toISOString(),
+      },
+    });
+  } catch (error) {
+    console.error('Writing review error:', error);
+    return res.status(502).json({
+      message: 'Writing review service unavailable or error',
+      error: error instanceof Error ? error.message : String(error),
+    });
   }
 });
 

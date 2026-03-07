@@ -52,6 +52,10 @@ See `AZURE_HOSTING.md` for detailed deployment instructions.
 MONGO_URI=mongodb://...
 MONGO_DB=ReportBuilderPro
 PORT=4000
+NLP_SERVICE_URL=http://localhost:8000
+WRITING_REVIEW_ENABLED=1
+WRITING_REVIEW_URL=https://api.languagetool.org/v2/check
+WRITING_REVIEW_LANGUAGE=en-GB
 ```
 
 ### Frontend (`web/.env`)
@@ -67,6 +71,7 @@ VITE_API_URL=http://localhost:4000
 - ✅ PDF generation
 - ✅ Offline support
 - ✅ Issue detection (NLP)
+- ✅ Browser spellcheck + pre-PDF writing review
 
 ## 🛠️ Tech Stack
 
