@@ -19,8 +19,8 @@ RUN python -m spacy download en_core_web_sm || true
 COPY app/ ./app/
 COPY data/ ./data/
 
-# Train model at build time so image is self-contained (uses data/training_data.json)
-RUN python -m app.train
+# Train model at build time so Azure uses the report-style augmented dataset
+RUN python -m app.train --data data/training_data_augmented_report_style.json
 
 # Azure and most clouds set PORT
 ENV PORT=8000

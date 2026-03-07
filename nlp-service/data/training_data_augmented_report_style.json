@@ -1,0 +1,3362 @@
+[
+  {
+    "text": "Delivery of steel delayed by two days.",
+    "label": "delay"
+  },
+  {
+    "text": "Safety inspection pending for next week.",
+    "label": "risk"
+  },
+  {
+    "text": "Concrete pour rescheduled due to weather.",
+    "label": "delay"
+  },
+  {
+    "text": "Material shortage reported for electrical supplies.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Non-compliant scaffolding found on site.",
+    "label": "risk"
+  },
+  {
+    "text": "Equipment maintenance overdue by three weeks.",
+    "label": "delay"
+  },
+  {
+    "text": "Permit expiration date approaching.",
+    "label": "risk"
+  },
+  {
+    "text": "Concrete delivery behind schedule.",
+    "label": "delay"
+  },
+  {
+    "text": "Steel beams unavailable from supplier.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Missing safety documentation for crane operation.",
+    "label": "risk"
+  },
+  {
+    "text": "Work completed on time today.",
+    "label": "none"
+  },
+  {
+    "text": "All materials delivered as expected.",
+    "label": "none"
+  },
+  {
+    "text": "Site is compliant with safety requirements.",
+    "label": "none"
+  },
+  {
+    "text": "Progress is on schedule for Phase 2.",
+    "label": "none"
+  },
+  {
+    "text": "Crane delivery postponed until Friday.",
+    "label": "delay"
+  },
+  {
+    "text": "Insufficient cement for foundation pour.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Hard hat inspection tag expired on site entrance.",
+    "label": "risk"
+  },
+  {
+    "text": "Electrical cables out of stock until next month.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Roofing work cancelled due to high winds.",
+    "label": "delay"
+  },
+  {
+    "text": "Documentation incomplete for last inspection.",
+    "label": "risk"
+  },
+  {
+    "text": "Low supply of rebar reported by warehouse.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Project is running behind schedule.",
+    "label": "delay"
+  },
+  {
+    "text": "Safety violation noted in zone B.",
+    "label": "risk"
+  },
+  {
+    "text": "Brick delivery unavailable this week.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Foundation pour rescheduled to next Tuesday.",
+    "label": "delay"
+  },
+  {
+    "text": "Permits missing for new structure.",
+    "label": "risk"
+  },
+  {
+    "text": "Standard progress report submitted.",
+    "label": "none"
+  },
+  {
+    "text": "No issues to report this week.",
+    "label": "none"
+  },
+  {
+    "text": "Depleted stock of safety barriers.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Hazard tape damaged and needs replacement.",
+    "label": "risk"
+  },
+  {
+    "text": "Timber delivery delayed due to transport issues.",
+    "label": "delay"
+  },
+  {
+    "text": "Risk of collapse in excavation area.",
+    "label": "risk"
+  },
+  {
+    "text": "Shortage of insulation materials on site.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "MEP works delayed by one week.",
+    "label": "delay"
+  },
+  {
+    "text": "Fire safety certificate not yet received.",
+    "label": "risk"
+  },
+  {
+    "text": "Plasterboard stocks running low.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Handover date pushed back to end of month.",
+    "label": "delay"
+  },
+  {
+    "text": "Unsafe working practice observed at height.",
+    "label": "risk"
+  },
+  {
+    "text": "No delay to programme this period.",
+    "label": "none"
+  },
+  {
+    "text": "Materials ordered and delivered on time.",
+    "label": "none"
+  },
+  {
+    "text": "All permits and certifications in place.",
+    "label": "none"
+  },
+  {
+    "text": "Brickwork behind programme by five days.",
+    "label": "delay"
+  },
+  {
+    "text": "Potential hazard from exposed wiring.",
+    "label": "risk"
+  },
+  {
+    "text": "Cement shortage affecting ground floor works.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "First fix delayed awaiting design clarification.",
+    "label": "delay"
+  },
+  {
+    "text": "Scaffold tag expired and requires renewal.",
+    "label": "risk"
+  },
+  {
+    "text": "Tiles and adhesives in short supply.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Weather has caused a two-day delay to external works.",
+    "label": "delay"
+  },
+  {
+    "text": "Near miss reported in loading bay.",
+    "label": "risk"
+  },
+  {
+    "text": "Copper pipe supply delayed from merchant.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Programme remains on track.",
+    "label": "none"
+  },
+  {
+    "text": "Weekly targets achieved.",
+    "label": "none"
+  },
+  {
+    "text": "No safety incidents this week.",
+    "label": "none"
+  },
+  {
+    "text": "Second fix electrical delayed by supplier.",
+    "label": "delay"
+  },
+  {
+    "text": "PPE compliance issue raised by site manager.",
+    "label": "risk"
+  },
+  {
+    "text": "Insufficient aggregate for road construction.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Critical path activity delayed by subcontractor.",
+    "label": "delay"
+  },
+  {
+    "text": "Structural warranty documentation outstanding.",
+    "label": "risk"
+  },
+  {
+    "text": "Drylining materials not available until next week.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Completion date at risk due to late deliveries.",
+    "label": "delay"
+  },
+  {
+    "text": "Trip hazard identified in corridor.",
+    "label": "risk"
+  },
+  {
+    "text": "Paint and coatings out of stock.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Schedule recovery plan in progress.",
+    "label": "delay"
+  },
+  {
+    "text": "Asbestos survey results pending.",
+    "label": "risk"
+  },
+  {
+    "text": "Rebar and mesh supply constrained.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Works completed to programme.",
+    "label": "none"
+  },
+  {
+    "text": "All deliveries received as planned.",
+    "label": "none"
+  },
+  {
+    "text": "Site passed safety audit.",
+    "label": "none"
+  },
+  {
+    "text": "Flooring installation postponed.",
+    "label": "delay"
+  },
+  {
+    "text": "Lifting operation risk assessment overdue.",
+    "label": "risk"
+  },
+  {
+    "text": "Window units not delivered on time.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Mechanical commissioning delayed.",
+    "label": "delay"
+  },
+  {
+    "text": "Fire alarm certification not completed.",
+    "label": "risk"
+  },
+  {
+    "text": "Shortage of ducting and fittings.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Critical milestone missed this week.",
+    "label": "delay"
+  },
+  {
+    "text": "Unsecured load reported in compound.",
+    "label": "risk"
+  },
+  {
+    "text": "Blockwork mortar supply interrupted.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "No programme slippage to report.",
+    "label": "none"
+  },
+  {
+    "text": "Stocks adequate for current phase.",
+    "label": "none"
+  },
+  {
+    "text": "Compliance check passed.",
+    "label": "none"
+  },
+  {
+    "text": "Glazing works running behind schedule.",
+    "label": "delay"
+  },
+  {
+    "text": "COSHH assessment not updated.",
+    "label": "risk"
+  },
+  {
+    "text": "Sanitaryware delivery delayed.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "External envelope delayed by weather.",
+    "label": "delay"
+  },
+  {
+    "text": "Method statement not signed off.",
+    "label": "risk"
+  },
+  {
+    "text": "Insufficient cable and containment on site.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Subcontractor start date pushed back.",
+    "label": "delay"
+  },
+  {
+    "text": "Edge protection damaged and not replaced.",
+    "label": "risk"
+  },
+  {
+    "text": "Aggregate and sand stocks low.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Project on programme and within budget.",
+    "label": "none"
+  },
+  {
+    "text": "No material shortages this period.",
+    "label": "none"
+  },
+  {
+    "text": "Routine progress update only.",
+    "label": "none"
+  },
+  {
+    "text": "Roofing programme delayed by one week.",
+    "label": "delay"
+  },
+  {
+    "text": "Risk register update required.",
+    "label": "risk"
+  },
+  {
+    "text": "Timber frame delivery rescheduled.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Groundworks behind due to wet conditions.",
+    "label": "delay"
+  },
+  {
+    "text": "Safety briefing not completed for new staff.",
+    "label": "risk"
+  },
+  {
+    "text": "Bricks and blocks in short supply.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Fit-out start delayed.",
+    "label": "delay"
+  },
+  {
+    "text": "Incident report filed for minor injury.",
+    "label": "risk"
+  },
+  {
+    "text": "Steel reinforcement delivery delayed.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Everything running to plan.",
+    "label": "none"
+  },
+  {
+    "text": "Deliveries on schedule.",
+    "label": "none"
+  },
+  {
+    "text": "No risks or issues to report.",
+    "label": "none"
+  },
+  {
+    "text": "Labour shortage has delayed first fix.",
+    "label": "delay"
+  },
+  {
+    "text": "Design change caused a one-week delay.",
+    "label": "delay"
+  },
+  {
+    "text": "Vendor failed to deliver on promised date.",
+    "label": "delay"
+  },
+  {
+    "text": "Slab pour put back due to rain.",
+    "label": "delay"
+  },
+  {
+    "text": "Insufficient timber for roof structure.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Gutter and drainage materials on back order.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Risk of water ingress before roof complete.",
+    "label": "risk"
+  },
+  {
+    "text": "Ladder not secured correctly.",
+    "label": "risk"
+  },
+  {
+    "text": "Excavation not properly signed or fenced.",
+    "label": "risk"
+  },
+  {
+    "text": "Phase 1 handed over on time.",
+    "label": "none"
+  },
+  {
+    "text": "Supplies received as per order.",
+    "label": "none"
+  },
+  {
+    "text": "No delays or shortages this week.",
+    "label": "none"
+  },
+  {
+    "text": "Boiler installation delayed by manufacturer.",
+    "label": "delay"
+  },
+  {
+    "text": "Windows and doors not in stock.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Gas certificate outstanding.",
+    "label": "risk"
+  },
+  {
+    "text": "Site tidy and compliant.",
+    "label": "none"
+  },
+  {
+    "text": "House A is progressing well.",
+    "label": "none"
+  },
+  {
+    "text": "Roof is up.",
+    "label": "none"
+  },
+  {
+    "text": "Walls are ready for external render.",
+    "label": "none"
+  },
+  {
+    "text": "Windows are installed.",
+    "label": "none"
+  },
+  {
+    "text": "Current access to the house is unsafe.",
+    "label": "risk"
+  },
+  {
+    "text": "A new safer ramp should be installed.",
+    "label": "risk"
+  },
+  {
+    "text": "Scaffolding is not tied properly in some parts.",
+    "label": "risk"
+  },
+  {
+    "text": "Missing some windowsills need more.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Access to the house is unsafe.",
+    "label": "risk"
+  },
+  {
+    "text": "Scaffolding not tied properly.",
+    "label": "risk"
+  },
+  {
+    "text": "Missing windowsills need more.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Sca\u01afolding is not tied properly in in some parts.",
+    "label": "risk"
+  },
+  {
+    "text": "House A is progressing well",
+    "label": "none"
+  },
+  {
+    "text": "Walls are Ready for external render.",
+    "label": "none"
+  },
+  {
+    "text": "Need more windowsills.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Windowsills missing need more.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Some windowsills missing need more.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Missing timber.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Timber missing on site.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Still missing timber for framing.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "No timber on site for roof works.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Need more timber for first fix.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Short on timber for roof structure.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Timber not delivered yet.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Missing roof timber.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Stud timber missing in compound.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Not enough timber for partition walls.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Missing blocks for front elevation.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "More blocks needed on site.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Bricks missing for boundary wall.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "No plasterboard left for second fix.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Insulation missing in storage area.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Missing steel for lintels.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Need more mesh before slab pour.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Missing windows for House B.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "No windowsills on site yet.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Doors missing for final fix.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Missing ducting for plant room.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Cable tray missing on Level 2.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Missing rebar for remaining bays.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Need more concrete blocks.",
+    "label": "material_shortage"
+  },
+  {
+    "text": "Missing edge protection to stair core.",
+    "label": "risk"
+  },
+  {
+    "text": "Guardrail missing at landing edge.",
+    "label": "risk"
+  },
+  {
+    "text": "Missing handrail to temporary stairs.",
+    "label": "risk"
+  },
+  {
+    "text": "Missing cover on floor opening.",
+    "label": "risk"
+  },
+  {
+    "text": "Barrier missing around excavation.",
+    "label": "risk"
+  },
+  {
+    "text": "Scaffold ties missing on rear elevation.",
+    "label": "risk"
+  },
+  {
+    "text": "Missing permit for hot works.",
+    "label": "risk"
+  },
+  {
+    "text": "Risk assessment missing for lift operation.",
+    "label": "risk"
+  },
+  {
+    "text": "Missing fire stopping at service riser.",
+    "label": "risk"
+  },
+  {
+    "text": "PPE missing for cutting works.",
+    "label": "risk"
+  },
+  {
+    "text": "Missing warning signage at site entrance.",
+    "label": "risk"
+  },
+  {
+    "text": "Method statement missing for roof works.",
+    "label": "risk"
+  },
+  {
+    "text": "Nothing missing from current delivery.",
+    "label": "none"
+  },
+  {
+    "text": "No materials missing today.",
+    "label": "none"
+  },
+  {
+    "text": "All timber delivered and stacked.",
+    "label": "none"
+  },
+  {
+    "text": "Timber arrived on site this morning.",
+    "label": "none"
+  },
+  {
+    "text": "No shortages noted in storage area.",
+    "label": "none"
+  },
+  {
+    "text": "Windowsills delivered as planned.",
+    "label": "none"
+  },
+  {
+    "text": "No missing items on this plot.",
+    "label": "none"
+  },
+  {
+    "text": "Warehouse pedestrian struck by a forklift/PIT when operator did not look in direction of travel; foot crush led to surgical toe amputations. Multi-employer warehouse environment; incident reporting requirements not met.",
+    "report_style_text": "Warehouse pedestrian struck by a forklift/PIT when operator did not look in direction of travel; foot crush led to surgical toe amputations. Multi-employer warehouse environment; incident reporting requirements not met.",
+    "label": "risk",
+    "source": "user_provided_osha_text",
+    "synthetic": false,
+    "original_category": "safety",
+    "original_risk_id": "safety.forklift_pit_strike",
+    "subcategory": "forklift_pit_strike",
+    "severity": "high",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Crane mechanic inspecting trolley wheels during movement was crushed between a moving bumper and a fixed guard; lack of spotter and poor visibility/communication contributed to fatality.",
+    "report_style_text": "Crane mechanic inspecting trolley wheels during movement was crushed between a moving bumper and a fixed guard; lack of spotter and poor visibility/communication contributed to fatality.",
+    "label": "risk",
+    "source": "user_provided_osha_text",
+    "synthetic": false,
+    "original_category": "safety",
+    "original_risk_id": "safety.caught_between",
+    "subcategory": "caught_between",
+    "severity": "critical",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Worker grinding and welding galvanized gate without respirator experienced hot metal burn to ear and illness consistent with fume exposure; inadequate PPE and incomplete safety program noted.",
+    "report_style_text": "Worker grinding and welding galvanized gate without respirator experienced hot metal burn to ear and illness consistent with fume exposure; inadequate PPE and incomplete safety program noted.",
+    "label": "risk",
+    "source": "user_provided_osha_text",
+    "synthetic": false,
+    "original_category": "safety",
+    "original_risk_id": "safety.hot_work_fumes",
+    "subcategory": "hot_work_fumes",
+    "severity": "high",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Painter used a stepladder as a single ladder on sloped tiled roof; ladder slipped causing ~19 ft fall with head laceration. Unsafe ladder practice was reported as common on site.",
+    "report_style_text": "Painter used a stepladder as a single ladder on sloped tiled roof; ladder slipped causing ~19 ft fall with head laceration. Unsafe ladder practice was reported as common on site.",
+    "label": "risk",
+    "source": "user_provided_osha_text",
+    "synthetic": false,
+    "original_category": "safety",
+    "original_risk_id": "safety.ladder_slip",
+    "subcategory": "ladder_slip",
+    "severity": "high",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Utility worker setting up roadside work zone was struck by passing motorist within minutes of arrival before controls were fully established; fatality.",
+    "report_style_text": "Utility worker setting up roadside work zone was struck by passing motorist within minutes of arrival before controls were fully established; fatality.",
+    "label": "risk",
+    "source": "user_provided_osha_text",
+    "synthetic": false,
+    "original_category": "safety",
+    "original_risk_id": "safety.struck_by_vehicle",
+    "subcategory": "struck_by_vehicle",
+    "severity": "critical",
+    "likelihood": "possible"
+  },
+  {
+    "text": "During drilling rig disassembly, releasing pin removed while worker was positioned on the leg; falling component pinned worker causing fatal crush injury. Training on correct pin sequence and exclusion zone were inadequate.",
+    "report_style_text": "During drilling rig disassembly, releasing pin removed while worker was positioned on the leg; falling component pinned worker causing fatal crush injury. Training on correct pin sequence and exclusion zone were inadequate.",
+    "label": "risk",
+    "source": "user_provided_osha_text",
+    "synthetic": false,
+    "original_category": "safety",
+    "original_risk_id": "safety.caught_between",
+    "subcategory": "caught_between",
+    "severity": "critical",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Worker contacted unguarded generator fan blades while retrieving equipment in trailer power center; fatal laceration injuries. Guarding and isolation controls were lacking.",
+    "report_style_text": "Worker contacted unguarded generator fan blades while retrieving equipment in trailer power center; fatal laceration injuries. Guarding and isolation controls were lacking.",
+    "label": "risk",
+    "source": "user_provided_osha_text",
+    "synthetic": false,
+    "original_category": "safety",
+    "original_risk_id": "safety.machinery_unguarded",
+    "subcategory": "machinery_unguarded",
+    "severity": "critical",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Worker adjusting belts on machine was injured when coworker started equipment; sleeve caught in sprocket pulling hand in. Scene changed before investigation; no lockout/tagout program.",
+    "report_style_text": "Worker adjusting belts on machine was injured when coworker started equipment; sleeve caught in sprocket pulling hand in. Scene changed before investigation; no lockout/tagout program.",
+    "label": "risk",
+    "source": "user_provided_osha_text",
+    "synthetic": false,
+    "original_category": "safety",
+    "original_risk_id": "safety.lockout_tagout_failure",
+    "subcategory": "lockout_tagout_failure",
+    "severity": "high",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Building safety risk: external wall build-up includes potentially combustible facade components; requires review against current fire guidance and material classifications.",
+    "report_style_text": "Building safety risk: external wall build-up includes potentially combustible facade components; requires review against current fire guidance and material classifications.",
+    "label": "risk",
+    "source": "user_provided_building_safety_narrative",
+    "synthetic": false,
+    "original_category": "fire_safety",
+    "original_risk_id": "fire_safety.combustible_cladding",
+    "subcategory": "combustible_cladding",
+    "severity": "high",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Compliance risk: fire safety requirements interpreted differently across parties, creating uncertainty and potential unsafe outcomes; clarify responsibilities and evidence for compliance.",
+    "report_style_text": "Compliance risk: fire safety requirements interpreted differently across parties, creating uncertainty and potential unsafe outcomes; clarify responsibilities and evidence for compliance.",
+    "label": "risk",
+    "source": "user_provided_building_safety_narrative",
+    "synthetic": false,
+    "original_category": "fire_safety",
+    "original_risk_id": "fire_safety.ambiguous_guidance",
+    "subcategory": "ambiguous_guidance",
+    "severity": "high",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Weathertightness risk: monolithic cladding and joint detailing may trap moisture; inspect for cracks and confirm drainage/ventilation strategy.",
+    "report_style_text": "Weathertightness risk: monolithic cladding and joint detailing may trap moisture; inspect for cracks and confirm drainage/ventilation strategy.",
+    "label": "risk",
+    "source": "user_provided_building_safety_narrative",
+    "synthetic": false,
+    "original_category": "weathertightness",
+    "original_risk_id": "weathertightness.monolithic_cladding_failure",
+    "subcategory": "monolithic_cladding_failure",
+    "severity": "high",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Regulatory/QA risk: incomplete consent and inspection records can allow latent defects (fire or moisture) to persist into operation and trigger expensive remediation.",
+    "report_style_text": "Regulatory/QA risk: incomplete consent and inspection records can allow latent defects (fire or moisture) to persist into operation and trigger expensive remediation.",
+    "label": "risk",
+    "source": "user_provided_building_safety_narrative",
+    "synthetic": false,
+    "original_category": "fire_safety",
+    "original_risk_id": "fire_safety.inadequate_inspection",
+    "subcategory": "inadequate_inspection",
+    "severity": "high",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Evacuation alert system not commissioned.",
+    "report_style_text": "Evacuation alert system not commissioned.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "fire_safety",
+    "original_risk_id": "fire_safety.evacuation_system_gap",
+    "subcategory": "evacuation_system_gap",
+    "severity": "medium",
+    "likelihood": "possible"
+  },
+  {
+    "text": "No hearing protection.",
+    "report_style_text": "No hearing protection.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.noise_exposure",
+    "subcategory": "noise_exposure",
+    "severity": "high",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Missing head flashing over windows.",
+    "report_style_text": "Missing head flashing over windows.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "weathertightness",
+    "original_risk_id": "weathertightness.window_flashing_defect",
+    "subcategory": "window_flashing_defect",
+    "severity": "low",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Isolation not applied before adjustment at Level 2 affecting Painting team.",
+    "report_style_text": "Isolation not applied before adjustment at Level 2 affecting Painting team.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.lockout_tagout_failure",
+    "subcategory": "lockout_tagout_failure",
+    "severity": "low",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Temporary power leads damaged.",
+    "report_style_text": "Temporary power leads damaged.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.electrical_shock",
+    "subcategory": "electrical_shock",
+    "severity": "medium",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Grinding sparks causing minor burns.",
+    "report_style_text": "Grinding sparks causing minor burns.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.hot_work_fumes",
+    "subcategory": "hot_work_fumes",
+    "severity": "medium",
+    "likelihood": "likely"
+  },
+  {
+    "text": "No rescue plan.",
+    "report_style_text": "No rescue plan.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.confined_space",
+    "subcategory": "confined_space",
+    "severity": "high",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Fire stopping incomplete at service penetrations.",
+    "report_style_text": "Fire stopping incomplete at service penetrations.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "fire_safety",
+    "original_risk_id": "fire_safety.missing_fire_stopping",
+    "subcategory": "missing_fire_stopping",
+    "severity": "high",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Desktop assessment relied on without evidence.",
+    "report_style_text": "Desktop assessment relied on without evidence.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "fire_safety",
+    "original_risk_id": "fire_safety.ambiguous_guidance",
+    "subcategory": "ambiguous_guidance",
+    "severity": "critical",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Lift plan not briefed involving winch near Warehouse aisle.",
+    "report_style_text": "Lift plan not briefed involving winch near Warehouse aisle.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.lifting_operations",
+    "subcategory": "lifting_operations",
+    "severity": "high",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Level 1.",
+    "report_style_text": "Level 1.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.edge_opening_unprotected",
+    "subcategory": "edge_opening_unprotected",
+    "severity": "critical",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Ladder set on uneven footing and not secured.",
+    "report_style_text": "Ladder set on uneven footing and not secured.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.ladder_slip",
+    "subcategory": "ladder_slip",
+    "severity": "medium",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "No exclusion zone during crane/trolley movement at Warehouse aisle.",
+    "report_style_text": "No exclusion zone during crane/trolley movement at Warehouse aisle.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.caught_between",
+    "subcategory": "caught_between",
+    "severity": "medium",
+    "likelihood": "possible"
+  },
+  {
+    "text": "No pedestrian segregation in vehicle route at Block B affecting Plumbing team.",
+    "report_style_text": "No pedestrian segregation in vehicle route at Block B affecting Plumbing team.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.struck_by_vehicle",
+    "subcategory": "struck_by_vehicle",
+    "severity": "high",
+    "likelihood": "likely"
+  },
+  {
+    "text": "No mechanical aid.",
+    "report_style_text": "No mechanical aid.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.manual_handling",
+    "subcategory": "manual_handling",
+    "severity": "critical",
+    "likelihood": "rare"
+  },
+  {
+    "text": "No designated walkways at South facade.",
+    "report_style_text": "No designated walkways at South facade.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.forklift_pit_strike",
+    "subcategory": "forklift_pit_strike",
+    "severity": "medium",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Risk related to silica, dust, RPE.",
+    "report_style_text": "Risk related to silica, dust, RPE.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.silica_exposure",
+    "subcategory": "silica_exposure",
+    "severity": "medium",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Survey missing.",
+    "report_style_text": "Survey missing.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.asbestos_disturbance",
+    "subcategory": "asbestos_disturbance",
+    "severity": "medium",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Guardrails removed for access at Scaffold lift.",
+    "report_style_text": "Guardrails removed for access at Scaffold lift.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.fall_from_height",
+    "subcategory": "fall_from_height",
+    "severity": "critical",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Moisture trapped behind cladding on Stair core.",
+    "report_style_text": "Moisture trapped behind cladding on Stair core.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "weathertightness",
+    "original_risk_id": "weathertightness.untreated_timber_rot",
+    "subcategory": "untreated_timber_rot",
+    "severity": "high",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Parapet coping joints not sealed at Loading bay.",
+    "report_style_text": "Parapet coping joints not sealed at Loading bay.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "weathertightness",
+    "original_risk_id": "weathertightness.complex_roof_detail",
+    "subcategory": "complex_roof_detail",
+    "severity": "high",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Inadequate ties.",
+    "report_style_text": "Inadequate ties.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.scaffold_collapse",
+    "subcategory": "scaffold_collapse",
+    "severity": "high",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Movement joints omitted on Stair core.",
+    "report_style_text": "Movement joints omitted on Stair core.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "weathertightness",
+    "original_risk_id": "weathertightness.monolithic_cladding_failure",
+    "subcategory": "monolithic_cladding_failure",
+    "severity": "high",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Resource constraints.",
+    "report_style_text": "Resource constraints.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "fire_safety",
+    "original_risk_id": "fire_safety.inadequate_inspection",
+    "subcategory": "inadequate_inspection",
+    "severity": "medium",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Guard removed exposing sprocket/nip point involving angle grinder near Site entrance.",
+    "report_style_text": "Guard removed exposing sprocket/nip point involving angle grinder near Site entrance.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.machinery_unguarded",
+    "subcategory": "machinery_unguarded",
+    "severity": "critical",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Water ingress undermining trench at Loading bay.",
+    "report_style_text": "Water ingress undermining trench at Loading bay.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.excavation_collapse",
+    "subcategory": "excavation_collapse",
+    "severity": "low",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Unclear classification for balcony build-up on Level 2.",
+    "report_style_text": "Unclear classification for balcony build-up on Level 2.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "fire_safety",
+    "original_risk_id": "fire_safety.combustible_cladding",
+    "subcategory": "combustible_cladding",
+    "severity": "low",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Wayfinding signage not installed.",
+    "report_style_text": "Wayfinding signage not installed.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "fire_safety",
+    "original_risk_id": "fire_safety.evacuation_system_gap",
+    "subcategory": "evacuation_system_gap",
+    "severity": "critical",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Noise Exposure at Basement affecting Roofing team.",
+    "report_style_text": "Noise Exposure at Basement affecting Roofing team.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.noise_exposure",
+    "subcategory": "noise_exposure",
+    "severity": "low",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Missing head flashing over windows at Stair core.",
+    "report_style_text": "Missing head flashing over windows at Stair core.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "weathertightness",
+    "original_risk_id": "weathertightness.window_flashing_defect",
+    "subcategory": "window_flashing_defect",
+    "severity": "low",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Isolation not applied before adjustment at South facade affecting Groundworks team.",
+    "report_style_text": "Isolation not applied before adjustment at South facade affecting Groundworks team.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.lockout_tagout_failure",
+    "subcategory": "lockout_tagout_failure",
+    "severity": "critical",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Live panel accessed without isolation.",
+    "report_style_text": "Live panel accessed without isolation.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.electrical_shock",
+    "subcategory": "electrical_shock",
+    "severity": "medium",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Welding galvanised steel without respirator at Stair core affecting Plumbing team.",
+    "report_style_text": "Welding galvanised steel without respirator at Stair core affecting Plumbing team.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.hot_work_fumes",
+    "subcategory": "hot_work_fumes",
+    "severity": "low",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Confined Space.",
+    "report_style_text": "Confined Space.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.confined_space",
+    "subcategory": "confined_space",
+    "severity": "low",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Compartment line breach not recorded on Scaffold lift.",
+    "report_style_text": "Compartment line breach not recorded on Scaffold lift.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "fire_safety",
+    "original_risk_id": "fire_safety.missing_fire_stopping",
+    "subcategory": "missing_fire_stopping",
+    "severity": "high",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Unclear approved documents.",
+    "report_style_text": "Unclear approved documents.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "fire_safety",
+    "original_risk_id": "fire_safety.ambiguous_guidance",
+    "subcategory": "ambiguous_guidance",
+    "severity": "high",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Poor communication.",
+    "report_style_text": "Poor communication.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.lifting_operations",
+    "subcategory": "lifting_operations",
+    "severity": "high",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Edge Opening Unprotected at Block B.",
+    "report_style_text": "Edge Opening Unprotected at Block B.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.edge_opening_unprotected",
+    "subcategory": "edge_opening_unprotected",
+    "severity": "medium",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Stepladder used closed against wall at Roof affecting Groundworks team.",
+    "report_style_text": "Stepladder used closed against wall at Roof affecting Groundworks team.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.ladder_slip",
+    "subcategory": "ladder_slip",
+    "severity": "critical",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Unexpected motion during inspection at Service yard.",
+    "report_style_text": "Unexpected motion during inspection at Service yard.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.caught_between",
+    "subcategory": "caught_between",
+    "severity": "critical",
+    "likelihood": "possible"
+  },
+  {
+    "text": "No pedestrian segregation in vehicle route at Stair core affecting Concrete team.",
+    "report_style_text": "No pedestrian segregation in vehicle route at Stair core affecting Concrete team.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.struck_by_vehicle",
+    "subcategory": "struck_by_vehicle",
+    "severity": "low",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Manual Handling at Apartment corridor affecting Painting team.",
+    "report_style_text": "Manual Handling at Apartment corridor affecting Painting team.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.manual_handling",
+    "subcategory": "manual_handling",
+    "severity": "high",
+    "likelihood": "likely"
+  },
+  {
+    "text": "PIT operator visibility obstructed at Level 1 affecting Logistics team.",
+    "report_style_text": "PIT operator visibility obstructed at Level 1 affecting Logistics team.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.forklift_pit_strike",
+    "subcategory": "forklift_pit_strike",
+    "severity": "low",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Issue observed consistent with silica exposure.",
+    "report_style_text": "Issue observed consistent with silica exposure.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.silica_exposure",
+    "subcategory": "silica_exposure",
+    "severity": "medium",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Asbestos Disturbance at Apartment corridor.",
+    "report_style_text": "Asbestos Disturbance at Apartment corridor.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.asbestos_disturbance",
+    "subcategory": "asbestos_disturbance",
+    "severity": "critical",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Open penetration without cover at Level 1 affecting Concrete team.",
+    "report_style_text": "Open penetration without cover at Level 1 affecting Concrete team.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.fall_from_height",
+    "subcategory": "fall_from_height",
+    "severity": "medium",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Early signs of decay on framing.",
+    "report_style_text": "Early signs of decay on framing.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "weathertightness",
+    "original_risk_id": "weathertightness.untreated_timber_rot",
+    "subcategory": "untreated_timber_rot",
+    "severity": "high",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Complex roof intersection lacks robust flashing on North facade.",
+    "report_style_text": "Complex roof intersection lacks robust flashing on North facade.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "weathertightness",
+    "original_risk_id": "weathertightness.complex_roof_detail",
+    "subcategory": "complex_roof_detail",
+    "severity": "low",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Inadequate ties.",
+    "report_style_text": "Inadequate ties.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.scaffold_collapse",
+    "subcategory": "scaffold_collapse",
+    "severity": "high",
+    "likelihood": "likely"
+  },
+  {
+    "text": "No drainage cavity behind cladding.",
+    "report_style_text": "No drainage cavity behind cladding.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "weathertightness",
+    "original_risk_id": "weathertightness.monolithic_cladding_failure",
+    "subcategory": "monolithic_cladding_failure",
+    "severity": "critical",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Consent documentation insufficient on Apartment corridor.",
+    "report_style_text": "Consent documentation insufficient on Apartment corridor.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "fire_safety",
+    "original_risk_id": "fire_safety.inadequate_inspection",
+    "subcategory": "inadequate_inspection",
+    "severity": "high",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Unguarded fan blades accessible involving scaffold near Block A.",
+    "report_style_text": "Unguarded fan blades accessible involving scaffold near Block A.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.machinery_unguarded",
+    "subcategory": "machinery_unguarded",
+    "severity": "high",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Excavation sidewalls not battered or shored at Level 2 affecting M&E team.",
+    "report_style_text": "Excavation sidewalls not battered or shored at Level 2 affecting M&E team.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.excavation_collapse",
+    "subcategory": "excavation_collapse",
+    "severity": "low",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Evacuation risk.",
+    "report_style_text": "Evacuation risk.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "fire_safety",
+    "original_risk_id": "fire_safety.combustible_cladding",
+    "subcategory": "combustible_cladding",
+    "severity": "critical",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Fire safety information pack incomplete.",
+    "report_style_text": "Fire safety information pack incomplete.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "fire_safety",
+    "original_risk_id": "fire_safety.evacuation_system_gap",
+    "subcategory": "evacuation_system_gap",
+    "severity": "medium",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Long exposure.",
+    "report_style_text": "Long exposure.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.noise_exposure",
+    "subcategory": "noise_exposure",
+    "severity": "high",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Water staining near openings on Level 2.",
+    "report_style_text": "Water staining near openings on Level 2.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "weathertightness",
+    "original_risk_id": "weathertightness.window_flashing_defect",
+    "subcategory": "window_flashing_defect",
+    "severity": "medium",
+    "likelihood": "rare"
+  },
+  {
+    "text": "No verified zero-energy state.",
+    "report_style_text": "No verified zero-energy state.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.lockout_tagout_failure",
+    "subcategory": "lockout_tagout_failure",
+    "severity": "critical",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Unknown circuits during fit-out.",
+    "report_style_text": "Unknown circuits during fit-out.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.electrical_shock",
+    "subcategory": "electrical_shock",
+    "severity": "high",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Welding galvanised steel without respirator involving winch near Basement.",
+    "report_style_text": "Welding galvanised steel without respirator involving winch near Basement.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.hot_work_fumes",
+    "subcategory": "hot_work_fumes",
+    "severity": "medium",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Confined Space.",
+    "report_style_text": "Confined Space.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.confined_space",
+    "subcategory": "confined_space",
+    "severity": "critical",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Cavity barriers missing at floor lines at Site entrance.",
+    "report_style_text": "Cavity barriers missing at floor lines at Site entrance.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "fire_safety",
+    "original_risk_id": "fire_safety.missing_fire_stopping",
+    "subcategory": "missing_fire_stopping",
+    "severity": "critical",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Responsibilities for compliance not defined on Level 2.",
+    "report_style_text": "Responsibilities for compliance not defined on Level 2.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "fire_safety",
+    "original_risk_id": "fire_safety.ambiguous_guidance",
+    "subcategory": "ambiguous_guidance",
+    "severity": "medium",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Poor communication.",
+    "report_style_text": "Poor communication.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.lifting_operations",
+    "subcategory": "lifting_operations",
+    "severity": "medium",
+    "likelihood": "possible"
+  },
+  {
+    "text": "MEP riser.",
+    "report_style_text": "MEP riser.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.edge_opening_unprotected",
+    "subcategory": "edge_opening_unprotected",
+    "severity": "medium",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Ladder placed on sloped tiles.",
+    "report_style_text": "Ladder placed on sloped tiles.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.ladder_slip",
+    "subcategory": "ladder_slip",
+    "severity": "low",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Worker positioned between moving plant and fixed structure.",
+    "report_style_text": "Worker positioned between moving plant and fixed structure.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.caught_between",
+    "subcategory": "caught_between",
+    "severity": "low",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Reversing truck without banksman.",
+    "report_style_text": "Reversing truck without banksman.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.struck_by_vehicle",
+    "subcategory": "struck_by_vehicle",
+    "severity": "medium",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Manual Handling involving mobile tower scaffold near Plant room.",
+    "report_style_text": "Manual Handling involving mobile tower scaffold near Plant room.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.manual_handling",
+    "subcategory": "manual_handling",
+    "severity": "low",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Forklift operating in shared aisle with pedestrians at Basement affecting Painting team.",
+    "report_style_text": "Forklift operating in shared aisle with pedestrians at Basement affecting Painting team.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.forklift_pit_strike",
+    "subcategory": "forklift_pit_strike",
+    "severity": "critical",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Silica Exposure at Block B affecting Roofing team.",
+    "report_style_text": "Silica Exposure at Block B affecting Roofing team.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.silica_exposure",
+    "subcategory": "silica_exposure",
+    "severity": "low",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Survey missing.",
+    "report_style_text": "Survey missing.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.asbestos_disturbance",
+    "subcategory": "asbestos_disturbance",
+    "severity": "low",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Guardrails removed for access.",
+    "report_style_text": "Guardrails removed for access.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.fall_from_height",
+    "subcategory": "fall_from_height",
+    "severity": "low",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Timber framing exposed to rain with no protection.",
+    "report_style_text": "Timber framing exposed to rain with no protection.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "weathertightness",
+    "original_risk_id": "weathertightness.untreated_timber_rot",
+    "subcategory": "untreated_timber_rot",
+    "severity": "low",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Minimal eaves increasing exposure.",
+    "report_style_text": "Minimal eaves increasing exposure.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "weathertightness",
+    "original_risk_id": "weathertightness.complex_roof_detail",
+    "subcategory": "complex_roof_detail",
+    "severity": "low",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Scaffold Collapse.",
+    "report_style_text": "Scaffold Collapse.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.scaffold_collapse",
+    "subcategory": "scaffold_collapse",
+    "severity": "low",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Paint finish deteriorated allowing ingress on Warehouse aisle.",
+    "report_style_text": "Paint finish deteriorated allowing ingress on Warehouse aisle.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "weathertightness",
+    "original_risk_id": "weathertightness.monolithic_cladding_failure",
+    "subcategory": "monolithic_cladding_failure",
+    "severity": "high",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Oversight gaps in multi-party delivery on Loading bay.",
+    "report_style_text": "Oversight gaps in multi-party delivery on Loading bay.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "fire_safety",
+    "original_risk_id": "fire_safety.inadequate_inspection",
+    "subcategory": "inadequate_inspection",
+    "severity": "high",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Interlock bypassed.",
+    "report_style_text": "Interlock bypassed.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.machinery_unguarded",
+    "subcategory": "machinery_unguarded",
+    "severity": "low",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Water ingress undermining trench.",
+    "report_style_text": "Water ingress undermining trench.",
+    "label": "risk",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "safety",
+    "original_risk_id": "safety.excavation_collapse",
+    "subcategory": "excavation_collapse",
+    "severity": "high",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Tolerances out requiring correction affecting Cladding sequence at Excavation area.",
+    "report_style_text": "Tolerances out requiring correction affecting Cladding sequence at Excavation area.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.rework_quality_defect",
+    "subcategory": "rework_quality_defect",
+    "severity": "high",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Neighbouring works blocking site entrance.",
+    "report_style_text": "Neighbouring works blocking site entrance.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.access_restriction",
+    "subcategory": "access_restriction",
+    "severity": "high",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Lift plan approval delayed noted during Drylining activities.",
+    "report_style_text": "Lift plan approval delayed noted during Drylining activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.permit_delay",
+    "subcategory": "permit_delay",
+    "severity": "low",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "High winds.",
+    "report_style_text": "High winds.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.weather_delay",
+    "subcategory": "weather_delay",
+    "severity": "critical",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Hold-point inspection not booked.",
+    "report_style_text": "Hold-point inspection not booked.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.late_inspections",
+    "subcategory": "late_inspections",
+    "severity": "critical",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Access scaffold blocking other works.",
+    "report_style_text": "Access scaffold blocking other works.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.interface_clash",
+    "subcategory": "interface_clash",
+    "severity": "medium",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Telehandler breakdown affecting lifts.",
+    "report_style_text": "Telehandler breakdown affecting lifts.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.plant_breakdown",
+    "subcategory": "plant_breakdown",
+    "severity": "medium",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Late design changes affecting layout.",
+    "report_style_text": "Late design changes affecting layout.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.late_design_information",
+    "subcategory": "late_design_information",
+    "severity": "critical",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Failed test leading to rework noted during M&E activities.",
+    "report_style_text": "Failed test leading to rework noted during M&E activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.rework_quality_defect",
+    "subcategory": "rework_quality_defect",
+    "severity": "critical",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Security lock-down preventing entry noted during Concrete activities.",
+    "report_style_text": "Security lock-down preventing entry noted during Concrete activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.access_restriction",
+    "subcategory": "access_restriction",
+    "severity": "medium",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Permit documentation incomplete.",
+    "report_style_text": "Permit documentation incomplete.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.permit_delay",
+    "subcategory": "permit_delay",
+    "severity": "low",
+    "likelihood": "likely"
+  },
+  {
+    "text": "High winds stopped crane operations.",
+    "report_style_text": "High winds stopped crane operations.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.weather_delay",
+    "subcategory": "weather_delay",
+    "severity": "critical",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Fire stopping sign-off delayed noted during Plumbing activities.",
+    "report_style_text": "Fire stopping sign-off delayed noted during Plumbing activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.late_inspections",
+    "subcategory": "late_inspections",
+    "severity": "low",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Sequence conflict between finishes and services.",
+    "report_style_text": "Sequence conflict between finishes and services.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.interface_clash",
+    "subcategory": "interface_clash",
+    "severity": "medium",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Telehandler breakdown affecting lifts noted during Steelwork activities.",
+    "report_style_text": "Telehandler breakdown affecting lifts noted during Steelwork activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.plant_breakdown",
+    "subcategory": "plant_breakdown",
+    "severity": "critical",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Incomplete design.",
+    "report_style_text": "Incomplete design.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.late_design_information",
+    "subcategory": "late_design_information",
+    "severity": "low",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Snagging rework required before close-up affecting Carpentry sequence at Plant room.",
+    "report_style_text": "Snagging rework required before close-up affecting Carpentry sequence at Plant room.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.rework_quality_defect",
+    "subcategory": "rework_quality_defect",
+    "severity": "high",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Neighbouring works blocking site entrance.",
+    "report_style_text": "Neighbouring works blocking site entrance.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.access_restriction",
+    "subcategory": "access_restriction",
+    "severity": "low",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Permit documentation incomplete affecting Painting sequence at Site entrance.",
+    "report_style_text": "Permit documentation incomplete affecting Painting sequence at Site entrance.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.permit_delay",
+    "subcategory": "permit_delay",
+    "severity": "high",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Heavy rain flooded access routes noted during Groundworks activities.",
+    "report_style_text": "Heavy rain flooded access routes noted during Groundworks activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.weather_delay",
+    "subcategory": "weather_delay",
+    "severity": "critical",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Testing/commissioning slots unavailable noted during Firestopping activities.",
+    "report_style_text": "Testing/commissioning slots unavailable noted during Firestopping activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.late_inspections",
+    "subcategory": "late_inspections",
+    "severity": "low",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Sequence conflict between finishes and services.",
+    "report_style_text": "Sequence conflict between finishes and services.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.interface_clash",
+    "subcategory": "interface_clash",
+    "severity": "low",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Generator failure impacting temporary power.",
+    "report_style_text": "Generator failure impacting temporary power.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.plant_breakdown",
+    "subcategory": "plant_breakdown",
+    "severity": "high",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Client approval pending for key submittal.",
+    "report_style_text": "Client approval pending for key submittal.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.late_design_information",
+    "subcategory": "late_design_information",
+    "severity": "medium",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Non-compliant installation needs redo affecting Logistics sequence at Loading bay.",
+    "report_style_text": "Non-compliant installation needs redo affecting Logistics sequence at Loading bay.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.rework_quality_defect",
+    "subcategory": "rework_quality_defect",
+    "severity": "medium",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Shared access route congested noted during Scaffolding activities.",
+    "report_style_text": "Shared access route congested noted during Scaffolding activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.access_restriction",
+    "subcategory": "access_restriction",
+    "severity": "high",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Road opening permit pending.",
+    "report_style_text": "Road opening permit pending.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.permit_delay",
+    "subcategory": "permit_delay",
+    "severity": "low",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Frost conditions halted concrete pours noted during M&E activities.",
+    "report_style_text": "Frost conditions halted concrete pours noted during M&E activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.weather_delay",
+    "subcategory": "weather_delay",
+    "severity": "high",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Hold-point inspection not booked affecting Carpentry sequence at Loading bay.",
+    "report_style_text": "Hold-point inspection not booked affecting Carpentry sequence at Loading bay.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.late_inspections",
+    "subcategory": "late_inspections",
+    "severity": "low",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Multiple trades competing for same area.",
+    "report_style_text": "Multiple trades competing for same area.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.interface_clash",
+    "subcategory": "interface_clash",
+    "severity": "high",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Plant maintenance overdue causing downtime.",
+    "report_style_text": "Plant maintenance overdue causing downtime.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.plant_breakdown",
+    "subcategory": "plant_breakdown",
+    "severity": "low",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Late design changes affecting layout affecting Logistics sequence at Apartment corridor.",
+    "report_style_text": "Late design changes affecting layout affecting Logistics sequence at Apartment corridor.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.late_design_information",
+    "subcategory": "late_design_information",
+    "severity": "medium",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Tolerances out requiring correction noted during Drylining activities.",
+    "report_style_text": "Tolerances out requiring correction noted during Drylining activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.rework_quality_defect",
+    "subcategory": "rework_quality_defect",
+    "severity": "high",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Shared access route congested.",
+    "report_style_text": "Shared access route congested.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.access_restriction",
+    "subcategory": "access_restriction",
+    "severity": "critical",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Permit documentation incomplete affecting Logistics sequence at North facade.",
+    "report_style_text": "Permit documentation incomplete affecting Logistics sequence at North facade.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.permit_delay",
+    "subcategory": "permit_delay",
+    "severity": "critical",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Heavy rain flooded access routes affecting Concrete sequence at Basement.",
+    "report_style_text": "Heavy rain flooded access routes affecting Concrete sequence at Basement.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.weather_delay",
+    "subcategory": "weather_delay",
+    "severity": "low",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Testing/commissioning slots unavailable noted during Plumbing activities.",
+    "report_style_text": "Testing/commissioning slots unavailable noted during Plumbing activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.late_inspections",
+    "subcategory": "late_inspections",
+    "severity": "high",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Access scaffold blocking other works.",
+    "report_style_text": "Access scaffold blocking other works.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.interface_clash",
+    "subcategory": "interface_clash",
+    "severity": "high",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Plant maintenance overdue causing downtime.",
+    "report_style_text": "Plant maintenance overdue causing downtime.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.plant_breakdown",
+    "subcategory": "plant_breakdown",
+    "severity": "medium",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Client approval pending for key submittal noted during Plumbing activities.",
+    "report_style_text": "Client approval pending for key submittal noted during Plumbing activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.late_design_information",
+    "subcategory": "late_design_information",
+    "severity": "high",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Snagging rework required before close-up noted during Plumbing activities.",
+    "report_style_text": "Snagging rework required before close-up noted during Plumbing activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.rework_quality_defect",
+    "subcategory": "rework_quality_defect",
+    "severity": "low",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Restricted access hours limit deliveries noted during Carpentry activities.",
+    "report_style_text": "Restricted access hours limit deliveries noted during Carpentry activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.access_restriction",
+    "subcategory": "access_restriction",
+    "severity": "low",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Lift plan approval delayed.",
+    "report_style_text": "Lift plan approval delayed.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.permit_delay",
+    "subcategory": "permit_delay",
+    "severity": "critical",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Frost conditions halted concrete pours noted during Carpentry activities.",
+    "report_style_text": "Frost conditions halted concrete pours noted during Carpentry activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.weather_delay",
+    "subcategory": "weather_delay",
+    "severity": "high",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Testing/commissioning slots unavailable.",
+    "report_style_text": "Testing/commissioning slots unavailable.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.late_inspections",
+    "subcategory": "late_inspections",
+    "severity": "low",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "M&E clashes with ceiling grid.",
+    "report_style_text": "M&E clashes with ceiling grid.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.interface_clash",
+    "subcategory": "interface_clash",
+    "severity": "high",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Crane out of service pending parts.",
+    "report_style_text": "Crane out of service pending parts.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.plant_breakdown",
+    "subcategory": "plant_breakdown",
+    "severity": "critical",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Late design changes affecting layout affecting Painting sequence at North facade.",
+    "report_style_text": "Late design changes affecting layout affecting Painting sequence at North facade.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.late_design_information",
+    "subcategory": "late_design_information",
+    "severity": "critical",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Snagging rework required before close-up affecting Commissioning sequence at Apartment corridor.",
+    "report_style_text": "Snagging rework required before close-up affecting Commissioning sequence at Apartment corridor.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.rework_quality_defect",
+    "subcategory": "rework_quality_defect",
+    "severity": "critical",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Security lock-down preventing entry.",
+    "report_style_text": "Security lock-down preventing entry.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.access_restriction",
+    "subcategory": "access_restriction",
+    "severity": "high",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Road opening permit pending noted during Electrical activities.",
+    "report_style_text": "Road opening permit pending noted during Electrical activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.permit_delay",
+    "subcategory": "permit_delay",
+    "severity": "medium",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Frost.",
+    "report_style_text": "Frost.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.weather_delay",
+    "subcategory": "weather_delay",
+    "severity": "medium",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Hold-point inspection not booked affecting Roofing sequence at Site entrance.",
+    "report_style_text": "Hold-point inspection not booked affecting Roofing sequence at Site entrance.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.late_inspections",
+    "subcategory": "late_inspections",
+    "severity": "medium",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Sequence conflict between finishes and services noted during Firestopping activities.",
+    "report_style_text": "Sequence conflict between finishes and services noted during Firestopping activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.interface_clash",
+    "subcategory": "interface_clash",
+    "severity": "low",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Generator failure impacting temporary power noted during Drylining activities.",
+    "report_style_text": "Generator failure impacting temporary power noted during Drylining activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.plant_breakdown",
+    "subcategory": "plant_breakdown",
+    "severity": "high",
+    "likelihood": "rare"
+  },
+  {
+    "text": "RFI responses outstanding.",
+    "report_style_text": "RFI responses outstanding.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.late_design_information",
+    "subcategory": "late_design_information",
+    "severity": "high",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Tolerances out requiring correction noted during Firestopping activities.",
+    "report_style_text": "Tolerances out requiring correction noted during Firestopping activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.rework_quality_defect",
+    "subcategory": "rework_quality_defect",
+    "severity": "medium",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Security lock-down preventing entry noted during Scaffolding activities.",
+    "report_style_text": "Security lock-down preventing entry noted during Scaffolding activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.access_restriction",
+    "subcategory": "access_restriction",
+    "severity": "low",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Hot works permit not approved noted during Steelwork activities.",
+    "report_style_text": "Hot works permit not approved noted during Steelwork activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.permit_delay",
+    "subcategory": "permit_delay",
+    "severity": "low",
+    "likelihood": "possible"
+  },
+  {
+    "text": "High winds stopped crane operations.",
+    "report_style_text": "High winds stopped crane operations.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.weather_delay",
+    "subcategory": "weather_delay",
+    "severity": "medium",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Documentation incomplete for inspection noted during Scaffolding activities.",
+    "report_style_text": "Documentation incomplete for inspection noted during Scaffolding activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.late_inspections",
+    "subcategory": "late_inspections",
+    "severity": "high",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Access scaffold blocking other works affecting Concrete sequence at Service yard.",
+    "report_style_text": "Access scaffold blocking other works affecting Concrete sequence at Service yard.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.interface_clash",
+    "subcategory": "interface_clash",
+    "severity": "low",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Crane out of service pending parts.",
+    "report_style_text": "Crane out of service pending parts.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.plant_breakdown",
+    "subcategory": "plant_breakdown",
+    "severity": "critical",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Late design changes affecting layout noted during Roofing activities.",
+    "report_style_text": "Late design changes affecting layout noted during Roofing activities.",
+    "label": "delay",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "delay",
+    "original_risk_id": "delay.late_design_information",
+    "subcategory": "late_design_information",
+    "severity": "medium",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Late approvals.",
+    "report_style_text": "Late approvals.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.long_lead_items",
+    "subcategory": "long_lead_items",
+    "severity": "high",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Client requested alternative finish with longer lead for Roofing works at Scaffold lift.",
+    "report_style_text": "Client requested alternative finish with longer lead for Roofing works at Scaffold lift.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.spec_change",
+    "subcategory": "spec_change",
+    "severity": "critical",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Stock not available at workface.",
+    "report_style_text": "Stock not available at workface.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.inventory_mismanagement",
+    "subcategory": "inventory_mismanagement",
+    "severity": "medium",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Framework supplier unable to meet demand.",
+    "report_style_text": "Framework supplier unable to meet demand.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.single_source_dependency",
+    "subcategory": "single_source_dependency",
+    "severity": "low",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Corrosion due to inadequate cover for Logistics works at Block B.",
+    "report_style_text": "Corrosion due to inadequate cover for Logistics works at Block B.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.storage_damage",
+    "subcategory": "storage_damage",
+    "severity": "high",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Batch failed certification checks impacting Logistics at Apartment corridor.",
+    "report_style_text": "Batch failed certification checks impacting Logistics at Apartment corridor.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.material_quality_reject",
+    "subcategory": "material_quality_reject",
+    "severity": "critical",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Strike affecting logistics.",
+    "report_style_text": "Strike affecting logistics.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.transport_disruption",
+    "subcategory": "transport_disruption",
+    "severity": "critical",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Incorrect items shipped.",
+    "report_style_text": "Incorrect items shipped.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.supplier_delay",
+    "subcategory": "supplier_delay",
+    "severity": "critical",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Cashflow constraints.",
+    "report_style_text": "Cashflow constraints.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.long_lead_items",
+    "subcategory": "long_lead_items",
+    "severity": "critical",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Client requested alternative finish with longer lead.",
+    "report_style_text": "Client requested alternative finish with longer lead.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.spec_change",
+    "subcategory": "spec_change",
+    "severity": "high",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Misplaced stock.",
+    "report_style_text": "Misplaced stock.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.inventory_mismanagement",
+    "subcategory": "inventory_mismanagement",
+    "severity": "low",
+    "likelihood": "rare"
+  },
+  {
+    "text": "No approved alternate product for Firestopping works at Basement.",
+    "report_style_text": "No approved alternate product for Firestopping works at Basement.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.single_source_dependency",
+    "subcategory": "single_source_dependency",
+    "severity": "critical",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Damage during internal moves.",
+    "report_style_text": "Damage during internal moves.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.storage_damage",
+    "subcategory": "storage_damage",
+    "severity": "high",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Materials rejected by QA impacting Steelwork at Warehouse aisle.",
+    "report_style_text": "Materials rejected by QA impacting Steelwork at Warehouse aisle.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.material_quality_reject",
+    "subcategory": "material_quality_reject",
+    "severity": "medium",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Customs hold on imported goods.",
+    "report_style_text": "Customs hold on imported goods.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.transport_disruption",
+    "subcategory": "transport_disruption",
+    "severity": "critical",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Haulier cancelled collection.",
+    "report_style_text": "Haulier cancelled collection.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.supplier_delay",
+    "subcategory": "supplier_delay",
+    "severity": "high",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Submittals not approved to place order for Groundworks works at External elevation.",
+    "report_style_text": "Submittals not approved to place order for Groundworks works at External elevation.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.long_lead_items",
+    "subcategory": "long_lead_items",
+    "severity": "medium",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Approved substitute required.",
+    "report_style_text": "Approved substitute required.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.spec_change",
+    "subcategory": "spec_change",
+    "severity": "critical",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Uncontrolled withdrawals depleted stock for Roofing works at Loading bay.",
+    "report_style_text": "Uncontrolled withdrawals depleted stock for Roofing works at Loading bay.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.inventory_mismanagement",
+    "subcategory": "inventory_mismanagement",
+    "severity": "low",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Single-source item delayed impacting Roofing at South facade.",
+    "report_style_text": "Single-source item delayed impacting Roofing at South facade.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.single_source_dependency",
+    "subcategory": "single_source_dependency",
+    "severity": "low",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Materials damaged due to rain exposure.",
+    "report_style_text": "Materials damaged due to rain exposure.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.storage_damage",
+    "subcategory": "storage_damage",
+    "severity": "medium",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Out-of-spec dimensions require remake.",
+    "report_style_text": "Out-of-spec dimensions require remake.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.material_quality_reject",
+    "subcategory": "material_quality_reject",
+    "severity": "medium",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Customs hold on imported goods impacting Carpentry at Loading bay.",
+    "report_style_text": "Customs hold on imported goods impacting Carpentry at Loading bay.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.transport_disruption",
+    "subcategory": "transport_disruption",
+    "severity": "critical",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Haulier cancelled collection.",
+    "report_style_text": "Haulier cancelled collection.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.supplier_delay",
+    "subcategory": "supplier_delay",
+    "severity": "low",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Submittals not approved to place order for Drylining works at External elevation.",
+    "report_style_text": "Submittals not approved to place order for Drylining works at External elevation.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.long_lead_items",
+    "subcategory": "long_lead_items",
+    "severity": "critical",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Approved substitute required for Cladding works at Basement.",
+    "report_style_text": "Approved substitute required for Cladding works at Basement.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.spec_change",
+    "subcategory": "spec_change",
+    "severity": "medium",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Uncontrolled withdrawals depleted stock impacting Commissioning at Scaffold lift.",
+    "report_style_text": "Uncontrolled withdrawals depleted stock impacting Commissioning at Scaffold lift.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.inventory_mismanagement",
+    "subcategory": "inventory_mismanagement",
+    "severity": "low",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "No approved alternate product for Logistics works at Level 1.",
+    "report_style_text": "No approved alternate product for Logistics works at Level 1.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.single_source_dependency",
+    "subcategory": "single_source_dependency",
+    "severity": "critical",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Materials damaged due to rain exposure impacting Scaffolding at Level 1.",
+    "report_style_text": "Materials damaged due to rain exposure impacting Scaffolding at Level 1.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.storage_damage",
+    "subcategory": "storage_damage",
+    "severity": "critical",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Out-of-spec dimensions require remake.",
+    "report_style_text": "Out-of-spec dimensions require remake.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.material_quality_reject",
+    "subcategory": "material_quality_reject",
+    "severity": "critical",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Weather.",
+    "report_style_text": "Weather.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.transport_disruption",
+    "subcategory": "transport_disruption",
+    "severity": "low",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Incorrect items shipped.",
+    "report_style_text": "Incorrect items shipped.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.supplier_delay",
+    "subcategory": "supplier_delay",
+    "severity": "high",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Late approvals.",
+    "report_style_text": "Late approvals.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.long_lead_items",
+    "subcategory": "long_lead_items",
+    "severity": "low",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Approved substitute required impacting Commissioning at Excavation area.",
+    "report_style_text": "Approved substitute required impacting Commissioning at Excavation area.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.spec_change",
+    "subcategory": "spec_change",
+    "severity": "medium",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Stock not available at workface.",
+    "report_style_text": "Stock not available at workface.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.inventory_mismanagement",
+    "subcategory": "inventory_mismanagement",
+    "severity": "high",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Framework supplier unable to meet demand for Groundworks works at Warehouse aisle.",
+    "report_style_text": "Framework supplier unable to meet demand for Groundworks works at Warehouse aisle.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.single_source_dependency",
+    "subcategory": "single_source_dependency",
+    "severity": "critical",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Pallets crushed from poor stacking for Logistics works at Loading bay.",
+    "report_style_text": "Pallets crushed from poor stacking for Logistics works at Loading bay.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.storage_damage",
+    "subcategory": "storage_damage",
+    "severity": "critical",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Out-of-spec dimensions require remake.",
+    "report_style_text": "Out-of-spec dimensions require remake.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.material_quality_reject",
+    "subcategory": "material_quality_reject",
+    "severity": "low",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Strike affecting logistics impacting Concrete at External elevation.",
+    "report_style_text": "Strike affecting logistics impacting Concrete at External elevation.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.transport_disruption",
+    "subcategory": "transport_disruption",
+    "severity": "low",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Incorrect order.",
+    "report_style_text": "Incorrect order.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.supplier_delay",
+    "subcategory": "supplier_delay",
+    "severity": "low",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Long-lead plant not released for manufacture.",
+    "report_style_text": "Long-lead plant not released for manufacture.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.long_lead_items",
+    "subcategory": "long_lead_items",
+    "severity": "medium",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Client requested alternative finish with longer lead.",
+    "report_style_text": "Client requested alternative finish with longer lead.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.spec_change",
+    "subcategory": "spec_change",
+    "severity": "high",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Insufficient quantities issued impacting Painting at Basement.",
+    "report_style_text": "Insufficient quantities issued impacting Painting at Basement.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.inventory_mismanagement",
+    "subcategory": "inventory_mismanagement",
+    "severity": "low",
+    "likelihood": "likely"
+  },
+  {
+    "text": "No alternates.",
+    "report_style_text": "No alternates.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.single_source_dependency",
+    "subcategory": "single_source_dependency",
+    "severity": "medium",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Pallets crushed from poor stacking for Logistics works at Block B.",
+    "report_style_text": "Pallets crushed from poor stacking for Logistics works at Block B.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.storage_damage",
+    "subcategory": "storage_damage",
+    "severity": "low",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Batch failed certification checks.",
+    "report_style_text": "Batch failed certification checks.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.material_quality_reject",
+    "subcategory": "material_quality_reject",
+    "severity": "high",
+    "likelihood": "rare"
+  },
+  {
+    "text": "Customs hold on imported goods for Scaffolding works at North facade.",
+    "report_style_text": "Customs hold on imported goods for Scaffolding works at North facade.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.transport_disruption",
+    "subcategory": "transport_disruption",
+    "severity": "high",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Incorrect order.",
+    "report_style_text": "Incorrect order.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.supplier_delay",
+    "subcategory": "supplier_delay",
+    "severity": "critical",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Lead time exceeds float.",
+    "report_style_text": "Lead time exceeds float.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.long_lead_items",
+    "subcategory": "long_lead_items",
+    "severity": "critical",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Client preference.",
+    "report_style_text": "Client preference.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.spec_change",
+    "subcategory": "spec_change",
+    "severity": "low",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Stock not available at workface impacting Commissioning at Loading bay.",
+    "report_style_text": "Stock not available at workface impacting Commissioning at Loading bay.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.inventory_mismanagement",
+    "subcategory": "inventory_mismanagement",
+    "severity": "high",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Framework supplier unable to meet demand.",
+    "report_style_text": "Framework supplier unable to meet demand.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.single_source_dependency",
+    "subcategory": "single_source_dependency",
+    "severity": "low",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Corrosion due to inadequate cover impacting Steelwork at Scaffold lift.",
+    "report_style_text": "Corrosion due to inadequate cover impacting Steelwork at Scaffold lift.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.storage_damage",
+    "subcategory": "storage_damage",
+    "severity": "high",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Materials rejected by QA impacting Scaffolding at North facade.",
+    "report_style_text": "Materials rejected by QA impacting Scaffolding at North facade.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.material_quality_reject",
+    "subcategory": "material_quality_reject",
+    "severity": "high",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Customs hold on imported goods impacting Concrete at External elevation.",
+    "report_style_text": "Customs hold on imported goods impacting Concrete at External elevation.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.transport_disruption",
+    "subcategory": "transport_disruption",
+    "severity": "critical",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Supplier dispatch slipped by one week for Plumbing works at Service yard.",
+    "report_style_text": "Supplier dispatch slipped by one week for Plumbing works at Service yard.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.supplier_delay",
+    "subcategory": "supplier_delay",
+    "severity": "low",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Cashflow constraints.",
+    "report_style_text": "Cashflow constraints.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.long_lead_items",
+    "subcategory": "long_lead_items",
+    "severity": "high",
+    "likelihood": "rare"
+  },
+  {
+    "text": "New fire compliance requirement changed insulation spec impacting Carpentry at Service yard.",
+    "report_style_text": "New fire compliance requirement changed insulation spec impacting Carpentry at Service yard.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.spec_change",
+    "subcategory": "spec_change",
+    "severity": "low",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Uncontrolled withdrawals depleted stock.",
+    "report_style_text": "Uncontrolled withdrawals depleted stock.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.inventory_mismanagement",
+    "subcategory": "inventory_mismanagement",
+    "severity": "critical",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Framework supplier unable to meet demand for M&E works at Level 1.",
+    "report_style_text": "Framework supplier unable to meet demand for M&E works at Level 1.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.single_source_dependency",
+    "subcategory": "single_source_dependency",
+    "severity": "critical",
+    "likelihood": "possible"
+  },
+  {
+    "text": "Pallets crushed from poor stacking.",
+    "report_style_text": "Pallets crushed from poor stacking.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.storage_damage",
+    "subcategory": "storage_damage",
+    "severity": "high",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Out-of-spec dimensions require remake for Steelwork works at Warehouse aisle.",
+    "report_style_text": "Out-of-spec dimensions require remake for Steelwork works at Warehouse aisle.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.material_quality_reject",
+    "subcategory": "material_quality_reject",
+    "severity": "high",
+    "likelihood": "unlikely"
+  },
+  {
+    "text": "Port congestion delaying shipment impacting Firestopping at Apartment corridor.",
+    "report_style_text": "Port congestion delaying shipment impacting Firestopping at Apartment corridor.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.transport_disruption",
+    "subcategory": "transport_disruption",
+    "severity": "low",
+    "likelihood": "likely"
+  },
+  {
+    "text": "Delivery rescheduled due to backlog.",
+    "report_style_text": "Delivery rescheduled due to backlog.",
+    "label": "material_shortage",
+    "source": "synthetic_from_taxonomy",
+    "synthetic": true,
+    "original_category": "material_shortage",
+    "original_risk_id": "material_shortage.supplier_delay",
+    "subcategory": "supplier_delay",
+    "severity": "low",
+    "likelihood": "possible"
+  }
+]
