@@ -1,13 +1,20 @@
 """
-HTTP API for construction-report NLP.
+FastAPI HTTP layer for the ReportBuilderPro NLP service.
 
-Endpoints:
-  GET  /health          — process up; model/LLM config readiness for ops
-  POST /nlp/analyze     — classify sentences → flags (delay, risk, material_shortage, …)
-  POST /nlp/feedback    — placeholder for future human-in-the-loop training
+Exposes three endpoints consumed by the Node.js API proxy (server/index.js):
+  GET  /health          — liveness check; reports whether the configured classifier is ready
+  POST /nlp/analyze     — main inference endpoint: text → structured flags
+  POST /nlp/feedback    — stub endpoint for future human-in-the-loop retraining
 
-Implementation lives in `app.pipeline` (ML and optional Azure OpenAI). CORS is open for
-dev; tighten `allow_origins` in production behind your gateway.
+All ML and LLM logic is encapsulated in app.pipeline; this module only handles
+HTTP serialisation, input validation (via Pydantic models), and error translation.
+
+Pydantic is used for request/response validation following the FastAPI pattern described in:
+  Ramírez, S. (2019). FastAPI: Modern, fast (high-performance), web framework for building
+    APIs with Python 3.6+ based on standard Python type hints. https://fastapi.tiangolo.com/
+
+CORS is currently open (*) — restrict allow_origins to the frontend domain in production
+or enforce at the Azure API Management / Application Gateway layer.
 """
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -52,7 +59,18 @@ def nlp_analyze(req: AnalyzeRequest):
 
 @app.post("/nlp/feedback")
 def nlp_feedback(req: FeedbackRequest):
-    """Stub: accept user corrections for future retraining or analytics."""
+    """
+    Stub endpoint for human-in-the-loop feedback collection.
+
+    Accepts user corrections on individual flags (accept / reject / relabel).
+    Currently logs nothing — a production extension would persist corrections
+    to a database and use them to periodically retrain the classifier, following
+    active learning principles (Settles, 2010).
+
+    Reference:
+      Settles, B. (2010). Active learning literature survey. Computer Sciences
+        Technical Report 1648, University of Wisconsin–Madison.
+    """
     return {"success": True, "message": "Feedback received."}
 
 

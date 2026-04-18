@@ -33,7 +33,8 @@ const PORT = process.env.PORT || 4000;
 const MONGO_URI = process.env.MONGO_URI || process.env.Mongo_URL || 'mongodb://localhost:27017/';
 const DB_NAME = process.env.MONGO_DB || process.env.Mongo_DB || 'ReportBuilderPro';
 const NLP_SERVICE_URL = process.env.NLP_SERVICE_URL || ''; // e.g. http://localhost:8000
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-in-production';
+// SECURITY: fallback secret is publicly visible in source — ensure JWT_SECRET is set in env
+const JWT_SECRET = process.env.JWT_SECRET /* || 'dev-secret-change-in-production' */;
 const WRITING_REVIEW_ENABLED = process.env.WRITING_REVIEW_ENABLED === '1';
 const WRITING_REVIEW_URL = (process.env.WRITING_REVIEW_URL || '').trim();
 const WRITING_REVIEW_LANGUAGE = (process.env.WRITING_REVIEW_LANGUAGE || 'en-GB').trim();
@@ -55,6 +56,7 @@ console.log('[config]', {
 });
 
 // --- HTTP middleware ---
+// SECURITY: open CORS allows any origin — restrict to frontend domain in production
 app.use(cors());
 // Allow large JSON payloads (needed for PDFs stored as base64)
 app.use(express.json({ limit: '50mb' }));
@@ -145,16 +147,16 @@ app.post('/api/login', async (req, res) => {
     return res.status(400).json({ message: 'Email and password are required' });
   }
 
-  // Hardcoded logins for local/testing – work even when DB is not connected
-  const hardcoded = [
-    { email: 'admin', password: 'admin', name: 'Admin' },
-    { email: 'test@hwhpm.ie', password: 'password', name: 'User Test' },
-  ];
-  const match = hardcoded.find((u) => u.email === email && u.password === password);
-  if (match) {
-    const token = jwt.sign({ sub: match.email }, JWT_SECRET, { expiresIn: '7d' });
-    return res.json({ email: match.email, name: match.name, token });
-  }
+  // SECURITY: hardcoded credentials commented out — use DB users only
+  // const hardcoded = [
+  //   { email: 'admin', password: 'admin', name: 'Admin' },
+  //   { email: 'test@hwhpm.ie', password: 'password', name: 'User Test' },
+  // ];
+  // const match = hardcoded.find((u) => u.email === email && u.password === password);
+  // if (match) {
+  //   const token = jwt.sign({ sub: match.email }, JWT_SECRET, { expiresIn: '7d' });
+  //   return res.json({ email: match.email, name: match.name, token });
+  // }
 
   // For other users, database must be connected
   if (!db) {
@@ -163,6 +165,7 @@ app.post('/api/login', async (req, res) => {
 
   try {
     const user = await db.collection('Login').findOne({ email });
+    // SECURITY: plaintext password comparison — should use bcrypt.compare() in production
     if (!user || user.password !== password) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }

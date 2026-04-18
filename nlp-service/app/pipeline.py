@@ -1,10 +1,26 @@
 """
-NLP pipeline: load model, preprocess, TF-IDF, classify, generate flags.
+Inference pipeline: load model artefacts, classify sentences, produce structured flags.
 
-Optionally, an LLM (e.g. Azure OpenAI) can be used for
-sentence-level classification instead of, or alongside, the
-traditional ML model. This is controlled via environment variables
-so that the Node backend and API contract stay the same.
+The primary path is a lightweight ML classifier:
+  1. preprocess.py segments and lemmatises each sentence (spaCy en_core_web_sm).
+  2. Lemmas are joined into a feature string and transformed by the TF-IDF vectoriser.
+  3. LogisticRegression.predict_proba() returns per-class probability estimates.
+  4. Sentences where the highest-probability class is in LABELS_WITH_ACTIONS and
+     confidence ≥ CONFIDENCE_THRESHOLD are surfaced as flags to the frontend.
+
+An optional LLM path (Azure OpenAI) is also implemented and selectable at runtime via
+the NLP_CLASSIFIER_MODE environment variable ("ml" | "llm" | "hybrid"). The LLM path
+was prototyped as a design alternative during development; "ml" is the production mode.
+Because the API contract is identical for both paths, switching modes requires no
+changes to the Node.js backend or the React frontend.
+
+References:
+  Salton, G., & Buckley, C. (1988). Term-weighting approaches in automatic text
+    retrieval. Information Processing & Management, 24(5), 513–523.
+  Pedregosa, F. et al. (2011). Scikit-learn: Machine learning in Python.
+    Journal of Machine Learning Research, 12, 2825–2830.
+  Brown, T. et al. (2020). Language models are few-shot learners. NeurIPS 33.
+    (context for LLM-based classification approach)
 """
 import os
 import time
@@ -17,9 +33,19 @@ from joblib import load
 from app.preprocess import sentence_split_and_lemmatize
 
 MODEL_DIR = Path(__file__).resolve().parent.parent / "model"
+# Labels that produce a flag. "none" is the null class and is filtered out.
 LABELS_WITH_ACTIONS = ["delay", "risk", "material_shortage"]
+
+# Minimum posterior probability required to surface a flag.
+# Set at 0.50 (majority class threshold): sentences where the classifier is not
+# meaningfully more confident in an action class than in "none" are suppressed.
+# This was tuned empirically on the construction training corpus to balance
+# precision (avoiding false alarms) against recall (catching genuine issues).
 CONFIDENCE_THRESHOLD = 0.50
 
+# Suggested remediation text surfaced alongside each flag in the UI.
+# These are static lookups — a future extension could generate contextual advice
+# using the LLM path in _classify_sentence_llm().
 SUGGESTED_ACTIONS = {
     "delay": "Update schedule and notify client. Review dependencies.",
     "risk": "Log in issues register. Schedule follow-up inspection.",
@@ -76,11 +102,21 @@ def is_model_available() -> bool:
 
 
 def _classify_sentence_ml(tokens: List[str]) -> Tuple[str, float]:
-    """Classify a tokenised sentence using the TF-IDF + Logistic Regression model."""
+    """
+    Classify a pre-lemmatised sentence via TF-IDF + Logistic Regression.
+
+    Returns (label, confidence) where confidence is the softmax posterior
+    probability for the predicted class.  Logistic Regression provides
+    well-calibrated probabilities suitable for thresholding (unlike SVM or
+    naive distance-based classifiers).
+    """
     if not load_model():
         raise RuntimeError("Model not found. Run: python -m app.train")
+    # Rejoin lemmas into a space-separated string — the format the vectoriser was
+    # trained on (see train.py: X_texts.append(" ".join(tokens))).
     features_str = " ".join(tokens)
     X = _vectorizer.transform([features_str])
+    # predict_proba returns a row vector over all classes in classifier.classes_ order.
     probs = _classifier.predict_proba(X)[0]
     class_idx = probs.argmax()
     prob = float(probs[class_idx])
@@ -90,10 +126,18 @@ def _classify_sentence_ml(tokens: List[str]) -> Tuple[str, float]:
 
 def _classify_sentence_llm(sentence: str) -> str:
     """
-    Classify a sentence using an LLM (Azure OpenAI).
+    Alternative classifier path: zero-shot sentence classification via Azure OpenAI.
 
-    The model is prompted to respond with exactly one of:
-      risk, delay, material_shortage, none
+    The LLM is prompted to return exactly one of the four label tokens.
+    temperature=0.0 is set to make responses deterministic (greedy decoding).
+    max_tokens=1 limits the response to a single token, reducing cost and latency.
+
+    This approach follows zero-shot classification as described in:
+      Brown, T. et al. (2020). Language models are few-shot learners. NeurIPS 33.
+
+    Note: unlike Logistic Regression, LLMs do not produce calibrated posterior
+    probabilities.  A fixed confidence of 0.95 is assigned for flagged labels
+    as a placeholder to satisfy the downstream threshold check.
     """
     if not _has_llm_config():
         raise RuntimeError("LLM configuration missing. Set AZURE_OPENAI_* env vars.")
