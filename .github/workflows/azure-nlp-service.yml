@@ -37,7 +37,17 @@ jobs:
 
       - name: Deploy to Container Apps
         run: |
-          az containerapp update \
-            --name ${{ env.AZURE_CONTAINER_APP_NAME }} \
-            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-            --image ${{ env.IMAGE_TAG }}
+          # Update if the container app exists, otherwise fail with a clear message
+          if az containerapp show \
+              --name ${{ env.AZURE_CONTAINER_APP_NAME }} \
+              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+              --output none 2>/dev/null; then
+            az containerapp update \
+              --name ${{ env.AZURE_CONTAINER_APP_NAME }} \
+              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+              --image ${{ env.IMAGE_TAG }}
+          else
+            echo "ERROR: Container App '${{ env.AZURE_CONTAINER_APP_NAME }}' not found in '${{ env.AZURE_RESOURCE_GROUP }}'."
+            echo "Check the AZURE_NLP_CONTAINER_APP_NAME secret matches the actual resource name."
+            exit 1
+          fi
