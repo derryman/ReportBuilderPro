@@ -1,3 +1,6 @@
+/**
+ * Types and small helpers for the writing-review API response (grammar/style issues per field).
+ */
 export type CapturedComponent = {
   type: 'image' | 'text' | 'progress' | 'issues';
   title: string;

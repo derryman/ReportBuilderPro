@@ -1,4 +1,17 @@
-// Import required libraries
+/**
+ * Report Builder Pro — Express API (Node.js)
+ *
+ * Role in the stack:
+ * - Authenticates users (JWT) and serves JSON under /api.
+ * - Persists templates, reports, and NLP analysis results in MongoDB (or Cosmos DB).
+ * - Proxies heavy NLP to the Python service (NLP_SERVICE_URL) and optional grammar/style
+ *   checks to LanguageTool (WRITING_REVIEW_* env vars).
+ *
+ * Main collections: Login, Templates, Reports, ai_analysis
+ *
+ * Sections below: config → middleware → Mongo → auth & templates → reports →
+ * NLP helpers → analyze/writing-review/PDF → latest analysis → shutdown.
+ */
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
@@ -6,6 +19,7 @@ const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const pdfParse = require('pdf-parse');
 const { MongoClient, ObjectId } = require('mongodb');
+const { getTextFromReport } = require('./lib/getTextFromReport');
 
 // Load .env then .env.local (local overrides for local testing, e.g. MONGO_URI=mongodb://localhost:27017/)
 dotenv.config({ path: '.env' });
@@ -30,18 +44,17 @@ const WRITING_REVIEW_MAX_ISSUES = Math.max(
   Number.parseInt(process.env.WRITING_REVIEW_MAX_ISSUES || '12', 10) || 12
 );
 
-// Debug: Log what we're getting (without exposing password)
-console.log('Environment check:');
-console.log('MONGO_URI exists:', !!process.env.MONGO_URI);
-console.log('Mongo_URL exists:', !!process.env.Mongo_URL);
-console.log('MONGO_DB exists:', !!process.env.MONGO_DB);
-console.log('Mongo_DB exists:', !!process.env.Mongo_DB);
-console.log('Using MONGO_URI:', MONGO_URI ? MONGO_URI.substring(0, 20) + '...' : 'NOT SET');
-console.log('Using DB_NAME:', DB_NAME);
-console.log('Writing review enabled:', WRITING_REVIEW_ENABLED);
-console.log('Writing review configured:', Boolean(WRITING_REVIEW_URL));
+// Startup diagnostics (never log full connection strings)
+console.log('[config]', {
+  mongoUriFromEnv: Boolean(process.env.MONGO_URI || process.env.Mongo_URL),
+  mongoUriPreview: MONGO_URI ? `${MONGO_URI.substring(0, 24)}…` : 'NOT SET',
+  dbName: DB_NAME,
+  nlpServiceSet: Boolean(NLP_SERVICE_URL),
+  writingReviewEnabled: WRITING_REVIEW_ENABLED,
+  writingReviewConfigured: Boolean(WRITING_REVIEW_URL),
+});
 
-// Enable CORS (allows frontend to talk to backend)
+// --- HTTP middleware ---
 app.use(cors());
 // Allow large JSON payloads (needed for PDFs stored as base64)
 app.use(express.json({ limit: '50mb' }));
@@ -75,11 +88,10 @@ function requireAuth(req, res, next) {
 }
 app.use('/api', requireAuth);
 
-// Variables to store MongoDB connection
 let mongoClient;
 let db;
 
-// Function to connect to MongoDB (with retries for Cosmos DB)
+// --- MongoDB (retries help Azure Cosmos cold start / transient errors) ---
 async function connectToMongo() {
   const maxRetries = 5;
   const retryDelayMs = 5000;
@@ -113,13 +125,9 @@ async function connectToMongo() {
   }
 }
 
-// Start the connection when server starts
-console.log('Starting MongoDB connection...');
-console.log('MONGO_URI:', MONGO_URI ? 'Set' : 'NOT SET');
-console.log('MONGO_DB:', DB_NAME);
 connectToMongo();
 
-// Health check
+// --- Core routes ---
 app.get('/api/health', (_req, res) => {
   console.log('Health check requested');
   res.json({ 
@@ -129,7 +137,7 @@ app.get('/api/health', (_req, res) => {
   });
 });
 
-// Login endpoint - checks credentials against MongoDB "Login" collection
+// Public: JWT issued here; all other /api/* require Bearer token (see requireAuth).
 app.post('/api/login', async (req, res) => {
   // Get email and password from request
   const { email, password } = req.body;
@@ -166,7 +174,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// Get all templates - only those created by the current user
+// --- Templates (scoped by createdBy = req.user.email) ---
 app.get('/api/templates', async (req, res) => {
   if (!db) {
     return res.status(503).json({ message: 'Database not ready yet' });
@@ -315,7 +323,7 @@ app.delete('/api/templates/:id', async (req, res) => {
   }
 });
 
-// Save a captured report from mobile
+// --- Reports (captured field data from mobile or web) ---
 app.post('/api/reports', async (req, res) => {
   if (!db) {
     console.error('Database not connected');
@@ -495,24 +503,9 @@ app.delete('/api/reports/:id', async (req, res) => {
   }
 });
 
-// --- NLP / Risk detection ---
+// --- NLP / writing review helpers (used by routes below) ---
 
-/** Build one text string from a report's capturedData (all title + text fields). */
-function getTextFromReport(report) {
-  const capturedData = report && report.capturedData;
-  if (!capturedData || typeof capturedData !== 'object') return '';
-  const parts = [];
-  for (const v of Object.values(capturedData)) {
-    if (v && typeof v === 'object') {
-      if (typeof v.title === 'string' && v.title.trim()) parts.push(v.title.trim());
-      if (typeof v.text === 'string' && v.text.trim()) parts.push(v.text.trim());
-      if (typeof v.progress === 'string' && v.progress.trim()) parts.push(v.progress.trim());
-      if (typeof v.issues === 'string' && v.issues.trim()) parts.push(v.issues.trim());
-    }
-  }
-  return parts.join('\n');
-}
-
+/** Build a single review document plus per-field segments so LanguageTool offsets map back to report fields. */
 function getWritingReviewSegmentsFromReport(report) {
   const capturedData = report && report.capturedData;
   if (!capturedData || typeof capturedData !== 'object') {
@@ -561,10 +554,12 @@ function getWritingReviewSegmentsFromReport(report) {
   };
 }
 
+/** True when LanguageTool (or compatible) URL is set and the feature flag is on. */
 function isWritingReviewConfigured() {
   return WRITING_REVIEW_ENABLED && Boolean(WRITING_REVIEW_URL);
 }
 
+/** Map a character offset in the concatenated review text back to a field segment. */
 function findSegmentForOffset(segments, offset) {
   if (!Array.isArray(segments) || segments.length === 0) return null;
   return (
@@ -574,6 +569,7 @@ function findSegmentForOffset(segments, offset) {
   );
 }
 
+/** POST form body to LanguageTool-compatible /check endpoint. */
 async function callWritingReviewService(text) {
   const params = new URLSearchParams({
     text: text || '',
@@ -597,6 +593,7 @@ async function callWritingReviewService(text) {
   return res.json();
 }
 
+/** Turn provider "matches" into stable issue objects with fieldKey for the UI. */
 function normaliseWritingReviewIssues(matches, segments) {
   if (!Array.isArray(matches)) return [];
 
@@ -666,7 +663,7 @@ async function callNlpService(text) {
   return res.json();
 }
 
-// Analyze one report (only if owned by current user)
+// Persist analysis to `ai_analysis` for history and GET /api/nlp/latest.
 app.post('/api/reports/:id/analyze', async (req, res) => {
   if (!db) {
     return res.status(503).json({ message: 'Database not ready yet' });
@@ -728,6 +725,7 @@ app.post('/api/reports/:id/analyze', async (req, res) => {
   }
 });
 
+// Grammar/style check via configured LanguageTool-compatible endpoint.
 app.post('/api/reports/:id/writing-review', async (req, res) => {
   if (!db) {
     return res.status(503).json({ message: 'Database not ready yet' });
@@ -797,7 +795,7 @@ app.post('/api/reports/:id/writing-review', async (req, res) => {
   }
 });
 
-// Analyze uploaded PDF: extract text, run NLP, return flags (and save as latest scan for Home)
+// PDF upload → pdf-parse text → same NLP path as reports; optional persist to ai_analysis.
 app.post('/api/nlp/analyze-pdf', upload.single('pdf'), async (req, res) => {
   if (!req.file || !req.file.buffer) {
     return res.status(400).json({ message: 'No PDF file uploaded. Use field name "pdf".' });
@@ -851,7 +849,6 @@ app.post('/api/nlp/analyze-pdf', upload.single('pdf'), async (req, res) => {
   });
 });
 
-// Get the most recent analysis for current user (Home "latest scan" dashboard)
 app.get('/api/nlp/latest', async (req, res) => {
   if (!db) {
     return res.status(503).json({ message: 'Database not ready yet' });

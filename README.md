@@ -2,79 +2,54 @@
 
 A full-stack web application for creating and managing construction site reports. Built with React, Node.js, Express, and MongoDB.
 
-## 🚀 Quick Start
+## Quick start
 
 ### Prerequisites
-- Node.js 20.x
-- MongoDB (or Azure Cosmos DB)
 
-### Local Development
+- Node.js 20.x (or current LTS supported by Vite)
+- MongoDB (local or Azure Cosmos DB with MongoDB API)
+
+### Local development
 
 ```bash
-# Install all dependencies
 npm run install:all
-
-# Start both frontend and backend
 npm run dev
-
-# Or start individually
-npm run dev:server  # Backend on http://localhost:4000
-npm run dev:web     # Frontend on http://localhost:5173
 ```
 
-## 📁 Project Structure
+Or start separately:
+
+```bash
+npm run dev:server   # Backend http://localhost:4000
+npm run dev:web      # Frontend http://localhost:5173
+```
+
+## Project layout
 
 ```
 ReportBuilderPro/
-├── server/          # Node.js/Express backend API
-├── web/            # React frontend (Vite)
-└── .github/        # GitHub Actions workflows
+├── server/       # Express API, JWT, MongoDB, NLP proxy
+├── web/          # React + TypeScript (Vite)
+├── nlp-service/  # FastAPI NLP classifier (see nlp-service/README.md)
+├── risk_dataset_construction_megapack/  # Optional extra training source data
+└── .github/      # CI workflows
 ```
 
-## 🌐 Deployment
+## Environment
 
-The app is deployed on Azure:
-- **Frontend:** Azure Static Web Apps
-- **Backend:** Azure App Service
-- **Database:** Azure Cosmos DB (MongoDB API)
+Copy `server/.env.example` → `server/.env` and `web/.env.example` → `web/.env`, then set `MONGO_URI`, `JWT_SECRET`, optional `NLP_SERVICE_URL`, etc.
 
-See `AZURE_HOSTING.md` for detailed deployment instructions.
+## Features
 
-## 📚 Documentation
+- User authentication
+- Template creation and management
+- Mobile-friendly report capture
+- PDF generation
+- Offline support
+- NLP issue hints (optional Python service)
+- Optional writing review integration
 
-- `AZURE_HOSTING.md` - Complete Azure deployment guide
-- `MIGRATE_TO_AZURE.md` - Migrating data from local MongoDB to Azure
-
-## 🔧 Environment Variables
-
-### Backend (`server/.env`)
-```
-MONGO_URI=mongodb://...
-MONGO_DB=ReportBuilderPro
-PORT=4000
-NLP_SERVICE_URL=http://localhost:8000
-WRITING_REVIEW_ENABLED=1
-WRITING_REVIEW_URL=https://api.languagetool.org/v2/check
-WRITING_REVIEW_LANGUAGE=en-GB
-```
-
-### Frontend (`web/.env`)
-```
-VITE_API_URL=http://localhost:4000
-```
-
-## 📝 Features
-
-- ✅ User authentication
-- ✅ Template creation and management
-- ✅ Mobile-friendly report capture
-- ✅ PDF generation
-- ✅ Offline support
-- ✅ Issue detection (NLP)
-- ✅ Browser spellcheck + pre-PDF writing review
-
-## 🛠️ Tech Stack
+## Tech stack
 
 - **Frontend:** React, TypeScript, Vite, Bootstrap
 - **Backend:** Node.js, Express, MongoDB
-- **Hosting:** Azure (Static Web Apps, App Service, Cosmos DB)
+- **NLP:** Python, FastAPI, spaCy, scikit-learn

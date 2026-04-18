@@ -1,4 +1,14 @@
-# FastAPI NLP service - Python, spaCy, scikit-learn
+"""
+HTTP API for construction-report NLP.
+
+Endpoints:
+  GET  /health          — process up; model/LLM config readiness for ops
+  POST /nlp/analyze     — classify sentences → flags (delay, risk, material_shortage, …)
+  POST /nlp/feedback    — placeholder for future human-in-the-loop training
+
+Implementation lives in `app.pipeline` (ML and optional Azure OpenAI). CORS is open for
+dev; tighten `allow_origins` in production behind your gateway.
+"""
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -24,11 +34,13 @@ class FeedbackRequest(BaseModel):
 
 @app.get("/health")
 def health():
+    """Liveness + whether the configured classifier backend is ready."""
     return {"status": "ok", "model_loaded": is_model_available()}
 
 
 @app.post("/nlp/analyze")
 def nlp_analyze(req: AnalyzeRequest):
+    """Return structured flags + metadata for the supplied report text body."""
     if not req.text or not req.text.strip():
         raise HTTPException(status_code=400, detail="Text is required")
     try:
@@ -40,6 +52,7 @@ def nlp_analyze(req: AnalyzeRequest):
 
 @app.post("/nlp/feedback")
 def nlp_feedback(req: FeedbackRequest):
+    """Stub: accept user corrections for future retraining or analytics."""
     return {"success": True, "message": "Feedback received."}
 
 

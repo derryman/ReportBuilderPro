@@ -1,3 +1,6 @@
+/**
+ * Dashboard: latest NLP scan summary, quick links (desktop vs mobile), onboarding hints.
+ */
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { fetchWithAuth } from '../utils/api';

@@ -77,6 +77,33 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 
 Or double-click **run_nlp.bat** (Windows).
 
+## Unit tests
+
+These checks are for **local development and dissertation evidence** (regression on preprocessing and pipeline behaviour). They are **not** part of Azure runtime: the container runs the API; CI or your machine runs `unittest` when you choose to.
+
+You still need the **venv and dependencies** from [Setup](#setup) (`pip install -r requirements.txt`, spaCy model, etc.). Azure hosting does not replace a local Python env for running tests.
+
+**If tests “fail” with `ModuleNotFoundError: No module named 'joblib'` or `'spacy'`** before any individual test runs, that is an **environment** problem, not a failed assertion. You are using a Python interpreter that does not have `nlp-service/requirements.txt` installed (often `C:\Python312\python.exe` instead of `venv\Scripts\python.exe`). Fix: activate the project venv, then `pip install -r requirements.txt`, then run the tests again. On Windows you can double-click **`run_tests.bat`** in this folder (after `setup_nlp.bat` has created `venv`).
+
+**Recommended** — from the `nlp-service` folder (with venv activated):
+
+```bash
+cd nlp-service
+venv\Scripts\activate
+python -m unittest discover -s tests
+```
+
+Windows shortcut: double-click **`run_tests.bat`** (uses `venv` in this folder automatically).
+
+**Also valid** — from `nlp-service/tests` (test modules add the service root to `sys.path`):
+
+```bash
+cd nlp-service/tests
+python -m unittest discover -s . -p "test_*.py"
+```
+
+Avoid `python -m unittest discover -s tests` while your cwd is already `tests/` (that looks for `tests/tests` and fails with “Start directory is not importable”).
+
 ## Endpoints
 
 - GET /health

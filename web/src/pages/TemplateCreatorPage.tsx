@@ -1,3 +1,6 @@
+/**
+ * Drag-and-drop template designer: components saved to /api/templates; optional keyword “risk” preview.
+ */
 import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { DndContext, closestCenter, useSensor, useSensors, PointerSensor, DragOverlay } from '@dnd-kit/core';

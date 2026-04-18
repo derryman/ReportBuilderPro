@@ -1,3 +1,7 @@
+/**
+ * Frontend bootstrap: StrictMode, global styles, AuthProvider, App routes.
+ * HashRouter base is configured in Vite (`base: './'`) for Azure Static Web Apps.
+ */
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import 'bootstrap/dist/css/bootstrap.min.css';

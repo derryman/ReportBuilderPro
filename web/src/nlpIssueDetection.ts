@@ -1,3 +1,6 @@
+/**
+ * Lightweight client-side keyword scan for demos / Template Creator preview (not the ML NLP service).
+ */
 export type DetectedIssue = {
   id: number;
   jobId: string;

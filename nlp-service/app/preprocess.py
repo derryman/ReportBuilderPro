@@ -1,6 +1,9 @@
 """
-Stage 1: Preprocessing with spaCy.
-Lowercasing, tokenization, sentence splitting, lemmatization.
+Stage 1: Preprocessing with spaCy (`en_core_web_sm`).
+
+Lowercasing, sentence boundaries, and per-sentence lemmas for the TF-IDF vectorizer.
+If spaCy is not installed, falls back to naive `.` splitting and whitespace tokens
+(works for smoke tests; install the model for real accuracy).
 """
 import spacy
 

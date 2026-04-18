@@ -1,3 +1,6 @@
+/**
+ * Sign-in form; successful login stores JWT + user profile (see AuthContext).
+ */
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';

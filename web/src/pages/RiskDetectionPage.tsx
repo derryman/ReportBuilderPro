@@ -1,3 +1,6 @@
+/**
+ * Run NLP on saved reports or uploaded PDFs; surfaces flags returned by server + Python service.
+ */
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchWithAuth } from '../utils/api';

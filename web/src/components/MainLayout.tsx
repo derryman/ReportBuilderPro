@@ -1,3 +1,6 @@
+/**
+ * Authenticated chrome: sidebar navigation, user email, logout, and <Outlet /> for child routes.
+ */
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import { useMobile } from '../utils/useMobile';

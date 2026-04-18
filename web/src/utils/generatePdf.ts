@@ -1,3 +1,6 @@
+/**
+ * Client-side PDF builder from captured template components (text, progress, issues, images).
+ */
 import jsPDF from 'jspdf';
 
 /**

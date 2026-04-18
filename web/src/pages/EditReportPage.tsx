@@ -1,3 +1,6 @@
+/**
+ * Load one report by id, edit captured field values, PUT /api/reports/:id.
+ */
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../utils/api';

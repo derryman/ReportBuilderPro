@@ -1,4 +1,9 @@
-# Training: load data, spaCy preprocess, TF-IDF + Logistic Regression, save
+"""
+Train the sklearn classifier: JSON sentences → spaCy lemmas → TF-IDF → Logistic Regression.
+
+Writes `model/vectorizer.joblib` and `model/classifier.joblib` next to this package.
+Run from repo: `python -m app.train` (cwd: nlp-service).
+"""
 import argparse
 import json
 import sys

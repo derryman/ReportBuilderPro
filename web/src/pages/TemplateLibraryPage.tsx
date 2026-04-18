@@ -1,3 +1,6 @@
+/**
+ * Lists the current user’s templates from GET /api/templates; links to edit or capture flows.
+ */
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchWithAuth } from '../utils/api';

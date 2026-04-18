@@ -1,3 +1,6 @@
+/**
+ * Field capture against a chosen template: online POST /api/reports or offline IndexedDB queue + sync.
+ */
 import { useEffect, useState, useCallback } from 'react';
 import { API_BASE_URL } from '../config';
 import { fetchWithAuth } from '../utils/api';

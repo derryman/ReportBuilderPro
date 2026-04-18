@@ -1,3 +1,6 @@
+/**
+ * Gate: if not logged in, redirect to #/login (used around MainLayout in App.tsx).
+ */
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
