@@ -1,4 +1,4 @@
-so # Risk Dataset (Construction: Safety, Delays, Material Shortages, Fire/Cladding, Weathertightness)
+# Risk Dataset (Construction: Safety, Delays, Material Shortages, Fire/Cladding, Weathertightness)
 
 Generated: 2026-03-06T14:57:23.075913Z
 

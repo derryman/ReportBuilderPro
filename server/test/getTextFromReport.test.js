@@ -1,3 +1,4 @@
+// Tests for getTextFromReport — checks it handles empty input and correctly joins field text
 'use strict';
 
 const { describe, it } = require('node:test');

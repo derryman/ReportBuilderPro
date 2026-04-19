@@ -1,7 +1,8 @@
+# Tests for preprocess.py — checks sentence splitting and the spaCy fallback path
 import unittest
 from unittest.mock import patch
 
-import _ensure_repo_root  # noqa: F401
+import _ensure_repo_root  
 
 from app import preprocess
 

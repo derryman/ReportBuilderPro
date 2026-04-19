@@ -1,27 +1,4 @@
-"""
-Inference pipeline: load model artefacts, classify sentences, produce structured flags.
-
-The primary path is a lightweight ML classifier:
-  1. preprocess.py segments and lemmatises each sentence (spaCy en_core_web_sm).
-  2. Lemmas are joined into a feature string and transformed by the TF-IDF vectoriser.
-  3. LogisticRegression.predict_proba() returns per-class probability estimates.
-  4. Sentences where the highest-probability class is in LABELS_WITH_ACTIONS and
-     confidence ≥ CONFIDENCE_THRESHOLD are surfaced as flags to the frontend.
-
-An optional LLM path (Azure OpenAI) is also implemented and selectable at runtime via
-the NLP_CLASSIFIER_MODE environment variable ("ml" | "llm" | "hybrid"). The LLM path
-was prototyped as a design alternative during development; "ml" is the production mode.
-Because the API contract is identical for both paths, switching modes requires no
-changes to the Node.js backend or the React frontend.
-
-References:
-  Salton, G., & Buckley, C. (1988). Term-weighting approaches in automatic text
-    retrieval. Information Processing & Management, 24(5), 513–523.
-  Pedregosa, F. et al. (2011). Scikit-learn: Machine learning in Python.
-    Journal of Machine Learning Research, 12, 2825–2830.
-  Brown, T. et al. (2020). Language models are few-shot learners. NeurIPS 33.
-    (context for LLM-based classification approach)
-"""
+# Loads the trained model and classifies report text into risk flags
 import os
 import time
 from pathlib import Path
@@ -33,19 +10,14 @@ from joblib import load
 from app.preprocess import sentence_split_and_lemmatize
 
 MODEL_DIR = Path(__file__).resolve().parent.parent / "model"
-# Labels that produce a flag. "none" is the null class and is filtered out.
+
+# Labels that produce a flag — "none" is filtered out
 LABELS_WITH_ACTIONS = ["delay", "risk", "material_shortage"]
 
-# Minimum posterior probability required to surface a flag.
-# Set at 0.50 (majority class threshold): sentences where the classifier is not
-# meaningfully more confident in an action class than in "none" are suppressed.
-# This was tuned empirically on the construction training corpus to balance
-# precision (avoiding false alarms) against recall (catching genuine issues).
+# Minimum confidence score to surface a flag — sentences below 0.50 are ignored
 CONFIDENCE_THRESHOLD = 0.50
 
-# Suggested remediation text surfaced alongside each flag in the UI.
-# These are static lookups — a future extension could generate contextual advice
-# using the LLM path in _classify_sentence_llm().
+# What action to suggest alongside each flag in the UI
 SUGGESTED_ACTIONS = {
     "delay": "Update schedule and notify client. Review dependencies.",
     "risk": "Log in issues register. Schedule follow-up inspection.",
@@ -54,15 +26,13 @@ SUGGESTED_ACTIONS = {
 
 LLM_ALLOWED_LABELS = ["none", "delay", "risk", "material_shortage"]
 
-# Classifier mode:
-#   "ml"    -> use TF-IDF + Logistic Regression only (default)
-#   "llm"   -> use LLM-only classifier
-#   "hybrid"-> currently treated as "llm" (hook for future mixing)
+# Which classifier to use — "ml" is the default (TF-IDF + Logistic Regression)
+# "llm" uses Azure OpenAI, "hybrid" currently falls back to llm
 CLASSIFIER_MODE = os.environ.get("NLP_CLASSIFIER_MODE", "ml").strip().lower()
 if CLASSIFIER_MODE not in {"ml", "llm", "hybrid"}:
     CLASSIFIER_MODE = "ml"
 
-# Azure OpenAI (LLM) configuration – optional
+# Azure OpenAI config — only needed if CLASSIFIER_MODE is "llm"
 AZURE_OAI_ENDPOINT = os.environ.get("AZURE_OPENAI_ENDPOINT", "").rstrip("/")
 AZURE_OAI_KEY = os.environ.get("AZURE_OPENAI_KEY", "")
 AZURE_OAI_DEPLOYMENT = os.environ.get("AZURE_OPENAI_DEPLOYMENT_NAME", "")
@@ -77,7 +47,7 @@ def _has_llm_config() -> bool:
 
 
 def load_model() -> bool:
-    """Load TF-IDF + Logistic Regression model into memory if present."""
+    # Load the TF-IDF vectorizer and classifier from disk — cached after first load
     global _vectorizer, _classifier
     if _vectorizer is not None and _classifier is not None:
         return True
@@ -91,32 +61,18 @@ def load_model() -> bool:
 
 
 def is_model_available() -> bool:
-    """
-    Health check hook for FastAPI:
-    - If running in ML mode, check TF-IDF model is available.
-    - If running in LLM mode, check we have LLM config.
-    """
+    # Health check — returns True if the configured classifier is ready to use
     if CLASSIFIER_MODE in {"llm", "hybrid"}:
         return _has_llm_config()
     return load_model()
 
 
 def _classify_sentence_ml(tokens: List[str]) -> Tuple[str, float]:
-    """
-    Classify a pre-lemmatised sentence via TF-IDF + Logistic Regression.
-
-    Returns (label, confidence) where confidence is the softmax posterior
-    probability for the predicted class.  Logistic Regression provides
-    well-calibrated probabilities suitable for thresholding (unlike SVM or
-    naive distance-based classifiers).
-    """
+    # Join lemmas back into a string, transform with TF-IDF, run through the classifier
     if not load_model():
         raise RuntimeError("Model not found. Run: python -m app.train")
-    # Rejoin lemmas into a space-separated string — the format the vectoriser was
-    # trained on (see train.py: X_texts.append(" ".join(tokens))).
     features_str = " ".join(tokens)
     X = _vectorizer.transform([features_str])
-    # predict_proba returns a row vector over all classes in classifier.classes_ order.
     probs = _classifier.predict_proba(X)[0]
     class_idx = probs.argmax()
     prob = float(probs[class_idx])
@@ -125,20 +81,7 @@ def _classify_sentence_ml(tokens: List[str]) -> Tuple[str, float]:
 
 
 def _classify_sentence_llm(sentence: str) -> str:
-    """
-    Alternative classifier path: zero-shot sentence classification via Azure OpenAI.
-
-    The LLM is prompted to return exactly one of the four label tokens.
-    temperature=0.0 is set to make responses deterministic (greedy decoding).
-    max_tokens=1 limits the response to a single token, reducing cost and latency.
-
-    This approach follows zero-shot classification as described in:
-      Brown, T. et al. (2020). Language models are few-shot learners. NeurIPS 33.
-
-    Note: unlike Logistic Regression, LLMs do not produce calibrated posterior
-    probabilities.  A fixed confidence of 0.95 is assigned for flagged labels
-    as a placeholder to satisfy the downstream threshold check.
-    """
+    # Alternative path — sends the sentence to Azure OpenAI and asks it to return one label
     if not _has_llm_config():
         raise RuntimeError("LLM configuration missing. Set AZURE_OPENAI_* env vars.")
 
@@ -157,10 +100,7 @@ def _classify_sentence_llm(sentence: str) -> str:
     payload: Dict = {
         "messages": [
             {"role": "system", "content": prompt},
-            {
-                "role": "user",
-                "content": sentence.strip(),
-            },
+            {"role": "user", "content": sentence.strip()},
         ],
         "temperature": 0.0,
         "max_tokens": 1,
@@ -203,8 +143,6 @@ def analyze_text(text: str) -> Dict:
 
     sentences_with_tokens = sentence_split_and_lemmatize(text)
     flags = []
-
-    # Choose classifier path
     use_llm = CLASSIFIER_MODE in {"llm", "hybrid"} and _has_llm_config()
 
     for idx, (sentence_str, tokens) in enumerate(sentences_with_tokens):
@@ -214,23 +152,22 @@ def analyze_text(text: str) -> Dict:
         if use_llm:
             try:
                 label = _classify_sentence_llm(sentence_str)
-                # LLM does not provide calibrated probabilities; treat as high confidence
+                # LLM doesn't give a confidence score so we assign a fixed value
                 prob = 0.95 if label != "none" else 0.0
             except Exception:
-                # Fallback to ML if LLM call fails
+                # Fall back to ML if the LLM call fails
                 label, prob = _classify_sentence_ml(tokens)
         else:
             label, prob = _classify_sentence_ml(tokens)
 
+        # Only surface a flag if the label is actionable and confidence is high enough
         if label in LABELS_WITH_ACTIONS and prob >= CONFIDENCE_THRESHOLD:
             flags.append(
                 {
                     "label": label,
                     "confidence": round(prob, 2),
                     "snippet": sentence_str,
-                    "suggested_action": SUGGESTED_ACTIONS.get(
-                        label, "Review and take action."
-                    ),
+                    "suggested_action": SUGGESTED_ACTIONS.get(label, "Review and take action."),
                     "sentence_index": idx,
                 }
             )

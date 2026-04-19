@@ -1,4 +1,4 @@
-"""Ensure nlp-service root is on sys.path so `from app import …` works from any cwd."""
+# Makes sure the nlp-service root is on the Python path so tests can import from app/
 import sys
 from pathlib import Path
 

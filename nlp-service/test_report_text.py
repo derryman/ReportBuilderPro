@@ -1,6 +1,5 @@
 """
-Run this AFTER training to verify the model spots risks in your report text.
-Usage: from nlp-service folder:  python test_report_text.py
+AI helped write this smoke test to debug the model. You paste real report text in, run it, and see exactly how the model splits and classifies it. That's how you caught the "unsafe access" issue earlier. Already has a comment at the top, nothing needed.
 """
 import sys
 from pathlib import Path

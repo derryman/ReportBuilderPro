@@ -1,3 +1,4 @@
+// Tests for the client-side keyword scanner — checks empty input and schedule keyword detection
 import { describe, it, expect } from 'vitest';
 import { analyzeReportText } from './nlpIssueDetection';
 

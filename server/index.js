@@ -1,32 +1,5 @@
-/**
- * ReportBuilderPro — Express 5 REST API (Node.js middle tier)
- *
- * Role in the 3-tier architecture:
- * - Authenticates users via JWT and exposes a JSON API under /api.
- * - Persists templates, reports, and NLP analysis results in Azure Cosmos DB
- *   (MongoDB-compatible vCore cluster).
- * - Proxies NLP classification to the Python FastAPI service (NLP_SERVICE_URL)
- *   and optional grammar/style review to LanguageTool (WRITING_REVIEW_* env vars),
- *   keeping external service URLs and credentials server-side and off the browser.
- *
- * Collections: Login, Templates, Reports, ai_analysis
- *
- * Authentication:
- *   JSON Web Tokens (JWT, RFC 7519) are issued at /api/login and required on all
- *   subsequent /api/* requests via the requireAuth middleware.
- *   Reference: Jones, M. et al. (2015). JSON Web Token (RFC 7519). IETF.
- *
- * API design follows REST (Representational State Transfer) conventions:
- *   Reference: Fielding, R. T. (2000). Architectural styles and the design of
- *     network-based software architectures. Doctoral dissertation, UC Irvine.
- *
- * Persistence uses MongoDB document model via Azure Cosmos DB:
- *   Reference: Cattell, R. (2011). Scalable SQL and NoSQL data stores.
- *     ACM SIGMOD Record, 39(4), 12–27.
- *
- * Sections: config → middleware → MongoDB → auth → templates → reports →
- *           NLP helpers → analyze / writing-review / PDF → latest → shutdown.
- */
+// Express API — handles auth, templates, reports, and proxies to the NLP service
+// Collections: Login, Templates, Reports, ai_analysis
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
@@ -91,7 +64,7 @@ const upload = multer({
   },
 });
 
-/** Return 400 early if id is not a valid MongoDB ObjectId (prevents unhandled cast errors). */
+// Check the ID is a valid MongoDB ObjectId before hitting the database
 function validateObjectId(id, res) {
   if (!ObjectId.isValid(id)) {
     res.status(400).json({ message: 'Invalid ID format' });
@@ -100,7 +73,7 @@ function validateObjectId(id, res) {
   return true;
 }
 
-/** Require valid JWT for /api/* except login and health. Sets req.user = { email }. */
+// Check the JWT on every /api/* request — skips login and health endpoints
 function requireAuth(req, res, next) {
   if (req.method === 'POST' && req.path === '/login') return next();
   if (req.method === 'GET' && req.path === '/health') return next();
@@ -170,7 +143,6 @@ app.get('/api/health', (_req, res) => {
 
 // Public: JWT issued here; all other /api/* require Bearer token (see requireAuth).
 app.post('/api/login', async (req, res) => {
-  // Get email and password from request
   const { email, password } = req.body;
   if (!email || !password) {
     return res.status(400).json({ message: 'Email and password are required' });
@@ -532,7 +504,7 @@ app.delete('/api/reports/:id', async (req, res) => {
 
 // --- NLP / writing review helpers (used by routes below) ---
 
-/** Build a single review document plus per-field segments so LanguageTool offsets map back to report fields. */
+// Pull all text fields from a report into one string for LanguageTool, tracking where each field starts/ends
 function getWritingReviewSegmentsFromReport(report) {
   const capturedData = report && report.capturedData;
   if (!capturedData || typeof capturedData !== 'object') {
@@ -581,12 +553,12 @@ function getWritingReviewSegmentsFromReport(report) {
   };
 }
 
-/** True when LanguageTool (or compatible) URL is set and the feature flag is on. */
+// Check if writing review is switched on and a LanguageTool URL has been set
 function isWritingReviewConfigured() {
   return WRITING_REVIEW_ENABLED && Boolean(WRITING_REVIEW_URL);
 }
 
-/** Map a character offset in the concatenated review text back to a field segment. */
+// Work out which report field a LanguageTool issue belongs to based on character position
 function findSegmentForOffset(segments, offset) {
   if (!Array.isArray(segments) || segments.length === 0) return null;
   return (
@@ -596,7 +568,7 @@ function findSegmentForOffset(segments, offset) {
   );
 }
 
-/** POST form body to LanguageTool-compatible /check endpoint. */
+// Send report text to LanguageTool and get back grammar/style issues
 async function callWritingReviewService(text) {
   const params = new URLSearchParams({
     text: text || '',
@@ -621,7 +593,7 @@ async function callWritingReviewService(text) {
   return res.json();
 }
 
-/** Turn provider "matches" into stable issue objects with fieldKey for the UI. */
+// Convert raw LanguageTool matches into the issue format the frontend expects
 function normaliseWritingReviewIssues(matches, segments) {
   if (!Array.isArray(matches)) return [];
 
@@ -673,7 +645,7 @@ function normaliseWritingReviewIssues(matches, segments) {
     });
 }
 
-/** Call Python NLP service; returns { flags, metadata } or throws. */
+// Send text to the Python NLP service and get back risk flags
 async function callNlpService(text) {
   const base = NLP_SERVICE_URL.replace(/\/$/, '');
   if (!base) {

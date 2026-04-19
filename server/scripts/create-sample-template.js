@@ -1,11 +1,10 @@
-// Script to create a sample template in MongoDB
+// One-off script to seed a sample template into MongoDB
 // Run with: node server/scripts/create-sample-template.js
 
 const { MongoClient, ObjectId } = require('mongodb');
 const dotenv = require('dotenv');
 const path = require('path');
 
-// Load environment variables
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/';

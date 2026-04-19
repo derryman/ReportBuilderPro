@@ -1,3 +1,4 @@
+# Tests for pipeline.py — checks blank input, high confidence flagging, and low confidence suppression
 import unittest
 from unittest.mock import patch
 

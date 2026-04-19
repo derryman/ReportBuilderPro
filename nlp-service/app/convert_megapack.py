@@ -12,7 +12,7 @@ The converter:
 4. Builds an augmented training file by merging the existing dataset with a
    balanced sample of the converted megapack examples.
 """
-
+# Run this once when you want to expand the training dataset with megapack examples
 from __future__ import annotations
 
 import argparse
@@ -38,6 +38,7 @@ DEFAULT_AUGMENTED_REPORT_STYLE_OUTPUT = (
 )
 DEFAULT_SUMMARY_OUTPUT = NLP_ROOT / "data" / "training_data_augmented_summary.json"
 
+# Map megapack categories down to our 4 labels — safety/fire/weathertightness all become "risk"
 CATEGORY_TO_LABEL = {
     "safety": "risk",
     "fire_safety": "risk",
@@ -46,6 +47,7 @@ CATEGORY_TO_LABEL = {
     "material_shortage": "material_shortage",
 }
 
+# Regex patterns that strip synthetic label prefixes like "Safety issue: " or "Delay driver: "
 GENERIC_PREFIX_PATTERNS = [
     re.compile(
         r"^(Unsafe condition noted|Incident|Safety issue|Compliance concern|"
@@ -79,6 +81,7 @@ GENERIC_PREFIX_HINTS = {
     "shortage",
     "update",
 }
+# Clauses to drop from synthetic examples — they don't appear in real site reports
 META_CLAUSE_PREFIXES = (
     "likely cause:",
     "potential impact:",
@@ -88,6 +91,7 @@ META_CLAUSE_PREFIXES = (
     "stock check required",
     "remediation detail required",
 )
+# Phrases to remove so examples read like real site reports rather than synthetic data
 REPORT_STYLE_REPLACEMENTS = [
     (re.compile(r"\bidentified during inspection\b", flags=re.IGNORECASE), ""),
     (re.compile(r"\bnoted during inspection\b", flags=re.IGNORECASE), ""),
@@ -195,6 +199,7 @@ def load_jsonl(path: Path) -> List[Dict]:
     return records
 
 
+# Strip the generic prefixes that synthetic examples have but real reports don't
 def clean_synthetic_text(text: str) -> str:
     cleaned = re.sub(r"\s+", " ", text.strip())
     for pattern in GENERIC_PREFIX_PATTERNS:
@@ -212,6 +217,7 @@ def clean_synthetic_text(text: str) -> str:
     return cleaned
 
 
+# Make sure the text starts with a capital and ends with a full stop
 def ensure_sentence(text: str) -> str:
     cleaned = re.sub(r"\s+", " ", text.strip(" .;,:"))
     if not cleaned:
@@ -222,6 +228,7 @@ def ensure_sentence(text: str) -> str:
     return cleaned
 
 
+# Rewrite synthetic examples into report-style language — drops meta clauses and adds location context
 def build_report_style_text(text: str, synthetic: bool) -> str:
     if not synthetic:
         return ensure_sentence(text)
@@ -257,6 +264,7 @@ def build_report_style_text(text: str, synthetic: bool) -> str:
     return ensure_sentence(main)
 
 
+# Loop through every megapack record, map it to our label, clean the text, skip anything unusable
 def convert_megapack(records: Iterable[Dict]) -> Tuple[List[Dict], Counter]:
     converted: List[Dict] = []
     skipped = Counter()
@@ -301,6 +309,8 @@ def convert_megapack(records: Iterable[Dict]) -> Tuple[List[Dict], Counter]:
     return converted, skipped
 
 
+# Pick a balanced sample of synthetic examples — capped per label and per subcategory to avoid bias
+# AI helped here as I needed the model to not have an overload to one type of risk example
 def select_synthetic_examples(
     converted: Iterable[Dict],
     max_per_label: int,
@@ -365,6 +375,7 @@ def main() -> None:
     megapack_records = load_jsonl(args.megapack)
     converted, skipped = convert_megapack(megapack_records)
 
+    # Grounded = real-world examples from the megapack (not synthetic)
     grounded = [entry for entry in converted if not entry["synthetic"]]
     synthetic_sample = select_synthetic_examples(
         converted,
@@ -372,6 +383,7 @@ def main() -> None:
         max_per_subcategory=args.max_synthetic_per_subcategory,
         seed=args.seed,
     )
+    # Final training set = your original data + real megapack examples + sampled synthetic ones
     augmented = existing + grounded + synthetic_sample
     report_style_converted = [to_training_record(entry, use_report_style=True) for entry in converted]
     grounded_report_style = [to_training_record(entry, use_report_style=True) for entry in grounded]

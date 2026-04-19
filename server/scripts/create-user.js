@@ -1,8 +1,5 @@
-/**
- * Script to create a user in the Login collection
- * Usage: node scripts/create-user.js <email> <password> <name>
- * Example: node scripts/create-user.js admin@example.com password123 "Admin User"
- */
+// One-off script to add a user to the Login collection in MongoDB
+// Usage: node scripts/create-user.js <email> <password> <name>
 
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
@@ -11,7 +8,6 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/';
 const DB_NAME = process.env.MONGO_DB || 'ReportBuilderPro';
 
 async function createUser() {
-  // Get command line arguments
   const args = process.argv.slice(2);
   if (args.length < 2) {
     console.error('Usage: node create-user.js <email> <password> [name]');
@@ -33,7 +29,6 @@ async function createUser() {
     const db = client.db(DB_NAME);
     const collection = db.collection('Login');
 
-    // Check if user already exists
     const existingUser = await collection.findOne({ email });
     if (existingUser) {
       console.error(`❌ User with email "${email}" already exists!`);
