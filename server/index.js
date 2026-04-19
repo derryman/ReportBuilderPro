@@ -1,16 +1,31 @@
 /**
- * Report Builder Pro — Express API (Node.js)
+ * ReportBuilderPro — Express 5 REST API (Node.js middle tier)
  *
- * Role in the stack:
- * - Authenticates users (JWT) and serves JSON under /api.
- * - Persists templates, reports, and NLP analysis results in MongoDB (or Cosmos DB).
- * - Proxies heavy NLP to the Python service (NLP_SERVICE_URL) and optional grammar/style
- *   checks to LanguageTool (WRITING_REVIEW_* env vars).
+ * Role in the 3-tier architecture:
+ * - Authenticates users via JWT and exposes a JSON API under /api.
+ * - Persists templates, reports, and NLP analysis results in Azure Cosmos DB
+ *   (MongoDB-compatible vCore cluster).
+ * - Proxies NLP classification to the Python FastAPI service (NLP_SERVICE_URL)
+ *   and optional grammar/style review to LanguageTool (WRITING_REVIEW_* env vars),
+ *   keeping external service URLs and credentials server-side and off the browser.
  *
- * Main collections: Login, Templates, Reports, ai_analysis
+ * Collections: Login, Templates, Reports, ai_analysis
  *
- * Sections below: config → middleware → Mongo → auth & templates → reports →
- * NLP helpers → analyze/writing-review/PDF → latest analysis → shutdown.
+ * Authentication:
+ *   JSON Web Tokens (JWT, RFC 7519) are issued at /api/login and required on all
+ *   subsequent /api/* requests via the requireAuth middleware.
+ *   Reference: Jones, M. et al. (2015). JSON Web Token (RFC 7519). IETF.
+ *
+ * API design follows REST (Representational State Transfer) conventions:
+ *   Reference: Fielding, R. T. (2000). Architectural styles and the design of
+ *     network-based software architectures. Doctoral dissertation, UC Irvine.
+ *
+ * Persistence uses MongoDB document model via Azure Cosmos DB:
+ *   Reference: Cattell, R. (2011). Scalable SQL and NoSQL data stores.
+ *     ACM SIGMOD Record, 39(4), 12–27.
+ *
+ * Sections: config → middleware → MongoDB → auth → templates → reports →
+ *           NLP helpers → analyze / writing-review / PDF → latest → shutdown.
  */
 const express = require('express');
 const cors = require('cors');
@@ -33,8 +48,13 @@ const PORT = process.env.PORT || 4000;
 const MONGO_URI = process.env.MONGO_URI || process.env.Mongo_URL || 'mongodb://localhost:27017/';
 const DB_NAME = process.env.MONGO_DB || process.env.Mongo_DB || 'ReportBuilderPro';
 const NLP_SERVICE_URL = process.env.NLP_SERVICE_URL || ''; // e.g. http://localhost:8000
-// SECURITY: fallback secret is publicly visible in source — ensure JWT_SECRET is set in env
-const JWT_SECRET = process.env.JWT_SECRET /* || 'dev-secret-change-in-production' */;
+// JWT signing secret — must be set in environment or the process exits immediately.
+// Fail-fast on startup is safer than signing tokens with an undefined/weak secret.
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  console.error('FATAL: JWT_SECRET environment variable is not set. Exiting.');
+  process.exit(1);
+}
 const WRITING_REVIEW_ENABLED = process.env.WRITING_REVIEW_ENABLED === '1';
 const WRITING_REVIEW_URL = (process.env.WRITING_REVIEW_URL || '').trim();
 const WRITING_REVIEW_LANGUAGE = (process.env.WRITING_REVIEW_LANGUAGE || 'en-GB').trim();
@@ -70,6 +90,15 @@ const upload = multer({
     cb(new Error('Only PDF files are allowed'));
   },
 });
+
+/** Return 400 early if id is not a valid MongoDB ObjectId (prevents unhandled cast errors). */
+function validateObjectId(id, res) {
+  if (!ObjectId.isValid(id)) {
+    res.status(400).json({ message: 'Invalid ID format' });
+    return false;
+  }
+  return true;
+}
 
 /** Require valid JWT for /api/* except login and health. Sets req.user = { email }. */
 function requireAuth(req, res, next) {
@@ -206,6 +235,7 @@ app.get('/api/templates/:id', async (req, res) => {
     return res.status(503).json({ message: 'Database not ready yet' });
   }
 
+  if (!validateObjectId(req.params.id, res)) return;
   try {
     const template = await db.collection('Templates').findOne({
       _id: new ObjectId(req.params.id),
@@ -268,6 +298,7 @@ app.put('/api/templates/:id', async (req, res) => {
     return res.status(503).json({ message: 'Database not ready yet' });
   }
 
+  if (!validateObjectId(req.params.id, res)) return;
   try {
     const { title, description, components } = req.body;
     const id = req.params.id;
@@ -308,6 +339,7 @@ app.delete('/api/templates/:id', async (req, res) => {
     return res.status(503).json({ message: 'Database not ready yet' });
   }
 
+  if (!validateObjectId(req.params.id, res)) return;
   try {
     const id = req.params.id;
     const result = await db.collection('Templates').deleteOne({ _id: new ObjectId(id), createdBy: req.user.email });
@@ -335,21 +367,12 @@ app.post('/api/reports', async (req, res) => {
 
   try {
     const { templateId, jobId, capturedData, timestamp } = req.body;
-    
-    console.log('Received report save request:', {
-      templateId,
-      jobId,
-      capturedDataKeys: capturedData ? Object.keys(capturedData) : 'none',
-      hasTimestamp: !!timestamp,
-    });
-    
+
     if (!templateId) {
-      console.error('Missing templateId');
       return res.status(400).json({ message: 'Template ID is required' });
     }
-    
+
     if (!capturedData || Object.keys(capturedData).length === 0) {
-      console.error('Missing or empty capturedData');
       return res.status(400).json({ message: 'Captured data is required. Please fill in at least one field.' });
     }
 
@@ -362,9 +385,7 @@ app.post('/api/reports', async (req, res) => {
       createdAt: new Date(),
     };
 
-    console.log('Inserting report into database...');
     const result = await db.collection('Reports').insertOne(reportDoc);
-    console.log('Report saved successfully with ID:', result.insertedId.toString());
 
     return res.json({
       id: result.insertedId.toString(),
@@ -419,6 +440,7 @@ app.get('/api/reports/:id', async (req, res) => {
     return res.status(503).json({ message: 'Database not ready yet' });
   }
 
+  if (!validateObjectId(req.params.id, res)) return;
   try {
     const report = await db.collection('Reports').findOne({
       _id: new ObjectId(req.params.id),
@@ -448,6 +470,7 @@ app.put('/api/reports/:id', async (req, res) => {
     return res.status(503).json({ message: 'Database not ready yet' });
   }
 
+  if (!validateObjectId(req.params.id, res)) return;
   try {
     const { jobId, capturedData, timestamp } = req.body;
     const id = req.params.id;
@@ -488,6 +511,7 @@ app.delete('/api/reports/:id', async (req, res) => {
     return res.status(503).json({ message: 'Database not ready yet' });
   }
 
+  if (!validateObjectId(req.params.id, res)) return;
   try {
     const id = req.params.id;
     const result = await db.collection('Reports').deleteOne({ _id: new ObjectId(id), createdBy: req.user.email });
@@ -586,6 +610,7 @@ async function callWritingReviewService(text) {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: params.toString(),
+    signal: AbortSignal.timeout(15000), // prevent hung requests if LanguageTool is slow
   });
 
   if (!res.ok) {
@@ -658,6 +683,7 @@ async function callNlpService(text) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ text: text || '' }),
+    signal: AbortSignal.timeout(15000), // prevent hung requests if NLP container is cold-starting
   });
   if (!res.ok) {
     const errText = await res.text();
@@ -672,6 +698,7 @@ app.post('/api/reports/:id/analyze', async (req, res) => {
     return res.status(503).json({ message: 'Database not ready yet' });
   }
 
+  if (!validateObjectId(req.params.id, res)) return;
   try {
     const id = req.params.id;
     const report = await db.collection('Reports').findOne({
@@ -734,6 +761,7 @@ app.post('/api/reports/:id/writing-review', async (req, res) => {
     return res.status(503).json({ message: 'Database not ready yet' });
   }
 
+  if (!validateObjectId(req.params.id, res)) return;
   try {
     const id = req.params.id;
     const report = await db.collection('Reports').findOne({
