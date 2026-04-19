@@ -5,3 +5,5 @@ spacy==3.8.3
 scikit-learn==1.6.0
 joblib==1.4.2
 requests==2.32.3
+
+# AI wrote the above requirements.txt based on the imports in the codebase and the libraries I mentioned using for ML and LLM functionality. I had to iterate a bit to get the versions right and ensure compatibility, especially with FastAPI and Pydantic which have had some breaking changes in recent versions.

@@ -2,7 +2,7 @@
 import unittest
 from unittest.mock import patch
 
-import _ensure_repo_root  # noqa: F401
+import _ensure_repo_root  
 
 from app import pipeline
 

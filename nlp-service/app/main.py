@@ -9,10 +9,6 @@ Exposes three endpoints consumed by the Node.js API proxy (server/index.js):
 All ML and LLM logic is encapsulated in app.pipeline; this module only handles
 HTTP serialisation, input validation (via Pydantic models), and error translation.
 
-Pydantic is used for request/response validation following the FastAPI pattern described in:
-  Ramírez, S. (2019). FastAPI: Modern, fast (high-performance), web framework for building
-    APIs with Python 3.6+ based on standard Python type hints. https://fastapi.tiangolo.com/
-
 CORS is currently open (*) — restrict allow_origins to the frontend domain in production
 or enforce at the Azure API Management / Application Gateway layer.
 """
@@ -38,13 +34,13 @@ class FeedbackRequest(BaseModel):
     corrected_label: str | None = None
     notes: str | None = None
 
-
+# Node.js calls to check if the NLP service is up and the model is loaded 
 @app.get("/health")
 def health():
     """Liveness + whether the configured classifier backend is ready."""
     return {"status": "ok", "model_loaded": is_model_available()}
 
-
+# Main endpoint it takes the report text, runs it through the analyze_text function in pipeline.py, and returns the structured flags and metadata. If the model isn't available or there's an error during analysis, it raises a 503 Service Unavailable with the error message.
 @app.post("/nlp/analyze")
 def nlp_analyze(req: AnalyzeRequest):
     """Return structured flags + metadata for the supplied report text body."""
@@ -56,21 +52,9 @@ def nlp_analyze(req: AnalyzeRequest):
     except RuntimeError as e:
         raise HTTPException(status_code=503, detail=str(e))
 
-
+# AI helped generate its just a stub doesnt do anything currently but is a placeholder for future retraining
 @app.post("/nlp/feedback")
 def nlp_feedback(req: FeedbackRequest):
-    """
-    Stub endpoint for human-in-the-loop feedback collection.
-
-    Accepts user corrections on individual flags (accept / reject / relabel).
-    Currently logs nothing — a production extension would persist corrections
-    to a database and use them to periodically retrain the classifier, following
-    active learning principles (Settles, 2010).
-
-    Reference:
-      Settles, B. (2010). Active learning literature survey. Computer Sciences
-        Technical Report 1648, University of Wisconsin–Madison.
-    """
     return {"success": True, "message": "Feedback received."}
 
 

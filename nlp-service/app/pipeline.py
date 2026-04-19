@@ -66,7 +66,7 @@ def is_model_available() -> bool:
         return _has_llm_config()
     return load_model()
 
-
+# AI helped write this function — I had the basic idea of how to classify with the ML model but needed help structuring the code to handle both ML and LLM paths cleanly, as well as the error handling and confidence threshold logic. It was a bit of an iterative process to get it right.
 def _classify_sentence_ml(tokens: List[str]) -> Tuple[str, float]:
     # Join lemmas back into a string, transform with TF-IDF, run through the classifier
     if not load_model():
