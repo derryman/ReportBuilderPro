@@ -1,7 +1,4 @@
-/**
- * IndexedDB-based offline storage for reports.
- * Used when the user saves a report without internet; reports are synced later.
- */
+// Saves reports to the browser's IndexedDB when offline — syncs them to the server when back online
 
 const DB_NAME = 'ReportBuilderProOffline';
 const DB_VERSION = 2;

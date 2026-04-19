@@ -1,12 +1,7 @@
-/**
- * Client-side PDF builder from captured template components (text, progress, issues, images).
- */
+// Builds a PDF from a captured report and triggers download in the browser
 import jsPDF from 'jspdf';
 
-/**
- * Fixes image orientation by loading it into a canvas
- * This respects EXIF orientation automatically
- */
+// Load image into a canvas so the browser auto-corrects EXIF rotation
 async function fixImageOrientation(imageSrc: string): Promise<HTMLCanvasElement> {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -57,9 +52,6 @@ type ReportData = {
   components: CapturedComponent[];
 };
 
-/**
- * Generates a PDF from report data and triggers download
- */
 export async function generateReportPdf(reportData: ReportData): Promise<void> {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -68,7 +60,6 @@ export async function generateReportPdf(reportData: ReportData): Promise<void> {
   const maxWidth = pageWidth - 2 * margin;
   let yPosition = margin;
 
-  // Helper function to add a new page if needed
   const checkPageBreak = (requiredHeight: number) => {
     if (yPosition + requiredHeight > pageHeight - margin) {
       doc.addPage();
@@ -78,7 +69,6 @@ export async function generateReportPdf(reportData: ReportData): Promise<void> {
     return false;
   };
 
-  // Helper function to add text with word wrapping
   const addText = (text: string, fontSize: number, isBold: boolean = false) => {
     doc.setFontSize(fontSize);
     if (isBold) {
@@ -97,11 +87,9 @@ export async function generateReportPdf(reportData: ReportData): Promise<void> {
     doc.setFont('helvetica', 'normal');
   };
 
-  // Title
   addText(reportData.templateTitle, 18, true);
   yPosition += 5;
 
-  // Job ID and Date
   if (reportData.jobId) {
     addText(`Job ID: ${reportData.jobId}`, 10);
     yPosition += 3;
@@ -111,24 +99,18 @@ export async function generateReportPdf(reportData: ReportData): Promise<void> {
   addText(`Date: ${date}`, 10);
   yPosition += 8;
 
-  // Add a line separator
   doc.setLineWidth(0.5);
   doc.line(margin, yPosition, pageWidth - margin, yPosition);
   yPosition += 10;
 
-  // Process each component
   for (const component of reportData.components) {
-    // Component title
     addText(component.title || 'Untitled', 14, true);
     yPosition += 5;
 
-    // Handle different component types
     if (component.type === 'image' && component.image) {
       try {
-        // Fix image orientation based on EXIF data
         const canvas = await fixImageOrientation(component.image);
         
-        // Get corrected image dimensions from canvas
         const imgWidth = canvas.width;
         const imgHeight = canvas.height;
         const availableWidth = maxWidth;
@@ -137,7 +119,6 @@ export async function generateReportPdf(reportData: ReportData): Promise<void> {
         let displayWidth = imgWidth;
         let displayHeight = imgHeight;
         
-        // Scale down if too large
         if (displayWidth > availableWidth) {
           const ratio = availableWidth / displayWidth;
           displayWidth = availableWidth;
@@ -155,17 +136,13 @@ export async function generateReportPdf(reportData: ReportData): Promise<void> {
         displayHeight = displayHeight * 0.5;
 
         checkPageBreak(displayHeight + 5);
-        
-        // Center the image horizontally
         const xPosition = (pageWidth - displayWidth) / 2;
-        
-        // Convert canvas to base64 and add to PDF
         const correctedImageData = canvas.toDataURL('image/jpeg', 0.95);
         doc.addImage(correctedImageData, 'JPEG', xPosition, yPosition, displayWidth, displayHeight);
         yPosition += displayHeight + 10;
       } catch (error) {
         console.error('Error adding image to PDF:', error);
-        // Fallback: try adding image without orientation fix
+        // fallback if canvas orientation fix fails
         try {
           const img = new Image();
           await new Promise((resolve, reject) => {
@@ -199,10 +176,7 @@ export async function generateReportPdf(reportData: ReportData): Promise<void> {
           displayHeight = displayHeight * 0.5;
 
           checkPageBreak(displayHeight + 5);
-          
-          // Center the image horizontally
           const xPosition = (pageWidth - displayWidth) / 2;
-          
           doc.addImage(component.image, 'JPEG', xPosition, yPosition, displayWidth, displayHeight);
           yPosition += displayHeight + 10;
         } catch (fallbackError) {
@@ -222,13 +196,10 @@ export async function generateReportPdf(reportData: ReportData): Promise<void> {
       yPosition += 5;
     }
 
-    yPosition += 5; // Spacing between components
+    yPosition += 5;
   }
 
-  // Generate filename
   const dateStr = new Date(reportData.timestamp).toISOString().split('T')[0];
   const filename = `Report_${reportData.jobId || dateStr}_${Date.now()}.pdf`;
-
-  // Save PDF
   doc.save(filename);
 }

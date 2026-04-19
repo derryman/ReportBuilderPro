@@ -1,9 +1,6 @@
+// Hook that tells you if the device is online or offline in real time
 import { useState, useEffect } from 'react';
 
-/**
- * Hook to detect if the user is online (has network connectivity).
- * Uses navigator.onLine and listens for online/offline events.
- */
 export function useOnlineStatus(): boolean {
   const [isOnline, setIsOnline] = useState(() =>
     typeof navigator !== 'undefined' ? navigator.onLine : true

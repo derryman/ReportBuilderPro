@@ -1,6 +1,4 @@
-/**
- * Gate: if not logged in, redirect to #/login (used around MainLayout in App.tsx).
- */
+// Blocks access to any page if the user isn't logged in — redirects to login instead
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 

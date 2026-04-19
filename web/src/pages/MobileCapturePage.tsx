@@ -1,8 +1,5 @@
-/**
- * Field capture against a chosen template: online POST /api/reports or offline IndexedDB queue + sync.
- */
+// Mobile Capture page - fill out a site report on your phone, saves offline if no internet
 import { useEffect, useState, useCallback } from 'react';
-import { API_BASE_URL } from '../config';
 import { fetchWithAuth } from '../utils/api';
 import { useOnlineStatus } from '../utils/useOnlineStatus';
 import {
@@ -344,12 +341,10 @@ export default function MobileCapturePage() {
 
         if (response.ok) {
           await clearDraft();
-          console.log('✅ Report saved successfully!', responseData);
-          alert(`Report saved successfully!\n\nReport ID: ${responseData.id || 'N/A'}\n\nYou can view it on the Reports page.`);
+          alert('Report saved! You can view it on the Reports page.');
           resetForm();
         } else {
-          const errorMsg = responseData.message || `Server error: ${response.status} ${response.statusText}`;
-          console.error('❌ Save failed:', { status: response.status, error: errorMsg });
+          const errorMsg = responseData.message || `Server error: ${response.status}`;
           alert(`Failed to save report: ${errorMsg}`);
           throw new Error(errorMsg);
         }
@@ -361,7 +356,6 @@ export default function MobileCapturePage() {
         resetForm();
       }
     } catch (error: unknown) {
-      console.error('❌ Error saving report:', error);
       const message = error instanceof Error ? error.message : 'Something went wrong';
       alert(`Failed to save report: ${message}`);
     } finally {
@@ -398,9 +392,6 @@ export default function MobileCapturePage() {
             </span>
           )}
         </div>
-        <p className="text-muted" style={{ fontSize: '11px', marginTop: '4px' }}>
-          API: {API_BASE_URL}
-        </p>
       </header>
 
       {loading ? (
@@ -535,49 +526,15 @@ export default function MobileCapturePage() {
                           )}
                         </div>
                       );
-                    } else if (component.type === 'text') {
-                      const fieldKey = `text_${component.id}`;
+                    } else if (['text', 'progress', 'issues'].includes(component.type)) {
+                      // text, progress and issues all render the same - just a labelled textarea
+                      const fieldKey = `${component.type}_${component.id}`;
                       return (
                         <div key={component.id} className="form-group">
-                          <label>{component.data.title || 'Text'}</label>
+                          <label>{component.data.title || component.type}</label>
                           <textarea
                             className="form-control"
-                            rows={5}
-                            placeholder="Enter text..."
-                            spellCheck
-                            autoCorrect="on"
-                            autoCapitalize="sentences"
-                            value={currentPageForm[fieldKey] || ''}
-                            onChange={(e) => handleFormChange(fieldKey, e.target.value)}
-                          />
-                        </div>
-                      );
-                    } else if (component.type === 'progress') {
-                      const fieldKey = `progress_${component.id}`;
-                      return (
-                        <div key={component.id} className="form-group">
-                          <label>{component.data.title || 'Progress'}</label>
-                          <textarea
-                            className="form-control"
-                            rows={4}
-                            placeholder="Enter progress updates..."
-                            spellCheck
-                            autoCorrect="on"
-                            autoCapitalize="sentences"
-                            value={currentPageForm[fieldKey] || ''}
-                            onChange={(e) => handleFormChange(fieldKey, e.target.value)}
-                          />
-                        </div>
-                      );
-                    } else if (component.type === 'issues') {
-                      const fieldKey = `issues_${component.id}`;
-                      return (
-                        <div key={component.id} className="form-group">
-                          <label>{component.data.title || 'Issues'}</label>
-                          <textarea
-                            className="form-control"
-                            rows={4}
-                            placeholder="Enter issues or concerns..."
+                            rows={component.type === 'text' ? 5 : 4}
                             spellCheck
                             autoCorrect="on"
                             autoCapitalize="sentences"

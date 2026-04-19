@@ -1,6 +1,4 @@
-/**
- * Types and small helpers for the writing-review API response (grammar/style issues per field).
- */
+// Types and helpers for the writing review response - grammar/style issues flagged per field
 export type CapturedComponent = {
   type: 'image' | 'text' | 'progress' | 'issues';
   title: string;

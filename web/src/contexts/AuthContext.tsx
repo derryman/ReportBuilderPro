@@ -1,6 +1,4 @@
-/**
- * Global auth: login against POST /api/login, persist user + JWT in localStorage.
- */
+// Handles login/logout and keeps the user session alive across the whole app
 import { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
 import { API_BASE_URL } from '../config';

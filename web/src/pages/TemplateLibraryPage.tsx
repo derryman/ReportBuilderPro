@@ -1,11 +1,8 @@
-/**
- * Lists the current user’s templates from GET /api/templates; links to edit or capture flows.
- */
+// Template Library - shows all the user's saved templates with edit, view PDF and delete options
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchWithAuth } from '../utils/api';
 
-// Template structure from MongoDB
 type Template = {
   id: string;
   title: string;
@@ -13,46 +10,36 @@ type Template = {
 };
 
 export default function TemplateLibraryPage() {
-  // React hooks to manage component state
-  const [templates, setTemplates] = useState<Template[]>([]); // List of templates from MongoDB
-  const [loading, setLoading] = useState(true); // Whether we're still loading templates
-  const [viewingPdf, setViewingPdf] = useState<string | null>(null); // ID of PDF currently being viewed
-  const [pdfData, setPdfData] = useState<string | null>(null); // The actual PDF data (base64)
-  const [deletingId, setDeletingId] = useState<string | null>(null); // ID of template being deleted
-  const containerRef = useRef<HTMLDivElement>(null); // Reference to the PDF viewer container
+  const [templates, setTemplates] = useState<Template[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [viewingPdf, setViewingPdf] = useState<string | null>(null);
+  const [pdfData, setPdfData] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // This runs once when the page loads
-  // Fetches the list of templates from MongoDB via the backend API
+  // load templates from the API when the page opens
   useEffect(() => {
     const fetchTemplates = async () => {
       try {
-        // Request template list from backend
         const response = await fetchWithAuth('/api/templates');
-        if (response.ok) {
-          const data = await response.json();
-          setTemplates(data); // Store the templates
-        }
+        if (response.ok) setTemplates(await response.json());
       } catch (error) {
         console.error('Failed to fetch templates:', error);
       } finally {
-        setLoading(false); // Stop showing loading state
+        setLoading(false);
       }
     };
     fetchTemplates();
   }, []);
 
-  // This function opens a PDF in fullscreen mode
-  // It fetches the PDF data from MongoDB via the backend
+  // fetch the full template (with PDF data) and open it fullscreen
   const openPdf = async (templateId: string) => {
     try {
-      // Request the PDF data for this specific template
       const response = await fetchWithAuth(`/api/templates/${templateId}`);
       if (response.ok) {
         const data = await response.json();
-        setPdfData(data.pdfData); // Store the PDF data (it's stored as base64 in MongoDB)
-        setViewingPdf(templateId); // Remember which PDF we're viewing
-        
-        // Open the PDF viewer in fullscreen mode
+        setPdfData(data.pdfData);
+        setViewingPdf(templateId);
         setTimeout(() => {
           const container = containerRef.current;
           if (container?.requestFullscreen) container.requestFullscreen();
@@ -63,47 +50,30 @@ export default function TemplateLibraryPage() {
     }
   };
 
-  // This function closes the PDF viewer and exits fullscreen
   const closePdf = () => {
     if (document.exitFullscreen) document.exitFullscreen();
-    setViewingPdf(null); // Clear the viewing state
-    setPdfData(null); // Clear the PDF data
+    setViewingPdf(null);
+    setPdfData(null);
   };
 
-  // This automatically closes the PDF viewer if the user exits fullscreen
-  // (for example, if they press the ESC key)
+  // close the viewer automatically if the user presses ESC to exit fullscreen
   useEffect(() => {
     const handleFullscreenChange = () => {
-      const isFullscreen = !!document.fullscreenElement;
-      // If user exited fullscreen and we were viewing a PDF, close it
-      if (!isFullscreen && viewingPdf) {
+      if (!document.fullscreenElement && viewingPdf) {
         setViewingPdf(null);
         setPdfData(null);
       }
     };
-    // Listen for fullscreen changes
     document.addEventListener('fullscreenchange', handleFullscreenChange);
-    // Clean up: remove the listener when component unmounts
-    return () => {
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
-    };
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, [viewingPdf]);
 
-  // Delete a template
   const deleteTemplate = async (templateId: string, templateTitle: string) => {
-    // Confirm deletion
-    if (!window.confirm(`Are you sure you want to delete "${templateTitle}"? This action cannot be undone.`)) {
-      return;
-    }
-
+    if (!window.confirm(`Are you sure you want to delete "${templateTitle}"? This action cannot be undone.`)) return;
     setDeletingId(templateId);
     try {
-      const response = await fetchWithAuth(`/api/templates/${templateId}`, {
-        method: 'DELETE',
-      });
-
+      const response = await fetchWithAuth(`/api/templates/${templateId}`, { method: 'DELETE' });
       if (response.ok) {
-        // Remove the template from the list
         setTemplates(templates.filter((t) => t.id !== templateId));
       } else {
         const data = await response.json().catch(() => ({}));
@@ -117,7 +87,6 @@ export default function TemplateLibraryPage() {
     }
   };
 
-  // Show loading state while fetching templates
   if (loading) {
     return (
       <div className="template-library-page">
@@ -131,13 +100,11 @@ export default function TemplateLibraryPage() {
 
   return (
     <div className="template-library-page">
-      {/* Page header */}
       <header className="template-header">
         <h1>Template Library</h1>
         <p>Browse and view your report templates.</p>
       </header>
 
-      {/* Template cards - fetched from MongoDB */}
       {templates.length === 0 ? (
         <div className="panel panel-default">
           <div className="panel-body">
@@ -175,7 +142,6 @@ export default function TemplateLibraryPage() {
         </div>
       )}
 
-      {/* Fullscreen PDF viewer - displays PDF from MongoDB base64 data */}
       {viewingPdf && pdfData && (
         <div ref={containerRef} className="pdf-viewer-container pdf-viewer-fullscreen">
           <div className="pdf-viewer-header">

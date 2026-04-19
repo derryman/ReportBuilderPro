@@ -1,6 +1,4 @@
-/**
- * Drag-and-drop template designer: components saved to /api/templates; optional keyword “risk” preview.
- */
+// Template Creator - build a report template by adding and reordering components, then save it
 import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { DndContext, closestCenter, useSensor, useSensors, PointerSensor, DragOverlay } from '@dnd-kit/core';
@@ -10,18 +8,13 @@ import { CSS } from '@dnd-kit/utilities';
 import { analyzeReportText, type DetectedIssue } from '../nlpIssueDetection';
 import { fetchWithAuth } from '../utils/api';
 
-// These are the types of components users can add to their templates
 type ComponentType = 'image' | 'progress' | 'issues' | 'text';
 
-// This defines the structure of a component in a template
-// Each component has an ID, a type, and data (which varies by type)
 type Component = {
   id: string;
   type: ComponentType;
   data: {
-    // Generic metadata used when rendering the report / capture form
     title?: string;
-    // Type-specific content / example text
     image?: string;
     progress?: string;
     issues?: string;
@@ -29,7 +22,6 @@ type Component = {
   };
 };
 
-// List of available components users can add to their templates
 const components = [
   { type: 'image' as ComponentType, label: 'Image', icon: '📷' },
   { type: 'progress' as ComponentType, label: 'Progress', icon: '📊' },
@@ -71,15 +63,12 @@ export default function TemplateCreatorPage() {
     return () => { cancelled = true; };
   }, [templateId]);
 
-  // This function adds a new component to the template when user clicks a component button
   const addComponent = (type: ComponentType, insertIndex?: number) => {
-    // Create a new component with a unique ID (using current timestamp)
     const newComponent: Component = {
       id: `comp-${Date.now()}`,
       type,
       data: {},
     };
-    // Add the new component to the list
     if (insertIndex !== undefined) {
       const newComponents = [...templateComponents];
       newComponents.splice(insertIndex, 0, newComponent);
@@ -89,7 +78,6 @@ export default function TemplateCreatorPage() {
     }
   };
 
-  // Handle drag start from sidebar
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
     const componentType = active.data.current?.type as ComponentType | undefined;
@@ -100,8 +88,6 @@ export default function TemplateCreatorPage() {
     }
   };
 
-  // For now, provide a single example page layout we can refine together.
-  // This roughly matches how we might want a final daily site report to look.
   const loadSampleDailyReport = () => {
     const baseId = Date.now();
     setTemplateName('Daily Site Report');
@@ -141,51 +127,34 @@ export default function TemplateCreatorPage() {
     setNlpIssues([]);
   };
 
-  // This function handles when user finishes dragging a component to reorder it
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     setActiveId(null);
     setDraggingFromSidebar(null);
 
-    // If dragging from sidebar, add new component
     if (draggingFromSidebar) {
       if (over && over.id === 'canvas-drop-zone') {
-        // Add to end
         addComponent(draggingFromSidebar);
       } else if (over) {
-        // Insert before the component we dropped on
         const insertIndex = templateComponents.findIndex((c) => c.id === over.id);
-        if (insertIndex !== -1) {
-          addComponent(draggingFromSidebar, insertIndex);
-        } else {
-          addComponent(draggingFromSidebar);
-        }
+        addComponent(draggingFromSidebar, insertIndex !== -1 ? insertIndex : undefined);
       }
       return;
     }
 
-    // If nothing was dropped on, or dropped on itself, do nothing
     if (!over || active.id === over.id) return;
 
-    // Find the positions of the dragged component and where it was dropped
     const oldIndex = templateComponents.findIndex((c) => c.id === active.id);
     const newIndex = templateComponents.findIndex((c) => c.id === over.id);
-    
     if (oldIndex === -1 || newIndex === -1) return;
-    
-    // Create a copy of the components array
+
     const newComponents = [...templateComponents];
-    // Remove the component from its old position
     const [moved] = newComponents.splice(oldIndex, 1);
-    // Insert it at the new position
     newComponents.splice(newIndex, 0, moved);
-    // Update the state with the reordered components
     setTemplateComponents(newComponents);
   };
 
-  // This function updates the data for a specific component (e.g., when user types in a text field)
   const updateComponent = (id: string, field: string, value: string) => {
-    // Map through all components, update the one that matches the ID
     setTemplateComponents(
       templateComponents.map((c) =>
         c.id === id ? { ...c, data: { ...c.data, [field]: value } } : c
@@ -193,24 +162,15 @@ export default function TemplateCreatorPage() {
     );
   };
 
-  // This function removes a component from the template
   const removeComponent = (id: string) => {
-    // Filter out the component with the matching ID
     setTemplateComponents(templateComponents.filter((c) => c.id !== id));
   };
 
-  // This function handles when user uploads an image file
-  // It converts the image to base64 format so it can be stored
   const uploadImage = (id: string, event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      // Use FileReader to convert the image file to a base64 data URL
       const reader = new FileReader();
-      reader.onload = (e) => {
-        const imageData = e.target?.result as string;
-        // Update the component with the image data
-        updateComponent(id, 'image', imageData);
-      };
+      reader.onload = (e) => updateComponent(id, 'image', e.target?.result as string);
       reader.readAsDataURL(file);
     }
   };
@@ -337,7 +297,6 @@ export default function TemplateCreatorPage() {
       )}
 
       <div className="template-builder-grid">
-        {/* Document area - Word-style page (ribbon-only, no components bar) */}
         <section className="template-canvas-area">
           <div className="template-canvas word-document-wrapper">
             <div className="report-preview word-document-preview">
@@ -402,7 +361,6 @@ export default function TemplateCreatorPage() {
             </button>
           </div>
 
-          {/* NLP preview for current template text */}
           {nlpIssues.length > 0 && (
             <div className="panel panel-default" style={{ marginTop: 16 }}>
               <div className="panel-heading">
@@ -443,7 +401,6 @@ export default function TemplateCreatorPage() {
   );
 }
 
-// Props for individual draggable component item
 type ComponentItemProps = {
   component: Component;
   onUpdate: (id: string, field: string, value: string) => void;
@@ -451,23 +408,18 @@ type ComponentItemProps = {
   onImageUpload: (id: string, event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-// This component represents a single draggable component in the template
 function ComponentItem({ component, onUpdate, onRemove, onImageUpload }: ComponentItemProps) {
-  // This hook from @dnd-kit provides drag-and-drop functionality
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: component.id,
   });
 
-  // Style for the component - makes it draggable and shows visual feedback
   const style = {
-    transform: CSS.Transform.toString(transform), // Moves the component when dragging
-    transition, // Smooth animation
-    opacity: isDragging ? 0.5 : 1, // Makes it semi-transparent while dragging
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
   };
 
-  // This function renders the appropriate input field based on component type
   const renderInput = () => {
-    // Image component - file upload
     if (component.type === 'image') {
       return (
         <div className="component-image">
@@ -492,7 +444,6 @@ function ComponentItem({ component, onUpdate, onRemove, onImageUpload }: Compone
       );
     }
 
-    // Text-based components (progress, issues, text)
     const fields = {
       progress: { label: 'Progress', placeholder: 'Enter progress updates, milestones, or status information...' },
       issues: { label: 'Issues', placeholder: 'Enter any issues, concerns, or blockers...' },

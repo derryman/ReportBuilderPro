@@ -1,7 +1,4 @@
-/**
- * Route map for the SPA. Authenticated shell = MainLayout + nested routes.
- * Template Creator is desktop-only (mobile users are redirected to Mobile Capture).
- */
+// All the routes for the app — each path maps to a page component
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './components/MainLayout';
 import ProtectedRoute from './components/ProtectedRoute';

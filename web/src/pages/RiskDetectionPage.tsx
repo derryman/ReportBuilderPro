@@ -1,6 +1,4 @@
-/**
- * Run NLP on saved reports or uploaded PDFs; surfaces flags returned by server + Python service.
- */
+// Risk Detection page — scan saved reports or uploaded PDFs for risks, delays and material issues
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchWithAuth } from '../utils/api';

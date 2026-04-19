@@ -1,6 +1,4 @@
-/**
- * Dashboard: latest NLP scan summary, quick links (desktop vs mobile), onboarding hints.
- */
+// Home/dashboard page — shows the latest NLP scan result and quick nav links
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { fetchWithAuth } from '../utils/api';
@@ -53,18 +51,16 @@ export default function HomePage() {
   const [latest, setLatest] = useState<LatestAnalysis | null | undefined>(undefined);
 
   useEffect(() => {
+    // cancelled flag stops state updates if the component unmounts before the fetch finishes
     let cancelled = false;
     fetchWithAuth('/api/nlp/latest')
       .then((res) => (res.ok ? res.json() : { latest: null }))
-      .then((data) => {
-        if (!cancelled) setLatest(data.latest ?? null);
-      })
-      .catch(() => {
-        if (!cancelled) setLatest(null);
-      });
+      .then((data) => { if (!cancelled) setLatest(data.latest ?? null); })
+      .catch(() => { if (!cancelled) setLatest(null); });
     return () => { cancelled = true; };
   }, []);
 
+  // count how many flags of each label type there are (e.g. { risk: 2, delay: 1 })
   const counts = latest?.flags
     ? latest.flags.reduce<Record<string, number>>((acc, f) => {
         acc[f.label] = (acc[f.label] || 0) + 1;

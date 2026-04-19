@@ -1,6 +1,4 @@
-/**
- * Auth token helpers and `fetchWithAuth`: attaches Bearer JWT and sends users to /login on 401.
- */
+// Wrapper around fetch that automatically adds the auth token to every API request
 import { API_BASE_URL } from '../config';
 
 const TOKEN_KEY = 'token';

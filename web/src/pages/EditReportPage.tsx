@@ -1,6 +1,4 @@
-/**
- * Load one report by id, edit captured field values, PUT /api/reports/:id.
- */
+// Edit Report page — loads a saved report, lets the user update the fields, and saves it back
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../utils/api';
@@ -220,78 +218,31 @@ export default function EditReportPage() {
               </div>
 
               {template.components?.map((component) => {
+                // image field — file picker + preview of current photo
                 if (component.type === 'image') {
                   const fieldKey = `image_${component.id}`;
                   const imageValue = form[fieldKey] || '';
                   return (
                     <div key={component.id} className="form-group">
                       <label>{component.data.title || 'Image'}</label>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="form-control"
-                        onChange={(e) => handleImageUpload(component.id, e)}
-                      />
+                      <input type="file" accept="image/*" className="form-control" onChange={(e) => handleImageUpload(component.id, e)} />
                       {imageValue && (
                         <div className="mobile-image-preview" style={{ marginTop: 12 }}>
-                          <img
-                            src={imageValue}
-                            alt=""
-                            style={{
-                              width: '100%',
-                              maxHeight: 300,
-                              objectFit: 'contain',
-                              borderRadius: 8,
-                              border: '1px solid #e0e0e0',
-                            }}
-                          />
+                          <img src={imageValue} alt="" style={{ width: '100%', maxHeight: 300, objectFit: 'contain', borderRadius: 8, border: '1px solid #e0e0e0' }} />
                         </div>
                       )}
                     </div>
                   );
                 }
-                if (component.type === 'text') {
-                  const fieldKey = `text_${component.id}`;
+                // text, progress and issues all render the same — just a labelled textarea
+                if (['text', 'progress', 'issues'].includes(component.type)) {
+                  const fieldKey = `${component.type}_${component.id}`;
                   return (
                     <div key={component.id} className="form-group">
-                      <label>{component.data.title || 'Text'}</label>
+                      <label>{component.data.title || component.type}</label>
                       <textarea
                         className="form-control"
-                        rows={5}
-                        spellCheck
-                        autoCorrect="on"
-                        autoCapitalize="sentences"
-                        value={form[fieldKey] || ''}
-                        onChange={(e) => handleFormChange(fieldKey, e.target.value)}
-                      />
-                    </div>
-                  );
-                }
-                if (component.type === 'progress') {
-                  const fieldKey = `progress_${component.id}`;
-                  return (
-                    <div key={component.id} className="form-group">
-                      <label>{component.data.title || 'Progress'}</label>
-                      <textarea
-                        className="form-control"
-                        rows={4}
-                        spellCheck
-                        autoCorrect="on"
-                        autoCapitalize="sentences"
-                        value={form[fieldKey] || ''}
-                        onChange={(e) => handleFormChange(fieldKey, e.target.value)}
-                      />
-                    </div>
-                  );
-                }
-                if (component.type === 'issues') {
-                  const fieldKey = `issues_${component.id}`;
-                  return (
-                    <div key={component.id} className="form-group">
-                      <label>{component.data.title || 'Issues'}</label>
-                      <textarea
-                        className="form-control"
-                        rows={4}
+                        rows={component.type === 'text' ? 5 : 4}
                         spellCheck
                         autoCorrect="on"
                         autoCapitalize="sentences"

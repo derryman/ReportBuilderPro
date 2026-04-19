@@ -1,47 +1,37 @@
-/**
- * Sign-in form; successful login stores JWT + user profile (see AuthContext).
- */
+// Login page — sends credentials to the API and stores the token on success
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function LoginPage() {
-  // React hooks to manage component state
-  const navigate = useNavigate(); // Used to navigate to different pages
-  const { login, isAuthenticated } = useAuth(); // Get login function and auth state from auth context
-  
-  // Redirect to home if already logged in
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/', { replace: true });
-    }
-  }, [isAuthenticated, navigate]);
-  const [email, setEmail] = useState(''); // Stores the email input value
-  const [password, setPassword] = useState(''); // Stores the password input value
-  const [error, setError] = useState(''); // Stores any error message to display
-  const [isLoading, setIsLoading] = useState(false); // Tracks if login is in progress
+  const navigate = useNavigate();
+  const { login, isAuthenticated } = useAuth();
 
-  // This function runs when the user submits the login form
+  // if already logged in, skip straight to home
+  useEffect(() => {
+    if (isAuthenticated) navigate('/', { replace: true });
+  }, [isAuthenticated, navigate]);
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // Prevent page from refreshing
-    setIsLoading(true); // Show loading state
-    setError(''); // Clear any previous errors
+    event.preventDefault();
+    setIsLoading(true);
+    setError('');
 
     try {
-      // Use auth context login function
       const success = await login(email, password);
-      
       if (success) {
-        // Login successful - go to home page
         navigate('/');
       } else {
-        // Login failed - show error message
         setError('Invalid email or password');
         setIsLoading(false);
       }
-    } catch (error) {
-      // Network error - couldn't reach the server
+    } catch {
       setError('Unable to connect to server.');
       setIsLoading(false);
     }

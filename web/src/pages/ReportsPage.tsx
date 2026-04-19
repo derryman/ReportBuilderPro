@@ -1,6 +1,4 @@
-/**
- * Report list, PDF export, optional writing review (LanguageTool via API), merge offline sync.
- */
+// Reports list page — view, edit, export to PDF, and sync offline reports
 import { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../utils/api';
@@ -348,6 +346,7 @@ export default function ReportsPage() {
                     <p className="text-muted small">Use Edit or Download PDF to view content.</p>
                   ) : (
                   components.map((component, index) => {
+                    // image field — show the captured photo
                     if (component.type === 'image' && component.image) {
                       return (
                         <div key={index} className="report-component" style={{ marginBottom: '20px' }}>
@@ -357,48 +356,20 @@ export default function ReportsPage() {
                           <img
                             src={component.image}
                             alt={component.title || 'Captured image'}
-                            style={{
-                              width: '100%',
-                              maxWidth: '600px',
-                              maxHeight: '400px',
-                              objectFit: 'contain',
-                              borderRadius: '8px',
-                              border: '1px solid #e0e0e0',
-                            }}
+                            style={{ width: '100%', maxWidth: '600px', maxHeight: '400px', objectFit: 'contain', borderRadius: '8px', border: '1px solid #e0e0e0' }}
                           />
                         </div>
                       );
-                    } else if (component.type === 'text' && component.text) {
+                    }
+                    // text, progress and issues fields all render the same way — title + body text
+                    const textValue = component.text || component.progress || component.issues;
+                    if (textValue) {
                       return (
                         <div key={index} className="report-component" style={{ marginBottom: '20px' }}>
                           <h4 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px' }}>
-                            {component.title || 'Text'}
+                            {component.title || component.type}
                           </h4>
-                          <p style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6' }}>
-                            {component.text}
-                          </p>
-                        </div>
-                      );
-                    } else if (component.type === 'progress' && component.progress) {
-                      return (
-                        <div key={index} className="report-component" style={{ marginBottom: '20px' }}>
-                          <h4 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px' }}>
-                            {component.title || 'Progress'}
-                          </h4>
-                          <p style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6' }}>
-                            {component.progress}
-                          </p>
-                        </div>
-                      );
-                    } else if (component.type === 'issues' && component.issues) {
-                      return (
-                        <div key={index} className="report-component" style={{ marginBottom: '20px' }}>
-                          <h4 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px' }}>
-                            {component.title || 'Issues'}
-                          </h4>
-                          <p style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6' }}>
-                            {component.issues}
-                          </p>
+                          <p style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6' }}>{textValue}</p>
                         </div>
                       );
                     }
