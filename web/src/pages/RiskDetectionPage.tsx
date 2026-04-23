@@ -188,7 +188,7 @@ export default function RiskDetectionPage() {
           {/* Optional: Upload a single PDF and see NLP findings */}
           <div className="panel panel-default" style={{ marginTop: '1.5rem', marginBottom: '1.5rem' }}>
             <div className="panel-heading">
-              <h3 className="panel-title" style={{ margin: 0, fontSize: '1.1rem' }}>Demo: Upload PDF</h3>
+              <h3 className="panel-title" style={{ margin: 0, fontSize: '1.1rem' }}>Optional: Upload PDF</h3>
               <p className="text-muted small" style={{ marginTop: '4px', marginBottom: 0 }}>
                 Upload a single-page PDF (e.g. a site report). We extract text and run risk/delay/material-shortage detection.
               </p>
