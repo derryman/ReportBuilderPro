@@ -185,7 +185,7 @@ export default function RiskDetectionPage() {
             Select reports to scan for risks, delays, and material issues. Run the model from here, then view results on the Home dashboard.
           </p>
 
-          {/* Demo: Upload a single PDF and see NLP findings */}
+          {/* Optional: Upload a single PDF and see NLP findings */}
           <div className="panel panel-default" style={{ marginTop: '1.5rem', marginBottom: '1.5rem' }}>
             <div className="panel-heading">
               <h3 className="panel-title" style={{ margin: 0, fontSize: '1.1rem' }}>Demo: Upload PDF</h3>
