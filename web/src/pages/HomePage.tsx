@@ -181,7 +181,7 @@ export default function HomePage() {
                       <div className={issueCardClass}>
                         <div className="issue-header">
                           <span className={badgeClass}>{flag.label.replace(/_/g, ' ')}</span>
-                          <span className="issue-job">{(flag.confidence * 100).toFixed(0)}%</span>
+                          {/* <span className="issue-job">{(flag.confidence * 100).toFixed(0)}%</span> */}
                         </div>
                         <p className="issue-description">{flag.snippet}</p>
                         <div className="issue-meta">
