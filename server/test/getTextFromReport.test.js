@@ -14,14 +14,15 @@ describe('getTextFromReport', () => {
     assert.equal(getTextFromReport({ capturedData: 'not-an-object' }), '');
   });
 
-  it('joins trimmed title and text from captured fields', () => {
+  it('joins text from captured fields, excluding titles', () => {
     assert.equal(
       getTextFromReport({
         capturedData: {
           block1: { title: '  Site A  ', text: 'Progress ok' },
+          block2: { title: 'Issues', issues: 'Standing water on site' },
         },
       }),
-      'Site A\nProgress ok',
+      'Progress ok\n\nStanding water on site',
     );
   });
 });
