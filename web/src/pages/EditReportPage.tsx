@@ -86,10 +86,13 @@ export default function EditReportPage() {
         const captured = reportData.capturedData || {};
         Object.entries(captured).forEach(([compId, data]) => {
           const d = data as CapturedComponent;
-          if (d.type === 'image' && d.image) initial[`image_${compId}`] = d.image;
-          if (d.type === 'text' && d.text) initial[`text_${compId}`] = d.text;
-          if (d.type === 'progress' && d.progress) initial[`progress_${compId}`] = d.progress;
-          if (d.type === 'issues' && d.issues) initial[`issues_${compId}`] = d.issues;
+          // Mobile stores keys as "${pageIndex}_${comp.id}" — strip the numeric prefix so
+          // the form key matches what the textarea expects: "${type}_${comp.id}"
+          const id = /^\d+_/.test(compId) ? compId.replace(/^\d+_/, '') : compId;
+          if (d.type === 'image' && d.image) initial[`image_${id}`] = d.image;
+          if (d.type === 'text' && d.text) initial[`text_${id}`] = d.text;
+          if (d.type === 'progress' && d.progress) initial[`progress_${id}`] = d.progress;
+          if (d.type === 'issues' && d.issues) initial[`issues_${id}`] = d.issues;
         });
         setForm(initial);
       } catch (e) {
