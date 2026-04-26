@@ -511,7 +511,6 @@ export default function MobileCapturePage() {
                           <input
                             type="file"
                             accept="image/*"
-                            capture="environment"
                             className="form-control"
                             onChange={(e) => handleImageUpload(component.id, e)}
                           />
