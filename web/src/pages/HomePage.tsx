@@ -61,6 +61,11 @@ export default function HomePage() {
     return () => { cancelled = true; };
   }, []);
 
+  const clearScan = async () => {
+    await fetchWithAuth('/api/nlp/latest', { method: 'DELETE' });
+    setLatest(null);
+  };
+
   // count how many flags of each label type there are (e.g. { risk: 2, delay: 1 })
   const counts = latest?.flags
     ? latest.flags.reduce<Record<string, number>>((acc, f) => {
@@ -149,11 +154,14 @@ export default function HomePage() {
 
           {latest && latest.flags.length > 0 && (
             <>
-              <div className="latest-scan-meta" style={{ marginBottom: '1rem' }}>
-                <strong>{latest.reportTitle}</strong>
-                <span className="text-muted small" style={{ marginLeft: '0.5rem' }}>
-                  {latest.processed_at ? new Date(latest.processed_at).toLocaleString() : ''}
-                </span>
+              <div className="latest-scan-meta" style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+                <div>
+                  <strong>{latest.reportTitle}</strong>
+                  <span className="text-muted small" style={{ marginLeft: '0.5rem' }}>
+                    {latest.processed_at ? new Date(latest.processed_at).toLocaleString() : ''}
+                  </span>
+                </div>
+                <button className="btn btn-default btn-sm" onClick={clearScan}>Clear scan</button>
               </div>
 
               <div className="row" style={{ marginBottom: '1.5rem' }}>

@@ -708,10 +708,7 @@ app.post('/api/reports/:id/analyze', async (req, res) => {
       }
     }
 
-    const reportTitle =
-      (report.capturedData && typeof report.capturedData === 'object' && Object.values(report.capturedData).find((v) => v && v.title))
-        ? Object.values(report.capturedData).find((v) => v && v.title).title
-        : `Report ${id}`;
+    const reportTitle = report.jobId ? `Job ${report.jobId}` : `Report ${id}`;
 
     const analysisDoc = {
       reportId: id,
@@ -885,6 +882,18 @@ app.get('/api/nlp/latest', async (req, res) => {
     });
   } catch (error) {
     console.error('Get latest analysis error:', error);
+    return res.status(500).json({ message: 'Unexpected server error' });
+  }
+});
+
+// Clear all scan results for the current user
+app.delete('/api/nlp/latest', async (req, res) => {
+  if (!db) return res.status(503).json({ message: 'Database not ready yet' });
+  try {
+    await db.collection('ai_analysis').deleteMany({ createdBy: req.user.email });
+    return res.json({ message: 'Scan results cleared' });
+  } catch (error) {
+    console.error('Clear analysis error:', error);
     return res.status(500).json({ message: 'Unexpected server error' });
   }
 });
