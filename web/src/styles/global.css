@@ -593,6 +593,10 @@ small.text-muted {
   border-left-color: #ea580c;
 }
 
+.issue-card.issue-warning {
+  border-left-color: #ca8a04;
+}
+
 .issue-card.issue-low {
   border-left-color: #2563eb;
 }
@@ -619,8 +623,13 @@ small.text-muted {
 }
 
 .issue-badge-medium {
-  background: #fed7aa; /* Lighter background */
-  color: #9a3412; /* Even darker orange for better WCAG AA contrast */
+  background: #fed7aa;
+  color: #9a3412;
+}
+
+.issue-badge-warning {
+  background: #fef08a;
+  color: #854d0e;
 }
 
 .issue-badge-low {

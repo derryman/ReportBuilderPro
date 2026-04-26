@@ -40,9 +40,10 @@ const QUICK_LINKS_MOBILE: QuickLink[] = [
   { path: '/risk-detection', label: 'Risk Detection', description: 'Scan for risks' },
 ];
 
-function labelToSeverity(label: string): 'high' | 'medium' | 'low' {
+function labelToSeverity(label: string): 'high' | 'medium' | 'warning' | 'low' {
   if (label === 'risk') return 'high';
-  if (label === 'delay' || label === 'material_shortage') return 'medium';
+  if (label === 'delay') return 'medium';
+  if (label === 'material_shortage') return 'warning';
   return 'low';
 }
 
