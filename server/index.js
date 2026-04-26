@@ -645,23 +645,32 @@ function normaliseWritingReviewIssues(matches, segments) {
     });
 }
 
-// Send text to the Python NLP service and get back risk flags
+// Send text to the Python NLP service and get back risk flags.
+// Retries once on failure to handle Azure Container Apps cold starts (can take 30-60s).
 async function callNlpService(text) {
   const base = NLP_SERVICE_URL.replace(/\/$/, '');
   if (!base) {
     throw new Error('NLP_SERVICE_URL is not set');
   }
-  const res = await fetch(`${base}/nlp/analyze`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text: text || '' }),
-    signal: AbortSignal.timeout(15000), // prevent hung requests if NLP container is cold-starting
-  });
-  if (!res.ok) {
-    const errText = await res.text();
-    throw new Error(errText || `NLP service returned ${res.status}`);
+  const attempt = async () => {
+    const res = await fetch(`${base}/nlp/analyze`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: text || '' }),
+      signal: AbortSignal.timeout(60000),
+    });
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(errText || `NLP service returned ${res.status}`);
+    }
+    return res.json();
+  };
+  try {
+    return await attempt();
+  } catch (err) {
+    console.warn('NLP first attempt failed, retrying once:', err.message);
+    return await attempt();
   }
-  return res.json();
 }
 
 // Persist analysis to `ai_analysis` for history and GET /api/nlp/latest.
