@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { fetchWithAuth } from '../utils/api';
 import { useMobile } from '../utils/useMobile';
+import { useAuth } from '../contexts/AuthContext';
 
 type NlpFlag = {
   label: string;
@@ -74,13 +75,14 @@ export default function HomePage() {
       }, {})
     : {};
 
+  const { user } = useAuth();
   const quickLinks = isMobile ? QUICK_LINKS_MOBILE : QUICK_LINKS_DESKTOP;
 
   return (
     <div className="home-page">
       <section className="rbp-hero panel panel-default">
         <div className="panel-body">
-          <h1>Report Builder Pro</h1>
+          <h1>Welcome back{user?.name ? `, ${user.name}` : ''}.</h1>
           <p>
             Create templates, capture reports on site, and scan for risks. One place for your reporting workflow.
           </p>
