@@ -3,15 +3,14 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import { useMobile } from '../utils/useMobile';
 import { useAuth } from '../contexts/AuthContext';
+import { useSettings } from '../contexts/SettingsContext';
 
-// Navigation menu item type
 type MenuItem = {
   path: string;
   label: string;
   hideOnMobile?: boolean;
 };
 
-// Navigation menu items
 const menuItems: MenuItem[] = [
   { path: '/', label: 'Home' },
   { path: '/template-creator', label: 'Template Creator', hideOnMobile: true },
@@ -19,11 +18,13 @@ const menuItems: MenuItem[] = [
   { path: '/mobile-capture', label: 'Mobile Capture' },
   { path: '/risk-detection', label: 'Risk Detection' },
   { path: '/reports', label: 'Reports' },
+  { path: '/settings', label: 'Settings' },
 ];
 
 export default function MainLayout() {
   const isMobile = useMobile();
   const { logout, user } = useAuth();
+  const { settings } = useSettings();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -35,9 +36,9 @@ export default function MainLayout() {
     <div className="rbp-shell">
       <aside className="rbp-sidebar">
         <NavLink to="/" className="rbp-brand-block">
-          <img src={logo} alt="Report Builder Pro logo" />
+          <img src={settings.logoData || logo} alt="logo" />
           <div className="brand-text">
-            <span className="brand-title">Report Builder Pro</span>
+            <span className="brand-title">{settings.companyName || 'Report Builder Pro'}</span>
             <small className="text-muted">Beta</small>
           </div>
         </NavLink>

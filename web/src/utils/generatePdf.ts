@@ -50,7 +50,20 @@ type ReportData = {
   jobId: string | null;
   timestamp: string;
   components: CapturedComponent[];
+  branding?: {
+    companyName?: string;
+    accentColor?: string;
+    logoData?: string;
+  };
 };
+
+// Convert a hex colour string to RGB values for jsPDF
+function hexToRgb(hex: string): [number, number, number] {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)]
+    : [13, 148, 136];
+}
 
 export async function generateReportPdf(reportData: ReportData): Promise<void> {
   const doc = new jsPDF();
@@ -59,6 +72,7 @@ export async function generateReportPdf(reportData: ReportData): Promise<void> {
   const margin = 20;
   const maxWidth = pageWidth - 2 * margin;
   let yPosition = margin;
+  const accentRgb = hexToRgb(reportData.branding?.accentColor || '#0d9488');
 
   const checkPageBreak = (requiredHeight: number) => {
     if (yPosition + requiredHeight > pageHeight - margin) {
@@ -76,16 +90,37 @@ export async function generateReportPdf(reportData: ReportData): Promise<void> {
     } else {
       doc.setFont('helvetica', 'normal');
     }
-    
     const lines = doc.splitTextToSize(text, maxWidth);
     lines.forEach((line: string) => {
       checkPageBreak(fontSize * 0.5);
       doc.text(line, margin, yPosition);
       yPosition += fontSize * 0.5;
     });
-    
     doc.setFont('helvetica', 'normal');
   };
+
+  // Company logo top-left if provided
+  const logoData = reportData.branding?.logoData;
+  if (logoData) {
+    try {
+      const logoHeight = 16;
+      const logoWidth = 40;
+      doc.addImage(logoData, 'PNG', margin, yPosition, logoWidth, logoHeight);
+      yPosition += logoHeight + 4;
+    } catch {
+      // skip logo if it fails to render
+    }
+  }
+
+  // Company name above report title if set
+  if (reportData.branding?.companyName) {
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100, 116, 139);
+    doc.text(reportData.branding.companyName, margin, yPosition);
+    doc.setTextColor(0, 0, 0);
+    yPosition += 6;
+  }
 
   addText(reportData.templateTitle, 18, true);
   yPosition += 5;
@@ -94,13 +129,17 @@ export async function generateReportPdf(reportData: ReportData): Promise<void> {
     addText(`Job ID: ${reportData.jobId}`, 10);
     yPosition += 3;
   }
-  
+
   const date = new Date(reportData.timestamp).toLocaleString();
   addText(`Date: ${date}`, 10);
   yPosition += 8;
 
-  doc.setLineWidth(0.5);
+  // Accent colour divider line
+  doc.setLineWidth(1);
+  doc.setDrawColor(...accentRgb);
   doc.line(margin, yPosition, pageWidth - margin, yPosition);
+  doc.setDrawColor(0, 0, 0);
+  doc.setLineWidth(0.5);
   yPosition += 10;
 
   for (const component of reportData.components) {

@@ -494,9 +494,6 @@ export default function MobileCapturePage() {
                       <button type="button" className="btn btn-default btn-sm" onClick={() => goToPage(currentPageIndex + 1)} disabled={currentPageIndex >= pageData.length - 1}>
                         Next
                       </button>
-                      <button type="button" className="btn btn-rbp btn-sm" onClick={addPage}>
-                        + Add page
-                      </button>
                     </div>
                   </div>
 
@@ -546,6 +543,9 @@ export default function MobileCapturePage() {
                     return null;
                   })}
 
+                  <button type="button" className="btn btn-default btn-block" style={{ marginBottom: 8 }} onClick={addPage}>
+                    + Add page
+                  </button>
                   <button type="submit" className="btn btn-rbp btn-block" disabled={saving}>
                     {saving ? 'Saving...' : 'Save Report'}
                   </button>

@@ -3,6 +3,8 @@ import { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../utils/api';
 import { generateReportPdf } from '../utils/generatePdf';
+import { useSettings } from '../contexts/SettingsContext';
+import { useToast } from '../contexts/ToastContext';
 import { useOnlineStatus } from '../utils/useOnlineStatus';
 import {
   getUnsyncedReports,
@@ -38,6 +40,8 @@ type WritingReviewModalState = {
 
 export default function ReportsPage() {
   const navigate = useNavigate();
+  const { settings } = useSettings();
+  const { showToast } = useToast();
   const [reports, setReports] = useState<Report[]>([]);
   const [templates, setTemplates] = useState<Record<string, Template>>({});
   const [loading, setLoading] = useState(true);
@@ -103,6 +107,11 @@ export default function ReportsPage() {
       jobId: fullReport.jobId,
       timestamp: fullReport.timestamp || fullReport.createdAt,
       components,
+      branding: {
+        companyName: settings.companyName,
+        accentColor: settings.accentColor,
+        logoData: settings.logoData,
+      },
     });
   };
 
@@ -114,7 +123,7 @@ export default function ReportsPage() {
         ? report
         : await fetchWithAuth(`/api/reports/${report.id}`).then((r) => (r.ok ? r.json() : null));
       if (!fullReport?.capturedData) {
-        alert('Could not load report data for PDF.');
+        showToast('Could not load report data for PDF.', 'error');
         return;
       }
       const templateTitle = templates[report.templateId]?.title || 'Unknown Template';
@@ -158,7 +167,7 @@ export default function ReportsPage() {
       await generatePdfForReport(fullReport, templateTitle);
     } catch (error) {
       console.error('Error generating PDF:', error);
-      alert('Failed to generate PDF. Please try again.');
+      showToast('Failed to generate PDF. Please try again.', 'error');
     } finally {
       setGeneratingPdf(null);
     }
@@ -172,7 +181,7 @@ export default function ReportsPage() {
       setWritingReview(null);
     } catch (error) {
       console.error('Error generating PDF after review:', error);
-      alert('Failed to generate PDF. Please try again.');
+      showToast('Failed to generate PDF. Please try again.', 'error');
     } finally {
       setGeneratingPdf(null);
     }
@@ -187,12 +196,12 @@ export default function ReportsPage() {
 
   const handleSyncPending = async () => {
     if (!isOnline) {
-      alert('You are offline. Connect to the internet to sync.');
+      showToast('You are offline. Connect to the internet to sync.', 'error');
       return;
     }
     const pending = await getUnsyncedReports();
     if (pending.length === 0) {
-      alert('No reports pending sync.');
+      showToast('No reports pending sync.', 'info');
       return;
     }
     setSyncing(true);
@@ -229,7 +238,7 @@ export default function ReportsPage() {
       if (reportsRes.ok) setReports(await reportsRes.json());
     }
     if (synced > 0 || failed > 0) {
-      alert(`Synced ${synced} report(s).${failed > 0 ? ` ${failed} failed.` : ''}`);
+      showToast(`Synced ${synced} report(s).${failed > 0 ? ` ${failed} failed.` : ''}`, failed > 0 ? 'error' : 'success');
     }
   };
 
@@ -240,13 +249,14 @@ export default function ReportsPage() {
       const res = await fetchWithAuth(`/api/reports/${report.id}`, { method: 'DELETE' });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        alert(data.message || 'Failed to delete report');
+        showToast(data.message || 'Failed to delete report', 'error');
         return;
       }
       setReports((prev) => prev.filter((r) => r.id !== report.id));
+      showToast('Report deleted');
     } catch (error) {
       console.error('Error deleting report:', error);
-      alert('Failed to delete report. Please try again.');
+      showToast('Failed to delete report. Please try again.', 'error');
     } finally {
       setDeletingReportId(null);
     }

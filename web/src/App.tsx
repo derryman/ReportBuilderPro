@@ -10,6 +10,7 @@ import MobileCapturePage from './pages/MobileCapturePage';
 import ReportsPage from './pages/ReportsPage';
 import RiskDetectionPage from './pages/RiskDetectionPage';
 import EditReportPage from './pages/EditReportPage';
+import CompanySettingsPage from './pages/CompanySettingsPage';
 import { useMobile } from './utils/useMobile';
 
 // Wrapper component that redirects mobile users away from Template Creator
@@ -49,6 +50,7 @@ export default function App() {
           <Route path="risk-detection" element={<RiskDetectionPage />} />
           <Route path="reports" element={<ReportsPage />} />
           <Route path="reports/:id/edit" element={<EditReportPage />} />
+          <Route path="settings" element={<CompanySettingsPage />} />
         </Route>
         
         {/* If user goes to a page that doesn't exist, redirect to login (will redirect to home if authenticated) */}

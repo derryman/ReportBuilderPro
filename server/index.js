@@ -886,6 +886,38 @@ app.get('/api/nlp/latest', async (req, res) => {
   }
 });
 
+// --- Company branding settings ---
+app.get('/api/settings', async (req, res) => {
+  if (!db) return res.status(503).json({ message: 'Database not ready yet' });
+  try {
+    const settings = await db.collection('Settings').findOne({ createdBy: req.user.email });
+    return res.json({
+      companyName: settings?.companyName || '',
+      accentColor: settings?.accentColor || '',
+      logoData: settings?.logoData || '',
+    });
+  } catch (error) {
+    console.error('Get settings error:', error);
+    return res.status(500).json({ message: 'Unexpected server error' });
+  }
+});
+
+app.put('/api/settings', async (req, res) => {
+  if (!db) return res.status(503).json({ message: 'Database not ready yet' });
+  try {
+    const { companyName, accentColor, logoData } = req.body;
+    await db.collection('Settings').updateOne(
+      { createdBy: req.user.email },
+      { $set: { companyName: companyName || '', accentColor: accentColor || '', logoData: logoData || '', updatedAt: new Date() } },
+      { upsert: true }
+    );
+    return res.json({ message: 'Settings saved' });
+  } catch (error) {
+    console.error('Save settings error:', error);
+    return res.status(500).json({ message: 'Unexpected server error' });
+  }
+});
+
 // Clear all scan results for the current user
 app.delete('/api/nlp/latest', async (req, res) => {
   if (!db) return res.status(503).json({ message: 'Database not ready yet' });
