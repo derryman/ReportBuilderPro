@@ -57,7 +57,9 @@ type ReportData = {
   templateTitle: string;
   jobId: string | null;
   timestamp: string;
-  components: CapturedComponent[];
+  // One array per captured page — keeps each page visually separate in the PDF instead of
+  // letting all components run together as a single undifferentiated stream.
+  pages: CapturedComponent[][];
   branding?: {
     companyName?: string;
     accentColor?: string;
@@ -150,7 +152,18 @@ export async function generateReportPdf(reportData: ReportData): Promise<void> {
   doc.setLineWidth(0.5);
   yPosition += 10;
 
-  for (const component of reportData.components) {
+  for (let pageIndex = 0; pageIndex < reportData.pages.length; pageIndex++) {
+    if (pageIndex > 0) {
+      doc.addPage();
+      yPosition = margin;
+      doc.setFontSize(9);
+      doc.setTextColor(100, 116, 139);
+      doc.text(`Page ${pageIndex + 1}`, margin, yPosition);
+      doc.setTextColor(0, 0, 0);
+      yPosition += 8;
+    }
+
+    for (const component of reportData.pages[pageIndex]) {
     addText(component.title || DEFAULT_SECTION_TITLES[component.type] || 'Untitled', 14, true);
     yPosition += 5;
 
@@ -161,20 +174,23 @@ export async function generateReportPdf(reportData: ReportData): Promise<void> {
         const imgWidth = canvas.width;
         const imgHeight = canvas.height;
         const availableWidth = maxWidth;
-        const availableHeight = pageHeight - yPosition - margin;
-        
+        // Size against the full page height, not whatever's left on the current page — otherwise
+        // an image landing near the bottom of a page gets crushed into a tiny sliver instead of
+        // flowing to a fresh page at a normal size.
+        const fullPageHeight = pageHeight - margin * 2;
+
         let displayWidth = imgWidth;
         let displayHeight = imgHeight;
-        
+
         if (displayWidth > availableWidth) {
           const ratio = availableWidth / displayWidth;
           displayWidth = availableWidth;
           displayHeight = displayHeight * ratio;
         }
-        
-        if (displayHeight > availableHeight) {
-          const ratio = availableHeight / displayHeight;
-          displayHeight = availableHeight;
+
+        if (displayHeight > fullPageHeight) {
+          const ratio = fullPageHeight / displayHeight;
+          displayHeight = fullPageHeight;
           displayWidth = displayWidth * ratio;
         }
 
@@ -201,20 +217,20 @@ export async function generateReportPdf(reportData: ReportData): Promise<void> {
           const imgWidth = img.width;
           const imgHeight = img.height;
           const availableWidth = maxWidth;
-          const availableHeight = pageHeight - yPosition - margin;
-          
+          const fullPageHeight = pageHeight - margin * 2;
+
           let displayWidth = imgWidth;
           let displayHeight = imgHeight;
-          
+
           if (displayWidth > availableWidth) {
             const ratio = availableWidth / displayWidth;
             displayWidth = availableWidth;
             displayHeight = displayHeight * ratio;
           }
-          
-          if (displayHeight > availableHeight) {
-            const ratio = availableHeight / displayHeight;
-            displayHeight = availableHeight;
+
+          if (displayHeight > fullPageHeight) {
+            const ratio = fullPageHeight / displayHeight;
+            displayHeight = fullPageHeight;
             displayWidth = displayWidth * ratio;
           }
 
@@ -244,6 +260,7 @@ export async function generateReportPdf(reportData: ReportData): Promise<void> {
     }
 
     yPosition += 5;
+    }
   }
 
   const dateStr = new Date(reportData.timestamp).toISOString().split('T')[0];

@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../utils/api';
 import { generateReportPdf } from '../utils/generatePdf';
+import { groupCapturedDataByPage } from '../utils/capturedData';
 import { useSettings } from '../contexts/SettingsContext';
 import { useToast } from '../contexts/ToastContext';
 import { useOnlineStatus } from '../utils/useOnlineStatus';
@@ -109,12 +110,12 @@ export default function ReportsPage() {
       throw new Error('Could not load report data for PDF.');
     }
 
-    const components = Object.values(fullReport.capturedData) as CapturedComponent[];
+    const pages = groupCapturedDataByPage(fullReport.capturedData);
     await generateReportPdf({
       templateTitle,
       jobId: fullReport.jobId,
       timestamp: fullReport.timestamp || fullReport.createdAt,
-      components,
+      pages,
       branding: {
         companyName: settings.companyName,
         accentColor: settings.accentColor,
