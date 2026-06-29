@@ -7,6 +7,7 @@ import { useSettings } from '../contexts/SettingsContext';
 import { useToast } from '../contexts/ToastContext';
 import { useOnlineStatus } from '../utils/useOnlineStatus';
 import {
+  type OfflineReport,
   getUnsyncedReports,
   markReportSynced,
   deleteOfflineReport,
@@ -47,15 +48,22 @@ export default function ReportsPage() {
   const [loading, setLoading] = useState(true);
   const [generatingPdf, setGeneratingPdf] = useState<string | null>(null);
   const [deletingReportId, setDeletingReportId] = useState<string | null>(null);
-  const [unsyncedCount, setUnsyncedCount] = useState(0);
+  const [pendingReports, setPendingReports] = useState<OfflineReport[]>([]);
   const [syncing, setSyncing] = useState(false);
   const [writingReview, setWritingReview] = useState<WritingReviewModalState | null>(null);
   const isOnline = useOnlineStatus();
+  const unsyncedCount = pendingReports.length;
 
   const refreshUnsyncedCount = useCallback(async () => {
-    const list = await getUnsyncedReports();
-    setUnsyncedCount(list.length);
+    setPendingReports(await getUnsyncedReports());
   }, []);
+
+  const handleDiscardPending = async (localId: string) => {
+    if (!window.confirm('Discard this offline report? It will be permanently lost.')) return;
+    await deleteOfflineReport(localId);
+    await refreshUnsyncedCount();
+    showToast('Offline report discarded');
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -230,7 +238,7 @@ export default function ReportsPage() {
           failed++;
           lastError = res.status === 413
             ? 'photo(s) too large'
-            : data.message || text || `server error ${res.status}`;
+            : [data.message, data.error].filter(Boolean).join(': ') || text || `server error ${res.status}`;
           console.error('Sync failed for offline report', report.localId, lastError);
         }
       } catch (err) {
@@ -304,6 +312,23 @@ export default function ReportsPage() {
             >
               {syncing ? 'Syncing...' : 'Sync now'}
             </button>
+            <ul style={{ listStyle: 'none', padding: 0, marginTop: 8, marginBottom: 0 }}>
+              {pendingReports.map((r) => (
+                <li key={r.localId} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13 }}>
+                  <span className="text-muted">
+                    {r.jobId || '(no job ID)'} — {formatDate(r.timestamp)}
+                  </span>
+                  <button
+                    type="button"
+                    className="btn btn-link btn-sm"
+                    style={{ padding: 0 }}
+                    onClick={() => handleDiscardPending(r.localId)}
+                  >
+                    Discard
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
       </header>

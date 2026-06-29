@@ -365,9 +365,17 @@ app.post('/api/reports', async (req, res) => {
     });
   } catch (error) {
     console.error('Save report error:', error);
-    return res.status(500).json({ 
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    // MongoDB rejects documents over its 16MB BSON limit — most often hit by uncompressed photos
+    if (/BSONObj size|maxBsonObjectSize|too large/i.test(errorMessage)) {
+      return res.status(413).json({
+        message: 'Report is too large to save. Try removing a photo or splitting it into fewer pages.',
+        error: errorMessage,
+      });
+    }
+    return res.status(500).json({
       message: 'Unexpected server error',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: errorMessage
     });
   }
 });

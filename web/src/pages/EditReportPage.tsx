@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchWithAuth } from '../utils/api';
+import { resizeImage } from '../utils/imageResize';
 
 type CapturedComponent = {
   type: 'image' | 'text' | 'progress' | 'issues';
@@ -32,17 +33,50 @@ type Template = {
   components?: Component[];
 };
 
-type FormState = {
-  jobId: string;
-  [key: string]: string;
-};
+/** Build empty form for one page from a template (all component keys, empty strings). */
+function emptyPageFromTemplate(template: Template): Record<string, string> {
+  const page: Record<string, string> = {};
+  template.components?.forEach((comp) => {
+    page[`${comp.type}_${comp.id}`] = '';
+  });
+  return page;
+}
+
+/**
+ * Captured data keys are "${pageIndex}_${comp.id}" for multipage reports (from mobile capture),
+ * or a bare "${comp.id}" for older single-page reports. Split them back out into one form per page.
+ */
+function pagesFromCapturedData(
+  capturedData: Record<string, CapturedComponent>,
+  template: Template
+): Record<string, string>[] {
+  const byPage = new Map<number, Record<string, string>>();
+  Object.entries(capturedData).forEach(([key, data]) => {
+    const match = /^(\d+)_(.+)$/.exec(key);
+    const pageIndex = match ? Number(match[1]) : 0;
+    const compId = match ? match[2] : key;
+    const page = byPage.get(pageIndex) ?? {};
+    const fieldKey = `${data.type}_${compId}`;
+    page[fieldKey] = data.image ?? data.text ?? data.progress ?? data.issues ?? '';
+    byPage.set(pageIndex, page);
+  });
+
+  const pageCount = byPage.size > 0 ? Math.max(...byPage.keys()) + 1 : 1;
+  const pages: Record<string, string>[] = [];
+  for (let i = 0; i < pageCount; i++) {
+    pages.push({ ...emptyPageFromTemplate(template), ...(byPage.get(i) ?? {}) });
+  }
+  return pages;
+}
 
 export default function EditReportPage() {
   const { id: reportId } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [report, setReport] = useState<Report | null>(null);
   const [template, setTemplate] = useState<Template | null>(null);
-  const [form, setForm] = useState<FormState>({ jobId: '' });
+  const [jobId, setJobId] = useState('');
+  const [pageData, setPageData] = useState<Record<string, string>[]>([]);
+  const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -64,37 +98,27 @@ export default function EditReportPage() {
         const templatesData = await templatesRes.json();
         if (cancelled) return;
         setReport(reportData);
-        const t = templatesData.find((x: Template) => x.id === reportData.templateId) || null;
-        if (t) {
-          setTemplate(t);
-        } else {
-          // Template not in API (e.g. test-template): derive from capturedData
-          const captured = reportData.capturedData || {};
-          const components: Component[] = Object.entries(captured).map(([compId, data]) => ({
-            id: compId,
-            type: (data as CapturedComponent).type,
-            data: { title: (data as CapturedComponent).title },
-          }));
-          setTemplate({
-            id: reportData.templateId,
-            title: 'Report',
-            components,
-          });
-        }
 
-        const initial: FormState = { jobId: reportData.jobId || '' };
         const captured = reportData.capturedData || {};
-        Object.entries(captured).forEach(([compId, data]) => {
-          const d = data as CapturedComponent;
-          // Mobile stores keys as "${pageIndex}_${comp.id}" — strip the numeric prefix so
-          // the form key matches what the textarea expects: "${type}_${comp.id}"
-          const id = /^\d+_/.test(compId) ? compId.replace(/^\d+_/, '') : compId;
-          if (d.type === 'image' && d.image) initial[`image_${id}`] = d.image;
-          if (d.type === 'text' && d.text) initial[`text_${id}`] = d.text;
-          if (d.type === 'progress' && d.progress) initial[`progress_${id}`] = d.progress;
-          if (d.type === 'issues' && d.issues) initial[`issues_${id}`] = d.issues;
-        });
-        setForm(initial);
+        let resolvedTemplate: Template = templatesData.find((x: Template) => x.id === reportData.templateId);
+        if (!resolvedTemplate) {
+          // Template not in API (e.g. test-template): derive one component per distinct field
+          // across all pages (dedupe by component id, since every page reuses the same ids).
+          const seen = new Map<string, Component>();
+          Object.entries(captured).forEach(([key, data]) => {
+            const d = data as CapturedComponent;
+            const match = /^\d+_(.+)$/.exec(key);
+            const compId = match ? match[1] : key;
+            if (!seen.has(compId)) {
+              seen.set(compId, { id: compId, type: d.type, data: { title: d.title } });
+            }
+          });
+          resolvedTemplate = { id: reportData.templateId, title: 'Report', components: [...seen.values()] };
+        }
+        setTemplate(resolvedTemplate);
+        setJobId(reportData.jobId || '');
+        setPageData(pagesFromCapturedData(captured, resolvedTemplate));
+        setCurrentPageIndex(0);
       } catch (e) {
         if (!cancelled) setError('Failed to load report');
       } finally {
@@ -106,19 +130,36 @@ export default function EditReportPage() {
   }, [reportId]);
 
   const handleFormChange = (field: string, value: string) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
+    setPageData((prev) => {
+      const next = [...prev];
+      next[currentPageIndex] = { ...(next[currentPageIndex] ?? {}), [field]: value };
+      return next;
+    });
   };
 
   const handleImageUpload = (componentId: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (ev) => {
+    reader.onload = async (ev) => {
       const data = ev.target?.result as string;
-      handleFormChange(`image_${componentId}`, data);
+      const resized = await resizeImage(data);
+      handleFormChange(`image_${componentId}`, resized);
     };
     reader.readAsDataURL(file);
   };
+
+  const addPage = () => {
+    if (!template) return;
+    setPageData((prev) => [...prev, emptyPageFromTemplate(template)]);
+    setCurrentPageIndex((prev) => prev + 1);
+  };
+
+  const goToPage = (index: number) => {
+    if (index >= 0 && index < pageData.length) setCurrentPageIndex(index);
+  };
+
+  const currentPageForm = pageData[currentPageIndex] ?? {};
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,25 +168,29 @@ export default function EditReportPage() {
     setError(null);
     try {
       const capturedData: Record<string, CapturedComponent> = {};
-      template.components?.forEach((comp) => {
-        const key = `${comp.type}_${comp.id}`;
-        const value = form[key];
-        if (comp.type === 'image' && value) {
-          capturedData[comp.id] = { type: 'image', title: comp.data.title || '', image: value };
-        } else if (comp.type === 'text' && value) {
-          capturedData[comp.id] = { type: 'text', title: comp.data.title || '', text: value };
-        } else if (comp.type === 'progress' && value) {
-          capturedData[comp.id] = { type: 'progress', title: comp.data.title || '', progress: value };
-        } else if (comp.type === 'issues' && value) {
-          capturedData[comp.id] = { type: 'issues', title: comp.data.title || '', issues: value };
-        }
+      pageData.forEach((page, pageIndex) => {
+        template.components?.forEach((comp) => {
+          const fieldKey = `${comp.type}_${comp.id}`;
+          const value = page[fieldKey];
+          if (!value) return;
+          const key = `${pageIndex}_${comp.id}`;
+          if (comp.type === 'image') {
+            capturedData[key] = { type: 'image', title: comp.data.title || '', image: value };
+          } else if (comp.type === 'text') {
+            capturedData[key] = { type: 'text', title: comp.data.title || '', text: value };
+          } else if (comp.type === 'progress') {
+            capturedData[key] = { type: 'progress', title: comp.data.title || '', progress: value };
+          } else if (comp.type === 'issues') {
+            capturedData[key] = { type: 'issues', title: comp.data.title || '', issues: value };
+          }
+        });
       });
 
       const res = await fetchWithAuth(`/api/reports/${reportId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          jobId: form.jobId || null,
+          jobId: jobId || null,
           capturedData,
           timestamp: report.timestamp,
         }),
@@ -215,16 +260,32 @@ export default function EditReportPage() {
                   type="text"
                   className="form-control"
                   placeholder="e.g. 2026-001"
-                  value={form.jobId || ''}
-                  onChange={(e) => handleFormChange('jobId', e.target.value)}
+                  value={jobId}
+                  onChange={(e) => setJobId(e.target.value)}
                 />
               </div>
+
+              {pageData.length > 1 && (
+                <div className="multipage-nav panel panel-default" style={{ marginBottom: 16 }}>
+                  <div className="panel-body" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+                    <span className="multipage-label">
+                      Page {currentPageIndex + 1} of {pageData.length}
+                    </span>
+                    <button type="button" className="btn btn-default btn-sm" onClick={() => goToPage(currentPageIndex - 1)} disabled={currentPageIndex === 0}>
+                      Previous
+                    </button>
+                    <button type="button" className="btn btn-default btn-sm" onClick={() => goToPage(currentPageIndex + 1)} disabled={currentPageIndex >= pageData.length - 1}>
+                      Next
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {template.components?.map((component) => {
                 // image field — file picker + preview of current photo
                 if (component.type === 'image') {
                   const fieldKey = `image_${component.id}`;
-                  const imageValue = form[fieldKey] || '';
+                  const imageValue = currentPageForm[fieldKey] || '';
                   return (
                     <div key={component.id} className="form-group">
                       <label>{component.data.title || 'Image'}</label>
@@ -249,7 +310,7 @@ export default function EditReportPage() {
                         spellCheck
                         autoCorrect="on"
                         autoCapitalize="sentences"
-                        value={form[fieldKey] || ''}
+                        value={currentPageForm[fieldKey] || ''}
                         onChange={(e) => handleFormChange(fieldKey, e.target.value)}
                       />
                     </div>
@@ -257,6 +318,10 @@ export default function EditReportPage() {
                 }
                 return null;
               })}
+
+              <button type="button" className="btn btn-default btn-block" style={{ marginBottom: 8 }} onClick={addPage}>
+                + Add page
+              </button>
 
               <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
                 <button type="button" className="btn btn-default" onClick={() => navigate('/reports')}>
