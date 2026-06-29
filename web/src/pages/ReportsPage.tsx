@@ -207,6 +207,7 @@ export default function ReportsPage() {
     setSyncing(true);
     let synced = 0;
     let failed = 0;
+    let lastError = '';
     for (const report of pending) {
       try {
         const res = await fetchWithAuth('/api/reports', {
@@ -219,16 +220,23 @@ export default function ReportsPage() {
             timestamp: report.timestamp,
           }),
         });
-        const data = await res.json().catch(() => ({}));
+        const text = await res.text();
+        const data = (() => { try { return JSON.parse(text); } catch { return {}; } })();
         if (res.ok && data.id) {
           await markReportSynced(report.localId, data.id);
           await deleteOfflineReport(report.localId);
           synced++;
         } else {
           failed++;
+          lastError = res.status === 413
+            ? 'photo(s) too large'
+            : data.message || text || `server error ${res.status}`;
+          console.error('Sync failed for offline report', report.localId, lastError);
         }
-      } catch {
+      } catch (err) {
         failed++;
+        lastError = err instanceof Error ? err.message : 'network error';
+        console.error('Sync failed for offline report', report.localId, lastError);
       }
     }
     await refreshUnsyncedCount();
@@ -238,7 +246,10 @@ export default function ReportsPage() {
       if (reportsRes.ok) setReports(await reportsRes.json());
     }
     if (synced > 0 || failed > 0) {
-      showToast(`Synced ${synced} report(s).${failed > 0 ? ` ${failed} failed.` : ''}`, failed > 0 ? 'error' : 'success');
+      showToast(
+        `Synced ${synced} report(s).${failed > 0 ? ` ${failed} failed: ${lastError}` : ''}`,
+        failed > 0 ? 'error' : 'success'
+      );
     }
   };
 

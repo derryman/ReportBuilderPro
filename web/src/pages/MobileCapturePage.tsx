@@ -34,6 +34,35 @@ type Template = {
   components?: Component[];
 };
 
+const MAX_IMAGE_DIMENSION = 1600;
+const IMAGE_QUALITY = 0.8;
+
+/** Downscale + re-compress a captured photo so full-res mobile camera shots don't blow past upload limits. */
+function resizeImage(dataUrl: string): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, MAX_IMAGE_DIMENSION / Math.max(img.width, img.height));
+      if (scale >= 1) {
+        resolve(dataUrl);
+        return;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        resolve(dataUrl);
+        return;
+      }
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      resolve(canvas.toDataURL('image/jpeg', IMAGE_QUALITY));
+    };
+    img.onerror = () => resolve(dataUrl);
+    img.src = dataUrl;
+  });
+}
+
 /** Build empty form for one page from a template (all component keys, empty strings). */
 function emptyPageFromTemplate(template: Template): Record<string, string> {
   const page: Record<string, string> = {};
@@ -246,9 +275,10 @@ export default function MobileCapturePage() {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = async (e) => {
         const imageData = e.target?.result as string;
-        handleFormChange(`image_${componentId}`, imageData);
+        const resized = await resizeImage(imageData);
+        handleFormChange(`image_${componentId}`, resized);
       };
       reader.readAsDataURL(file);
     }
@@ -324,36 +354,43 @@ export default function MobileCapturePage() {
         return;
       }
 
+      let response: Response;
       try {
-        const response = await fetchWithAuth('/api/reports', {
+        response = await fetchWithAuth('/api/reports', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
-
-        const responseText = await response.text();
-        let responseData: { message?: string; id?: string };
-        try {
-          responseData = JSON.parse(responseText);
-        } catch {
-          responseData = { message: responseText || 'Unknown error' };
-        }
-
-        if (response.ok) {
-          await clearDraft();
-          alert('Report saved! You can view it on the Reports page.');
-          resetForm();
-        } else {
-          const errorMsg = responseData.message || `Server error: ${response.status}`;
-          alert(`Failed to save report: ${errorMsg}`);
-          throw new Error(errorMsg);
-        }
-      } catch (networkError: unknown) {
+      } catch {
+        // Actual network failure (fetch couldn't even reach the server) — safe to queue for later sync
         await saveReportOffline(payload);
         await clearDraft();
         await refreshUnsyncedCount();
         alert('No connection. Report saved offline and will sync when you\'re back online.');
         resetForm();
+        setSaving(false);
+        return;
+      }
+
+      const responseText = await response.text();
+      let responseData: { message?: string; id?: string };
+      try {
+        responseData = JSON.parse(responseText);
+      } catch {
+        responseData = { message: responseText || 'Unknown error' };
+      }
+
+      if (response.ok) {
+        await clearDraft();
+        alert('Report saved! You can view it on the Reports page.');
+        resetForm();
+      } else if (response.status === 413) {
+        // The server reached us and explicitly rejected the request — retrying as-is would just fail
+        // again, so don't queue it offline. Keep the form filled in (draft autosave already covers it).
+        alert('Failed to save report: photo(s) are too large. Try removing a photo or splitting into fewer pages, then save again.');
+      } else {
+        const errorMsg = responseData.message || `Server error: ${response.status}`;
+        alert(`Failed to save report: ${errorMsg}`);
       }
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Something went wrong';
