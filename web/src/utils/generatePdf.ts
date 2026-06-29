@@ -45,6 +45,14 @@ type CapturedComponent = {
   issues?: string;
 };
 
+// Used when a section has no custom title (e.g. "Section title" was left blank in Template Creator)
+const DEFAULT_SECTION_TITLES: Record<CapturedComponent['type'], string> = {
+  image: 'Photo',
+  text: 'Notes',
+  progress: 'Progress',
+  issues: 'Issues',
+};
+
 type ReportData = {
   templateTitle: string;
   jobId: string | null;
@@ -143,7 +151,7 @@ export async function generateReportPdf(reportData: ReportData): Promise<void> {
   yPosition += 10;
 
   for (const component of reportData.components) {
-    addText(component.title || 'Untitled', 14, true);
+    addText(component.title || DEFAULT_SECTION_TITLES[component.type] || 'Untitled', 14, true);
     yPosition += 5;
 
     if (component.type === 'image' && component.image) {
